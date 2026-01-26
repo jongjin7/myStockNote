@@ -18,6 +18,7 @@ export interface Stock {
   name: string;
   quantity: number;
   avgPrice: number;
+  currentPrice?: number | null;
   status: StockStatus;
   createdAt: number;
   updatedAt: number;

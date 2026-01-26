@@ -1,8 +1,13 @@
 import { useState } from 'react';
 import { useApp } from '../contexts/AppContext';
-import { PlusCircle, Pencil, Trash2, Wallet, X } from 'lucide-react';
+import { PlusCircle, Pencil, Trash2, Wallet } from 'lucide-react';
 import type { Account } from '../types';
 import { v4 as uuidv4 } from 'uuid';
+import { 
+  Card,
+  Button, Input, Textarea, Modal, ModalBody, ModalFooter 
+} from '../components/ui';
+import { formatCurrency, formatDateTime } from '../lib/utils';
 
 export default function Accounts() {
   const { data, actions } = useApp();
@@ -59,162 +64,134 @@ export default function Accounts() {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-10 animate-fade-in">
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight leading-tight text-white mb-2">계좌 관리</h1>
-          <p className="text-sm font-medium text-slate-400 leading-relaxed">증권사별 계좌와 예수금을 수동으로 관리하세요.</p>
+          <h1 className="text-4xl font-bold tracking-tight text-white mb-2">계좌 관리</h1>
+          <p className="text-sm font-medium text-gray-400">증권사별 계좌와 예수금을 수동으로 관리하세요.</p>
         </div>
-        <button 
-          onClick={() => openModal()}
-          className="inline-flex items-center space-x-2 bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-xl font-semibold transition-all shadow-lg shadow-blue-600/20 active:scale-95"
-        >
-          <PlusCircle size={20} />
+        <Button onClick={() => openModal()} className="shadow-lg shadow-primary-500/10">
+          <PlusCircle size={20} className="mr-2" />
           <span>새 계좌 추가</span>
-        </button>
+        </Button>
       </header>
 
       {/* Account List Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {accounts.length > 0 ? (
           accounts.map((account) => (
-            <div 
-              key={account.id} 
-              className="group bg-slate-900 border border-slate-800 p-6 rounded-2xl hover:border-slate-700 transition-all shadow-sm"
-            >
-              <div className="flex items-start justify-between mb-6">
-                <div className="p-3 bg-blue-600/10 text-blue-500 rounded-xl">
-                  <Wallet size={24} />
+            <Card key={account.id} className="group border-gray-800 bg-gray-900/40 backdrop-blur-sm p-8">
+              <div className="flex items-start justify-between mb-8">
+                <div className="p-4 bg-primary-500/10 text-primary-500 rounded-2xl">
+                  <Wallet size={28} />
                 </div>
-                <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button 
+                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
                     onClick={() => openModal(account)}
-                    className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+                    className="p-2 h-auto text-gray-400 hover:text-white"
                   >
                     <Pencil size={18} />
-                  </button>
-                  <button 
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
                     onClick={() => handleDelete(account.id)}
-                    className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                    className="p-2 h-auto text-gray-400 hover:text-danger"
                   >
                     <Trash2 size={18} />
-                  </button>
+                  </Button>
                 </div>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div>
-                  <h3 className="text-xl font-bold text-white mb-1 tracking-tight">{account.brokerName}</h3>
-                  <p className="text-sm text-slate-500">
+                  <h3 className="text-2xl font-bold text-white mb-2 tracking-tight">{account.brokerName}</h3>
+                  <p className="text-sm text-gray-500 h-10 line-clamp-2">
                     {account.memo || '기록된 메모가 없습니다.'}
                   </p>
                 </div>
                 
-                <div className="pt-4 border-t border-slate-800">
-                  <div className="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wider">예수금</div>
-                  <div className="text-2xl font-extrabold text-white tracking-tight">
-                    {account.cashBalance.toLocaleString()} <span className="text-sm font-medium text-slate-400">원</span>
+                <div className="pt-6 border-t border-gray-800">
+                  <div className="text-[10px] font-bold text-gray-500 mb-2 uppercase tracking-widest">예수금 잔액</div>
+                  <div className="text-3xl font-bold text-white tracking-tight">
+                    {formatCurrency(account.cashBalance)}
                   </div>
                 </div>
 
-                <div className="text-[10px] text-slate-600 pt-2 flex justify-between">
-                  <span>최종 업데이트</span>
-                  <span>{new Date(account.updatedAt).toLocaleString()}</span>
+                <div className="text-[10px] text-gray-600 pt-2 flex justify-between border-t border-gray-800/50">
+                  <span className="font-bold uppercase tracking-widest">최종 업데이트</span>
+                  <span className="font-mono">{formatDateTime(new Date(account.updatedAt))}</span>
                 </div>
               </div>
-            </div>
+            </Card>
           ))
         ) : (
-          <div className="col-span-full bg-slate-900/50 border border-dashed border-slate-800 p-16 rounded-3xl text-center">
-            <div className="inline-flex p-5 bg-slate-800/50 rounded-full text-slate-600 mb-4">
-              <Wallet size={48} />
+          <div className="col-span-full bg-gray-900/20 border border-dashed border-gray-800 p-20 rounded-3xl text-center">
+            <div className="inline-flex p-6 bg-gray-900/50 rounded-full text-gray-700 mb-6 font-bold">
+              <Wallet size={64} />
             </div>
-            <h3 className="text-lg font-semibold text-slate-400 mb-2">등록된 계좌가 없습니다.</h3>
-            <p className="text-slate-500 text-sm font-medium mb-8 leading-relaxed">증권사 계좌를 추가하고 예수금을 관리해 보세요.</p>
-            <button 
-              onClick={() => openModal()}
-              className="inline-flex items-center space-x-2 bg-slate-800 hover:bg-slate-700 text-white px-6 py-3 rounded-2xl font-semibold transition-colors border border-slate-700"
-            >
-              <PlusCircle size={20} />
+            <h3 className="text-2xl font-bold text-gray-400 mb-2">등록된 계좌가 없습니다.</h3>
+            <p className="text-gray-600 mb-10 max-w-sm mx-auto">증권사별 계좌를 추가하고 전체 예수금 흐름을 한곳에서 파악해 보세요.</p>
+            <Button onClick={() => openModal()} size="lg">
+              <PlusCircle size={20} className="mr-2" />
               <span>첫 계좌 만들기</span>
-            </button>
+            </Button>
           </div>
         )}
       </div>
 
-      {/* Modal Overlay */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
-            <div className="flex items-center justify-between p-6 border-b border-slate-800">
-              <h2 className="text-xl font-bold text-white tracking-tight">
-                {editingAccount ? '계좌 정보 수정' : '새 계좌 추가'}
-              </h2>
-              <button 
-                onClick={closeModal}
-                className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
-              >
-                <X size={20} />
-              </button>
+      {/* Account Add/Edit Modal */}
+      <Modal 
+        isOpen={isModalOpen} 
+        onClose={closeModal}
+        title={editingAccount ? '계좌 정보 수정' : '새 계좌 추가'}
+      >
+        <form onSubmit={handleSubmit}>
+          <ModalBody>
+            <div className="space-y-6">
+              <Input 
+                label="증권사명"
+                value={brokerName}
+                onChange={(e) => setBrokerName(e.target.value)}
+                placeholder="예: 한국투자증권, 유안타증권"
+                required
+                className="bg-gray-950 border-gray-800"
+              />
+
+              <Input 
+                label="현재 예수금 (원)"
+                type="number" 
+                value={cashBalance}
+                onChange={(e) => setCashBalance(Number(e.target.value))}
+                placeholder="0"
+                min="0"
+                required
+                className="bg-gray-950 border-gray-800"
+              />
+
+              <Textarea 
+                label="메모 (선택)"
+                value={memo}
+                onChange={(e) => setMemo(e.target.value)}
+                placeholder="계좌 번호나 사용 목적 등을 자유롭게 기록하세요."
+                maxLength={200}
+                showCharCount
+                className="bg-gray-950 border-gray-800"
+              />
             </div>
-
-            <form onSubmit={handleSubmit} className="p-6 space-y-6">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-400 ml-1">증권사명</label>
-                <input 
-                  type="text" 
-                  value={brokerName}
-                  onChange={(e) => setBrokerName(e.target.value)}
-                  placeholder="예: 한국투자증권, 유안타증권"
-                  required
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all placeholder:text-slate-700"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-400 ml-1">현재 예수금 (원)</label>
-                <input 
-                  type="number" 
-                  value={cashBalance}
-                  onChange={(e) => setCashBalance(Number(e.target.value))}
-                  placeholder="0"
-                  min="0"
-                  step="1"
-                  required
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all placeholder:text-slate-700"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-400 ml-1">메모 (선택)</label>
-                <textarea 
-                  value={memo}
-                  onChange={(e) => setMemo(e.target.value)}
-                  placeholder="계좌 번호나 용량 등 메모 입력"
-                  rows={2}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all resize-none placeholder:text-slate-700"
-                />
-              </div>
-
-              <div className="pt-4 flex gap-3">
-                <button 
-                  type="button" 
-                  onClick={closeModal}
-                  className="flex-1 px-4 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-semibold transition-colors"
-                >
-                  취소
-                </button>
-                <button 
-                  type="submit" 
-                  className="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold transition-all shadow-lg shadow-blue-600/20 active:scale-95"
-                >
-                  {editingAccount ? '변경사항 저장' : '계좌 추가'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+          </ModalBody>
+          <ModalFooter>
+            <Button variant="secondary" type="button" onClick={closeModal}>
+              취소
+            </Button>
+            <Button type="submit">
+              {editingAccount ? '변경사항 저장' : '계좌 추가하기'}
+            </Button>
+          </ModalFooter>
+        </form>
+      </Modal>
     </div>
   );
 }

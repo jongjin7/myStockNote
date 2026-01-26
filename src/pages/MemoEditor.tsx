@@ -3,11 +3,16 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
 import { 
   ArrowLeft, Save, X, Image as ImageIcon, 
-  Trash2, AlertCircle, Info, CheckCircle2,
+  AlertCircle, Info, CheckCircle2,
   FileText, TrendingUp, ShieldAlert, Zap, Plus
 } from 'lucide-react';
 import type { StockMemo, Attachment } from '../types';
 import { v4 as uuidv4 } from 'uuid';
+import { 
+  Card,
+  Button, Textarea 
+} from '../components/ui';
+import { cn, formatFileSize } from '../lib/utils';
 
 export default function MemoEditor() {
   const { id: stockId, memoId } = useParams<{ id?: string; memoId?: string }>();
@@ -110,191 +115,207 @@ export default function MemoEditor() {
   if (!stock && !editingMemo) return null;
 
   return (
-    <div className="max-w-4xl mx-auto pb-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <header className="flex items-center justify-between mb-10">
-        <div className="flex items-center space-x-6">
-          <button 
+    <div className="max-w-5xl mx-auto pb-20 animate-fade-in">
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+        <div className="flex items-center gap-6">
+          <Button 
+            variant="ghost" 
+            size="sm" 
             onClick={() => navigate(-1)}
-            className="p-3 bg-slate-900 border border-slate-800 text-slate-400 hover:text-white rounded-2xl transition-all active:scale-90"
+            className="p-3 bg-gray-900/50 border border-gray-800 text-gray-400 hover:text-white rounded-xl"
           >
             <ArrowLeft size={20} />
-          </button>
+          </Button>
           <div>
-            <h1 className="text-2xl font-bold text-white mb-1">
+            <h1 className="text-3xl font-bold text-white tracking-tight">
               {editingMemo ? '투자 노트 수정' : '새 투자 노트 작성'}
             </h1>
-            <p className="text-sm text-slate-500 font-medium">
-              {stock?.name} <span className="mx-2 text-slate-800">|</span> {stock?.symbol || 'No Code'}
-            </p>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="text-sm font-bold text-primary-500">{stock?.name}</span>
+              <span className="text-gray-700 font-bold">|</span>
+              <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">{stock?.symbol || 'NO CODE'}</span>
+            </div>
           </div>
         </div>
-        <button 
-          onClick={handleSave}
-          className="inline-flex items-center space-x-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-2xl font-bold transition-all shadow-xl shadow-blue-600/20 active:scale-95"
-        >
-          <Save size={20} />
-          <span>노트 저장</span>
-        </button>
+        <div className="flex items-center gap-3">
+          <Button variant="secondary" onClick={() => navigate(-1)}>
+            취소
+          </Button>
+          <Button onClick={handleSave} className="shadow-lg shadow-primary-500/20 px-8">
+            <Save size={18} className="mr-2" />
+            <span>기록 완료</span>
+          </Button>
+        </div>
       </header>
 
-      <form onSubmit={handleSave} className="space-y-8">
+      <form onSubmit={handleSave} className="space-y-10">
         {/* Memo Type Selector */}
-        <div className="bg-slate-900 border border-slate-800 p-2 rounded-2xl inline-flex gap-1">
-          {[
-            { id: 'PURCHASE', label: '매수 기록', icon: Zap, color: 'text-blue-500' },
-            { id: 'SELL', label: '매도 회고', icon: ShieldAlert, color: 'text-red-500' },
-            { id: 'GENERAL', label: '일반 메모', icon: FileText, color: 'text-slate-400' }
-          ].map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => setType(item.id as any)}
-              className={`flex items-center space-x-2 px-6 py-3 rounded-xl transition-all font-bold text-sm ${
-                type === item.id 
-                  ? 'bg-slate-800 text-white shadow-sm' 
-                  : 'text-slate-500 hover:text-slate-300'
-              }`}
-            >
-              <item.icon size={16} className={type === item.id ? item.color : 'text-slate-600'} />
-              <span>{item.label}</span>
-            </button>
-          ))}
-        </div>
+        <section className="space-y-4">
+          <label className="text-sm font-bold text-gray-500 uppercase tracking-widest ml-1">노트 성격</label>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[
+              { id: 'PURCHASE', label: '매수 기록', icon: Zap, color: 'text-success', bg: 'hover:bg-success/5 border-success/20' },
+              { id: 'SELL', label: '매도 회고', icon: ShieldAlert, color: 'text-danger', bg: 'hover:bg-danger/5 border-danger/20' },
+              { id: 'GENERAL', label: '일반 메모', icon: FileText, color: 'text-info', bg: 'hover:bg-info/5 border-info/20' }
+            ].map((item) => (
+              <Card 
+                key={item.id}
+                interactive 
+                onClick={() => setType(item.id as any)}
+                className={cn(
+                  "p-6 flex items-center gap-4 transition-all border-2",
+                  type === item.id 
+                    ? "bg-gray-900 border-primary-500 shadow-[0_0_20px_rgba(59,130,246,0.15)]" 
+                    : "bg-gray-900/30 border-gray-800 " + item.bg
+                )}
+              >
+                <div className={cn(
+                  "p-3 rounded-xl",
+                  type === item.id ? "bg-primary-500 text-white" : item.color + " bg-gray-900"
+                )}>
+                  <item.icon size={24} />
+                </div>
+                <div>
+                  <h3 className={cn("font-bold", type === item.id ? "text-white" : "text-gray-400")}>
+                    {item.label}
+                  </h3>
+                  <p className="text-[10px] text-gray-600 font-medium uppercase tracking-widest mt-0.5">
+                    {item.id} Record
+                  </p>
+                </div>
+                {type === item.id && (
+                  <div className="ml-auto w-2 h-2 rounded-full bg-primary-500 animate-pulse" />
+                )}
+              </Card>
+            ))}
+          </div>
+        </section>
 
         {/* Structured Input Fields */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="space-y-6">
-            <div className="space-y-3">
-              <label className="text-sm font-bold text-slate-400 flex items-center ml-1">
-                <CheckCircle2 size={16} className="mr-2 text-blue-500" />
-                매수 이유 (왜 샀는가?)
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="space-y-8">
+            <Card className="p-8 border-gray-800 bg-gray-900/40 backdrop-blur-sm">
+              <label className="text-xs font-bold text-gray-500 uppercase tracking-widest flex items-center mb-6">
+                <CheckCircle2 size={16} className="mr-2 text-primary-500" />
+                매수 판단 근거 (Why Buy?)
               </label>
-              <textarea 
+              <Textarea 
                 value={buyReason}
                 onChange={(e) => setBuyReason(e.target.value)}
-                placeholder="예: 반도체 사이클 회복 기대, 실적 턴어라운드 전망..."
-                className="w-full bg-slate-900 border border-slate-800 rounded-3xl p-5 text-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all resize-none min-h-[120px] placeholder:text-slate-700"
+                placeholder="기업의 핵심 경쟁력, 시장 상황 등 매수 결정을 내린 결정적인 이유를 기록하세요."
+                className="bg-gray-950 border-gray-800 min-h-[160px] text-gray-200"
               />
-            </div>
+            </Card>
 
-            <div className="space-y-3">
-              <label className="text-sm font-bold text-slate-400 flex items-center ml-1">
-                <TrendingUp size={16} className="mr-2 text-emerald-500" />
-                기대 시나리오 (목표/기대)
+            <Card className="p-8 border-gray-800 bg-gray-900/40 backdrop-blur-sm">
+              <label className="text-xs font-bold text-gray-500 uppercase tracking-widest flex items-center mb-6">
+                <TrendingUp size={16} className="mr-2 text-success" />
+                기대하는 시나리오 (Target)
               </label>
-              <textarea 
+              <Textarea 
                 value={expectedScenario}
                 onChange={(e) => setExpectedScenario(e.target.value)}
-                placeholder="예: 상반기 내 목표가 8만원 도달, 신제품 출시 흥행..."
-                className="w-full bg-slate-900 border border-slate-800 rounded-3xl p-5 text-white focus:ring-2 focus:ring-emerald-600 focus:outline-none transition-all resize-none min-h-[120px] placeholder:text-slate-700"
+                placeholder="목표 주가, 신제품 출시, 실적 발표 등 주가 상승을 견인할 트리거를 기록하세요."
+                className="bg-gray-950 border-gray-800 min-h-[160px] text-gray-200"
               />
-            </div>
+            </Card>
           </div>
 
-          <div className="space-y-6">
-            <div className="space-y-3">
-              <label className="text-sm font-bold text-slate-400 flex items-center ml-1">
-                <AlertCircle size={16} className="mr-2 text-red-500" />
-                리스크 요인 (주의사항)
+          <div className="space-y-8">
+            <Card className="p-8 border-gray-800 bg-gray-900/40 backdrop-blur-sm">
+              <label className="text-xs font-bold text-gray-500 uppercase tracking-widest flex items-center mb-6">
+                <AlertCircle size={16} className="mr-2 text-danger" />
+                잠재적 리스크 (Risk)
               </label>
-              <textarea 
+              <Textarea 
                 value={risks}
                 onChange={(e) => setRisks(e.target.value)}
-                placeholder="예: 금리 인상 지속 시 밸류에이션 부담, 경쟁사 시장 점유율 확대..."
-                className="w-full bg-slate-900 border border-slate-800 rounded-3xl p-5 text-white focus:ring-2 focus:ring-red-600 focus:outline-none transition-all resize-none min-h-[120px] placeholder:text-slate-700"
+                placeholder="판단이 틀릴 수 있는 지점, 거시 경제 상황, 경쟁 심화 등 경계해야 할 요소를 기록하세요."
+                className="bg-gray-950 border-gray-800 min-h-[160px] text-gray-200"
               />
-            </div>
+            </Card>
 
-            <div className="space-y-3">
-              <label className="text-sm font-bold text-slate-400 flex items-center ml-1">
-                <Info size={16} className="mr-2 text-blue-400" />
-                현재 나의 생각
+            <Card className="p-8 border-gray-800 bg-gray-900/40 backdrop-blur-sm">
+              <label className="text-xs font-bold text-gray-500 uppercase tracking-widest flex items-center mb-6">
+                <Info size={16} className="mr-2 text-info" />
+                현재 나의 생각 (Mindset)
               </label>
-              <textarea 
+              <Textarea 
                 value={currentThought}
                 onChange={(e) => setCurrentThought(e.target.value)}
-                placeholder="장 시작 전 현재의 심정이나 추가적인 업데이트 내용..."
-                className="w-full bg-slate-900 border border-slate-800 rounded-3xl p-5 text-white focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all resize-none min-h-[120px] placeholder:text-slate-700"
+                placeholder="투자 과정에서 느껴지는 심리나 자유로운 아이디어를 가감 없이 기록하세요."
+                className="bg-gray-950 border-gray-800 min-h-[160px] text-gray-200"
               />
-            </div>
+            </Card>
           </div>
 
           {type === 'SELL' && (
-            <div className="col-span-1 md:col-span-2 space-y-3 animate-in fade-in slide-in-from-top-2">
-              <label className="text-sm font-bold text-slate-400 flex items-center ml-1">
-                <ShieldAlert size={16} className="mr-2 text-red-400" />
-                매도 회고 (복기)
+            <Card className="col-span-1 lg:col-span-2 p-8 border-danger/20 bg-danger/5 animate-scale-in">
+              <label className="text-xs font-bold text-danger uppercase tracking-widest flex items-center mb-6">
+                <ShieldAlert size={18} className="mr-2" />
+                매도 회고 및 실전 복기 (Review)
               </label>
-              <textarea 
+              <Textarea 
                 value={sellReview}
                 onChange={(e) => setSellReview(e.target.value)}
-                placeholder="매도 결정의 이유, 원래 시나리오와의 차이점 등..."
-                className="w-full bg-slate-900 border border-red-900/30 rounded-3xl p-5 text-white focus:ring-2 focus:ring-red-600 focus:outline-none transition-all resize-none min-h-[150px] placeholder:text-slate-700"
+                placeholder="매도 시점에서의 판단은 리서치 단계에서 기대했던 것과 어떻게 달랐나요? 성공과 실패의 원인을 기록하세요."
+                className="bg-gray-950 border-danger/10 min-h-[180px] text-gray-200"
               />
-            </div>
+            </Card>
           )}
         </div>
 
         {/* Attachments Section */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between px-1">
-            <label className="text-sm font-bold text-slate-400 flex items-center">
-              <ImageIcon size={16} className="mr-2 text-blue-500" />
-              참부 자료 아카이빙 (최대 5개)
+        <section className="space-y-6">
+          <div className="flex items-center justify-between px-2">
+            <label className="text-sm font-bold text-gray-500 uppercase tracking-widest flex items-center">
+              <ImageIcon size={18} className="mr-2 text-primary-500" />
+              리서치 자료 아카이빙 (최대 5개)
             </label>
-            <button 
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="text-xs font-bold text-blue-500 hover:text-blue-400 flex items-center space-x-1"
-            >
-              <Plus size={14} />
-              <span>자료 추가</span>
-            </button>
-            <input 
-              type="file" 
-              ref={fileInputRef}
-              onChange={handleImageUpload}
-              accept="image/*"
-              multiple
-              className="hidden"
-            />
+            <div className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">
+              {(memoAttachments.length + newAttachments.length)} / 5 files
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             {/* Existing Attachments */}
             {memoAttachments.map((att) => (
-              <div key={att.id} className="relative aspect-square group">
+              <div key={att.id} className="relative aspect-square group animate-fade-in">
                 <img 
                   src={att.data} 
                   alt={att.fileName} 
-                  className="w-full h-full object-cover rounded-2xl border border-slate-800"
+                  className="w-full h-full object-cover rounded-2xl border border-gray-800 group-hover:border-primary-500 transition-all shadow-lg"
                 />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl flex flex-col items-center justify-center p-2 text-center">
+                  <span className="text-[8px] text-white font-bold truncate w-full mb-1">{att.fileName}</span>
+                  <span className="text-[8px] text-white/60 font-mono">{formatFileSize(att.fileSize)}</span>
+                </div>
                 <button 
                   type="button"
                   onClick={() => removeAttachment(att.id, true)}
-                  className="absolute -top-2 -right-2 p-1.5 bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                  className="absolute -top-2 -right-2 p-2 bg-danger text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-xl"
                 >
-                  <X size={12} />
+                  <X size={14} />
                 </button>
               </div>
             ))}
 
             {/* New Attachments */}
             {newAttachments.map((att) => (
-              <div key={att.id} className="relative aspect-square group">
+              <div key={att.id} className="relative aspect-square group animate-scale-in">
                 <img 
                   src={att.data} 
-                  className="w-full h-full object-cover rounded-2xl border border-blue-500/30"
+                  className="w-full h-full object-cover rounded-2xl border border-primary-500 shadow-xl"
                 />
-                <div className="absolute top-2 left-2 px-1.5 py-0.5 bg-blue-600 text-[8px] font-bold text-white rounded uppercase">
+                <div className="absolute top-2 left-2 px-2 py-0.5 bg-primary-500 text-[8px] font-bold text-white rounded uppercase tracking-widest shadow-lg">
                   New
                 </div>
                 <button 
                   type="button"
                   onClick={() => removeAttachment(att.id, false)}
-                  className="absolute -top-2 -right-2 p-1.5 bg-red-600 text-white rounded-full shadow-lg"
+                  className="absolute -top-2 -right-2 p-2 bg-danger text-white rounded-full shadow-xl"
                 >
-                  <X size={12} />
+                  <X size={14} />
                 </button>
               </div>
             ))}
@@ -304,32 +325,47 @@ export default function MemoEditor() {
               <button 
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="aspect-square bg-slate-900 border-2 border-dashed border-slate-800 hover:border-blue-600/50 hover:bg-slate-800/50 rounded-2xl flex flex-col items-center justify-center text-slate-600 hover:text-blue-500 transition-all group"
+                className="aspect-square bg-gray-900/20 border-2 border-dashed border-gray-800 hover:border-primary-500 hover:bg-primary-500/5 rounded-2xl flex flex-col items-center justify-center text-gray-700 hover:text-primary-500 transition-all group"
               >
-                <Plus size={24} className="mb-2 group-hover:scale-110 transition-transform" />
-                <span className="text-[10px] font-bold">이미지 드롭</span>
+                <Plus size={32} className="mb-3 group-hover:scale-110 group-hover:rotate-90 transition-all duration-300" />
+                <span className="text-[10px] font-bold uppercase tracking-widest">Image Upload</span>
               </button>
             )}
+            <input 
+              type="file" 
+              ref={fileInputRef}
+              onChange={handleImageUpload}
+              accept="image/*"
+              multiple
+              className="hidden"
+            />
           </div>
-          <p className="text-[10px] text-slate-600 px-1 italic">
-            * LocalStorage 용량 제한으로 인해 고화질 이미지는 자동으로 최적화하여 저장하는 것을 권장합니다.
-          </p>
-        </div>
+          <div className="flex items-start gap-2 px-2">
+            <Info size={12} className="text-gray-600 mt-0.5" />
+            <p className="text-[10px] text-gray-600 font-medium leading-relaxed italic">
+              LocalStorage 용량 제한으로 인해 이미지는 5MB 이하만 업로드 가능하며, 가로 1200px 이상은 업로드 속도가 느려질 수 있습니다.
+            </p>
+          </div>
+        </section>
 
-        <div className="pt-10 flex items-center justify-center space-x-4">
-          <button 
+        {/* Form Actions (Mobile Visible only or duplicated for UX) */}
+        <div className="pt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Button 
+            variant="secondary" 
+            size="lg"
             type="button"
             onClick={() => navigate(-1)}
-            className="px-10 py-4 bg-slate-900 border border-slate-800 text-slate-400 hover:text-white rounded-2xl font-bold transition-all"
+            className="w-full sm:w-auto px-12 h-14"
           >
             취소하고 돌아가기
-          </button>
-          <button 
+          </Button>
+          <Button 
+            size="lg"
             type="submit"
-            className="px-12 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-extrabold transition-all shadow-2xl shadow-blue-600/30 active:scale-95"
+            className="w-full sm:w-auto px-16 h-14 shadow-2xl shadow-primary-500/30 font-black text-lg"
           >
             기록 완료
-          </button>
+          </Button>
         </div>
       </form>
     </div>
