@@ -106,26 +106,25 @@ export default function Dashboard() {
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-4">
-                      <div className={cn(
-                        "transition-all duration-500 shrink-0",
-                        totalProfit >= 0 ? "text-danger-light" : "text-info-light"
-                      )}>
-                        {totalProfit >= 0 ? <TrendingUp size={48} strokeWidth={2.5} className="w-[12cqi] h-[12cqi] min-w-[32px] max-w-[48px]" /> : <TrendingDown size={48} strokeWidth={2.5} className="w-[12cqi] h-[12cqi] min-w-[32px] max-w-[48px]" />}
+                    <div className="mt-2 flex flex-col min-w-0">
+                      <div className="font-black tracking-tighter tabular-nums flex items-baseline leading-none">
+                        <span 
+                          className={cn(
+                            "inline-block transition-all duration-300",
+                            totalProfit >= 0 ? "text-white" : "text-info-light"
+                          )}
+                          style={{ 
+                            fontSize: `clamp(1rem, ${180 / (profitStr.length + 3)}cqi, 3.5rem)` 
+                          }}
+                        >
+                          {totalProfit >= 0 ? '+' : '-'}{profitStr}
+                        </span>
                       </div>
-                      
-                      <div className="flex flex-col min-w-0 flex-1">
-                        <div className="font-black tracking-tighter tabular-nums flex items-baseline leading-none">
-                          <span 
-                            className="text-white inline-block transition-all duration-300"
-                            style={{ 
-                              fontSize: `clamp(1rem, ${180 / (profitStr.length + 2)}cqi, 3.5rem)` 
-                            }}
-                          >
-                            {profitStr}
-                          </span>
-                        </div>
-                      </div>
+                    </div>
+
+                    {/* Corner Icon */}
+                    <div className="absolute -bottom-12 -right-4 opacity-5">
+                      <TrendingUp size={120} strokeWidth={3} /> 
                     </div>
                   </div>
                 </div>

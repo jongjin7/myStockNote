@@ -503,9 +503,9 @@ z-index: 1000
 │   │ Holdings P/L (text-xs, gray-500)                          │   │
 │   │ 평가손익 (text-xs, gray-500) [ROI Badge: text-md]          │   │
 │   │                                                           │   │
-│   │ [Trending Icon] {Amount: Liquid Typography Scale}         │   │
-│   │ * Adaptive: fontSize: clamp(1rem, Dynamic Calc, 3.5rem)   │   │
-│   │ * Full display: Truncation prohibited for financial data   │   │
+│   │ { (+) or (-) Amount: Liquid Typography Scale }            │   │
+│   │ * Note: Explicit sign added / Loss text: text-info-light  │   │
+│   │ [Deco Icon: Bottom-Right Corner / Opacity 0.05 / Static]   │   │
 │   └───────────────────────────────────────────────────────────┘   │
 │                                                               │
 │ ───────────────────────────────────────────────────────────── │
