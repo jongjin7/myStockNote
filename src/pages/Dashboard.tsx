@@ -8,7 +8,7 @@ import {
 import { Link } from 'react-router-dom';
 import type { Account, Stock, StockMemo } from '../types';
 import { Card, Badge, Button } from '../components/ui';
-import { cn, formatCurrency, formatRelativeTime } from '../lib/utils';
+import { cn, formatCurrency, formatRelativeTime, formatNumber } from '../lib/utils';
 
 export default function Dashboard() {
   const { data } = useApp();
@@ -31,74 +31,80 @@ export default function Dashboard() {
   const watchlistCount = stocks.filter(s => s.status === 'WATCHLIST').length;
 
   return (
-    <div className="space-y-10 animate-fade-in">
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <div className="space-y-12 animate-fade-in max-w-6xl mx-auto">
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-2">
         <div>
-          <h1 className="text-4xl font-bold tracking-tight text-white mb-2">대시보드</h1>
-          <p className="text-sm font-medium text-gray-400">투자 판단의 복기가 더 나은 결정으로 이어집니다.</p>
+          <h1 className="text-5xl font-black tracking-tighter text-white mb-3">
+            Portfolio <span className="text-primary-500 text-3xl ml-2 font-light">Summary</span>
+          </h1>
+          <p className="text-sm font-bold text-gray-500 uppercase tracking-[0.2em]">
+            Investment decision & review analytics
+          </p>
         </div>
-        <div className="flex items-center gap-2 text-xs font-bold text-gray-500 bg-gray-900/50 border border-gray-800 px-4 py-2 rounded-full backdrop-blur-sm">
-          <Clock size={14} className="text-primary-500" />
-          <span>업데이트: {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+        <div className="flex items-center gap-3 text-[10px] font-black text-gray-400 bg-gray-900/40 border border-gray-800/50 px-5 py-2.5 rounded-2xl backdrop-blur-xl">
+          <Clock size={14} className="text-primary-500 animate-pulse" />
+          <span className="uppercase tracking-widest">Live Update: {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
         </div>
       </header>
 
       {/* Hero Stats Section */}
-      <section>
-        <div className="bg-gradient-to-br from-primary-600 to-primary-800 p-8 rounded-2xl shadow-xl shadow-primary-900/20 relative overflow-hidden group">
-          {/* Decorative Circles */}
-          <div className="absolute -right-10 -top-10 w-64 h-64 bg-white/10 rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700" />
-          <div className="absolute -left-20 -bottom-20 w-80 h-80 bg-primary-400/10 rounded-full blur-3xl" />
+      <section className="relative">
+        <div className="bg-gradient-to-br from-gray-900 to-gray-950 p-10 rounded-[32px] border border-gray-800/50 shadow-2xl relative overflow-hidden group">
+          {/* Subtle Background Textures */}
+          <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary-500/5 to-transparent pointer-events-none" />
+          <div className="absolute -right-20 -top-20 w-96 h-96 bg-primary-600/10 rounded-full blur-[100px] pointer-events-none" />
           
           <div className="relative z-10">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-              <div>
-                <p className="text-primary-100/80 font-semibold text-sm mb-2 uppercase tracking-wider">전체 예수금 요약</p>
-                <div className="text-4xl md:text-5xl font-bold text-white tracking-tight">
-                  {formatCurrency(totalCash)}
-                </div>
-                <div className="mt-4 flex items-center gap-2 text-primary-100/60 text-xs font-medium">
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary-200 animate-pulse" />
-                  마지막 업데이트: {formatRelativeTime(new Date())}
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-12">
+              <div className="space-y-2">
+                <span className="font-light text-gray-500 uppercase tracking-[0.3em] ml-1">TOTAL LIQUID CASH | 총 예수금</span>
+                <div className="font-black text-white tracking-tighter tabular-nums flex items-baseline gap-1">
+                  <span className="text-4xl font-black">₩</span>
+                  <span className="text-6xl font-black">{formatNumber(totalCash)}</span>
                 </div>
               </div>
 
-              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/10 min-w-[240px]">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] font-bold text-primary-100/60 uppercase tracking-widest">실시간 수익 현황</span>
-                  {totalProfit >= 0 ? (
-                    <ArrowUpRight size={16} className="text-danger-light" />
-                  ) : (
-                    <ArrowDownRight size={16} className="text-info-light" />
-                  )}
-                </div>
-                <div className={cn(
-                  "text-2xl font-bold mb-1 tracking-tight",
-                  totalProfit >= 0 ? "text-white" : "text-info-light"
-                )}>
-                  {totalProfit >= 0 ? '+' : ''}{formatCurrency(totalProfit)}
-                </div>
-                <div className={cn(
-                  "text-xs font-bold px-2 py-0.5 rounded-lg inline-block",
-                  totalProfit >= 0 ? "bg-danger/20 text-danger-light" : "bg-info/20 text-info-light"
-                )}>
-                  {totalProfit >= 0 ? '+' : ''}{totalProfitRate.toFixed(2)}%
+              <div className="flex flex-col sm:flex-row items-stretch gap-4 shrink-0">
+                <div className="bg-gray-950/60 backdrop-blur-2xl rounded-[24px] p-6 border border-gray-800/60 min-w-[280px] shadow-inner">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="font-black text-gray-600 uppercase tracking-[0.2em]">실현손익</span>
+                    <div className={cn(
+                      "p-1.5 rounded-lg",
+                      totalProfit >= 0 ? "bg-danger/10 text-danger" : "bg-info/10 text-info"
+                    )}>
+                      {totalProfit >= 0 ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
+                    </div>
+                  </div>
+                  <div className={cn(
+                    "font-black mb-2 tracking-tighter tabular-nums flex items-baseline gap-1",
+                    totalProfit >= 0 ? "text-white" : "text-info-light"
+                  )}>
+                    <span className="text-2xl">{totalProfit >= 0 ? '+₩' : '-₩'}</span>
+                    <span className="text-3xl">{formatNumber(Math.abs(totalProfit))}</span>
+                  </div>
+                  <div className={cn(
+                    "text-[11px] font-black px-3 py-1 rounded-full inline-flex items-center gap-1",
+                    totalProfit >= 0 ? "bg-danger/20 text-danger-light" : "bg-info/20 text-info-light"
+                  )}>
+                    {totalProfit >= 0 ? '+' : ''}{totalProfitRate.toFixed(2)}%
+                    <span className="opacity-50 font-medium ml-1 uppercase">ROI</span>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-10 pt-8 border-t border-white/10">
-              <div className="flex flex-col">
-                <span className="text-[10px] text-primary-100/50 font-bold uppercase mb-1 tracking-widest">운용 자산 총액 (예수금 제외)</span>
-                <span className="text-xl font-bold text-white tracking-tight">{formatCurrency(totalEvaluation)}</span>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 mt-12 pt-10 border-t border-gray-800/40">
+              <div className="space-y-2">
+                <span className="text-base font-black text-gray-600 uppercase tracking-widest">평가자산</span>
+                <p className="text-2xl font-black text-gray-100 tracking-tight tabular-nums">{formatCurrency(totalEvaluation)}</p>
               </div>
-              <div className="flex flex-col">
-                <span className="text-[10px] text-primary-100/50 font-bold uppercase mb-1 tracking-widest">총 매수 금액</span>
-                <span className="text-xl font-bold text-white tracking-tight">{formatCurrency(totalInvested)}</span>
+              <div className="space-y-2">
+                <span className="text-base font-black text-gray-600 uppercase tracking-widest">투자비용</span>
+                <p className="text-2xl font-black text-gray-100 tracking-tight tabular-nums">{formatCurrency(totalInvested)}</p>
               </div>
-              <div className="flex flex-col">
-                <span className="text-[10px] text-primary-100/50 font-bold uppercase mb-1 tracking-widest">계좌 수</span>
-                <span className="text-xl font-bold text-white tracking-tight">{accounts.length} <span className="text-sm font-medium opacity-60">개</span></span>
+              <div className="space-y-2">
+                <span className="text-base font-black text-gray-600 uppercase tracking-widest">계좌</span>
+                <p className="text-2xl font-black text-gray-100 tracking-tight">{accounts.length} <span className="text-sm text-gray-500 font-bold uppercase ml-1">Nodes</span></p>
               </div>
             </div>
           </div>
@@ -106,55 +112,65 @@ export default function Dashboard() {
       </section>
 
       {/* Grid Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card interactive className="border-gray-800 bg-gray-900/40 hover:bg-gray-900/60 backdrop-blur-sm">
-          <div className="flex items-center justify-between mb-8">
-            <div className="p-4 bg-success/10 text-success rounded-xl">
-              <TrendingUp size={28} />
-            </div>
-            <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">Holdings</span>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <Card interactive className="p-8 border-gray-800/50 bg-gray-900/30 hover:bg-gray-900/50 group overflow-hidden relative">
+          <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
+            <TrendingUp size={120} />
           </div>
-          <div>
-            <div className="text-4xl font-bold text-white mb-1 tracking-tight">
-              {holdingStocks.length} <span className="text-lg font-medium text-gray-500">개 종목</span>
+          <div className="relative z-10">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="p-3 bg-success/10 text-success rounded-2xl">
+                <TrendingUp size={24} />
+              </div>
+              <span className="text-[11px] font-black text-gray-500 uppercase tracking-[0.2em]">Holdings</span>
             </div>
-            <p className="text-sm text-gray-500 font-medium">현재 운용 및 일부 매도 상태의 종목</p>
+            <div>
+              <div className="text-5xl font-black text-white mb-2 tracking-tighter">
+                {holdingStocks.length} <span className="text-xl font-bold text-gray-600 uppercase ml-2 tracking-widest">Stocks</span>
+              </div>
+              <p className="text-sm text-gray-500 font-medium">Currently managed investment positions</p>
+            </div>
           </div>
         </Card>
 
-        <Card interactive className="border-gray-800 bg-gray-900/40 hover:bg-gray-900/60 backdrop-blur-sm">
-          <div className="flex items-center justify-between mb-8">
-            <div className="p-4 bg-primary-500/10 text-primary-500 rounded-xl">
-              <FileText size={28} />
-            </div>
-            <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">Notes</span>
+        <Card interactive className="p-8 border-gray-800/50 bg-gray-900/30 hover:bg-gray-900/50 group overflow-hidden relative">
+          <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
+            <FileText size={120} />
           </div>
-          <div>
-            <div className="text-4xl font-bold text-white mb-1 tracking-tight">
-              {memos.length} <span className="text-lg font-medium text-gray-500">개 노트</span>
+          <div className="relative z-10">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="p-3 bg-primary-500/10 text-primary-500 rounded-2xl">
+                <FileText size={24} />
+              </div>
+              <span className="text-[11px] font-black text-gray-500 uppercase tracking-[0.2em]">Research Docs</span>
             </div>
-            <p className="text-sm text-gray-500 font-medium">작성된 모든 투자 판단 및 회고 기록</p>
+            <div>
+              <div className="text-5xl font-black text-white mb-2 tracking-tighter">
+                {memos.length} <span className="text-xl font-bold text-gray-600 uppercase ml-2 tracking-widest">Memos</span>
+              </div>
+              <p className="text-sm text-gray-500 font-medium">Recorded investment thesis and reviews</p>
+            </div>
           </div>
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
         {/* Holding Stocks Section */}
-        <section className="lg:col-span-3 space-y-6">
+        <section className="lg:col-span-3 space-y-8">
           <div className="flex items-center justify-between px-2">
-            <div className="flex items-center gap-3">
-              <h2 className="text-2xl font-bold text-white tracking-tight">보유 종목</h2>
-              <Badge variant="default" className="bg-gray-800 text-gray-400">
-                {holdingStocks.length}
-              </Badge>
+            <div className="flex items-center gap-4">
+              <h2 className="text-3xl font-black text-white tracking-tight">Active Portfolio</h2>
+              <div className="px-3 py-1 bg-gray-900 border border-gray-800 rounded-full text-[10px] font-black text-gray-500 uppercase tracking-widest">
+                {holdingStocks.length} items
+              </div>
             </div>
-            <Link to="/watchlist" className="group text-sm font-bold text-primary-500 hover:text-primary-400 flex items-center transition-colors">
-              관심 종목 {watchlistCount}개
-              <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform" />
+            <Link to="/watchlist" className="group text-xs font-black text-primary-500 hover:text-primary-400 flex items-center transition-all uppercase tracking-widest">
+              Watchlist ({watchlistCount})
+              <ChevronRight size={14} className="ml-1 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
           
-          <div className="space-y-4">
+          <div className="space-y-5">
             {holdingStocks.length > 0 ? (
               holdingStocks.map((stock) => {
                 const stockMemos = memos.filter(m => m.stockId === stock.id);
@@ -166,49 +182,54 @@ export default function Dashboard() {
                 
                 return (
                   <Link key={stock.id} to={`/stocks/${stock.id}`}>
-                    <Card interactive className="p-5 border-gray-800 bg-gray-900/30 hover:bg-gray-900/50 flex items-center group mb-4 last:mb-0 relative overflow-hidden">
-                      {/* Profit/Loss Background Hint */}
+                    <Card interactive className="p-6 border-gray-800/40 bg-gray-900/20 hover:bg-gray-900/60 flex items-center group transition-all duration-500 relative overflow-hidden backdrop-blur-sm">
                       <div className={cn(
-                        "absolute right-0 top-0 bottom-0 w-1 opacity-20",
-                        profit >= 0 ? "bg-danger" : "bg-info"
+                        "absolute right-0 top-0 bottom-0 w-1 opacity-40 transition-all group-hover:w-2",
+                        profit >= 0 ? "bg-danger shadow-[0_0_15px_rgba(239,68,68,0.4)]" : "bg-info shadow-[0_0_15px_rgba(14,165,233,0.4)]"
                       )} />
 
-                      <div className="p-4 bg-gray-950 rounded-xl mr-5 border border-gray-800 shadow-inner group-hover:border-primary-500/50 transition-colors">
+                      <div className="p-4 bg-gray-950 rounded-2xl mr-6 border border-gray-800/80 shadow-inner group-hover:border-primary-500/50 group-hover:scale-105 transition-all">
                         <Target size={24} className={hasNote ? "text-primary-500" : "text-gray-700"} />
                       </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="font-bold text-lg text-white group-hover:text-primary-400 transition-colors">{stock.name}</span>
-                          {stock.symbol && <span className="text-[10px] font-mono text-gray-500 bg-gray-950 px-1.5 py-0.5 rounded border border-gray-800 uppercase tracking-tighter">{stock.symbol}</span>}
+                      
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-3 mb-1.5">
+                          <span className="font-bold text-xl text-white group-hover:text-primary-400 transition-colors truncate">{stock.name}</span>
+                          {stock.symbol && (
+                            <span className="text-[9px] font-black font-mono text-gray-500 bg-gray-950 px-2 py-0.5 rounded-lg border border-gray-800/80 uppercase tracking-tighter">
+                              {stock.symbol}
+                            </span>
+                          )}
                         </div>
-                        <div className="text-xs text-gray-500 font-medium flex items-center gap-2">
-                          <span>{stock.quantity.toLocaleString()}주</span>
+                        <div className="text-[11px] font-bold text-gray-600 flex items-center gap-3 uppercase tracking-widest">
+                          <span className="text-gray-400">{stock.quantity.toLocaleString()} shares</span>
                           <span className="w-1 h-1 rounded-full bg-gray-800" />
-                          <span>평균 {formatCurrency(stock.avgPrice)}</span>
+                          <span>Avg {formatCurrency(stock.avgPrice)}</span>
                         </div>
                       </div>
 
-                      <div className="flex flex-col items-end gap-1 mr-8 text-right min-w-[100px]">
+                      <div className="flex flex-col items-end gap-1.5 mr-10 text-right min-w-[120px]">
                         <div className={cn(
-                          "text-sm font-bold tracking-tight",
-                          profit > 0 ? "text-danger-light" : profit < 0 ? "text-info-light" : "text-gray-400"
+                          "text-lg font-black tracking-tighter tabular-nums",
+                          profit > 0 ? "text-danger-light" : profit < 0 ? "text-info-light" : "text-gray-500"
                         )}>
                           {profit > 0 ? '+' : ''}{formatCurrency(profit)}
                         </div>
                         <div className={cn(
-                          "text-[10px] font-bold font-mono",
-                          profit > 0 ? "text-danger-light/80" : profit < 0 ? "text-info-light/80" : "text-gray-600"
+                          "text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider",
+                          profit > 0 ? "bg-danger/10 text-danger-light" : profit < 0 ? "bg-info/10 text-info-light" : "bg-gray-800 text-gray-500"
                         )}>
                           {profit > 0 ? '+' : ''}{profitRate.toFixed(2)}%
                         </div>
                       </div>
 
-                      <div className="flex flex-col items-end gap-2 shrink-0">
-                        <Badge status={stock.status} />
-                        <div className={`text-[10px] font-bold px-2 py-0.5 rounded ${
-                          hasNote ? 'text-primary-400 bg-primary-500/10' : 'text-warning bg-warning/10'
-                        }`}>
-                          {hasNote ? `${stockMemos.length} Notes` : '노트 필요'}
+                      <div className="flex flex-col items-end gap-3 shrink-0">
+                        <Badge status={stock.status} className="px-3 py-1 shadow-sm" />
+                        <div className={cn(
+                          "text-[9px] font-black px-2.5 py-1 rounded-lg uppercase tracking-widest transition-colors",
+                          hasNote ? 'text-primary-400 bg-primary-500/10' : 'text-warning/80 bg-warning/5 border border-warning/10'
+                        )}>
+                          {hasNote ? `${stockMemos.length} Thesis` : 'No Record'}
                         </div>
                       </div>
                     </Card>
@@ -216,16 +237,16 @@ export default function Dashboard() {
                 );
               })
             ) : (
-              <div className="bg-gray-900/20 border border-dashed border-gray-800 rounded-2xl p-16 text-center">
-                <div className="mb-6 inline-flex p-6 bg-gray-900/50 rounded-full text-gray-700">
-                  <PlusCircle size={48} />
+              <div className="bg-gray-950/20 border-2 border-dashed border-gray-800/50 rounded-[32px] p-20 text-center">
+                <div className="mb-8 inline-flex p-8 bg-gray-900/50 rounded-full text-gray-800 shadow-inner">
+                  <PlusCircle size={64} />
                 </div>
-                <h3 className="text-xl font-bold text-gray-400 mb-2">보유 중인 종목이 없습니다.</h3>
-                <p className="text-gray-600 mb-8 max-w-xs mx-auto">계좌를 먼저 등록하신 후, 보유 중인 주식 종목을 추가해 보세요.</p>
+                <h3 className="text-2xl font-black text-gray-400 mb-3 tracking-tight">Empty Portfolio</h3>
+                <p className="text-gray-600 mb-10 max-w-xs mx-auto text-sm font-medium leading-relaxed">준비된 자산이 없습니다. 계좌를 등록하고 첫 번째 투자 종목을 추가해 보세요.</p>
                 <Link to="/accounts">
-                  <Button size="lg" className="shadow-lg shadow-primary-500/10">
-                    <PlusCircle size={20} className="mr-2" />
-                    <span>첫 종목 추가하기</span>
+                  <Button size="lg" className="shadow-2xl shadow-primary-500/30 px-12 h-14 rounded-2xl font-black">
+                    <PlusCircle size={20} className="mr-3" />
+                    <span>Get Started</span>
                   </Button>
                 </Link>
               </div>
@@ -234,39 +255,45 @@ export default function Dashboard() {
         </section>
 
         {/* Recent Memos Section */}
-        <section className="lg:col-span-2 space-y-6">
+        <section className="lg:col-span-2 space-y-8">
           <div className="flex items-center justify-between px-2">
-            <h2 className="text-2xl font-bold text-white tracking-tight">최근 투자 노트</h2>
+            <h2 className="text-3xl font-black text-white tracking-tight">Recent Thesis</h2>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-6">
             {recentMemos.length > 0 ? (
               recentMemos.map((memo) => {
                 const stock = stocks.find(s => s.id === memo.stockId);
                 return (
                   <Link key={memo.id} to={`/stocks/${stock?.id}`}>
-                    <Card interactive className="p-6 border-gray-800 bg-gray-900/30 hover:bg-gray-900/50 relative overflow-hidden group">
-                      <div className="absolute top-0 right-0 w-16 h-16 bg-primary-500/5 -mr-4 -mt-4 rounded-full blur-xl group-hover:bg-primary-500/10 transition-colors" />
-                      <div className="flex items-center justify-between mb-4 relative z-10">
-                        <span className="text-sm font-bold text-primary-400 tracking-tight">{stock?.name}</span>
-                        <span className="text-[10px] font-bold text-gray-500 bg-gray-950 px-2 py-1 rounded border border-gray-800">
-                          {formatRelativeTime(new Date(memo.updatedAt))}
-                        </span>
+                    <Card interactive className="p-8 border-gray-800/50 bg-gray-900/30 hover:bg-gray-900/50 relative overflow-hidden group transition-all duration-500">
+                      <div className="absolute top-0 right-0 w-24 h-24 bg-primary-500/5 -mr-6 -mt-6 rounded-full blur-2xl group-hover:bg-primary-500/10 transition-all duration-700" />
+                      
+                      <div className="flex items-center justify-between mb-6 relative z-10">
+                        <span className="text-sm font-black text-primary-400 tracking-wider uppercase">{stock?.name}</span>
+                        <div className="flex items-center gap-2 px-3 py-1 bg-gray-950 border border-gray-800/80 rounded-full">
+                          <Clock size={10} className="text-gray-600" />
+                          <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest font-mono">
+                            {formatRelativeTime(new Date(memo.updatedAt))}
+                          </span>
+                        </div>
                       </div>
-                      <p className="text-sm text-gray-400 font-medium leading-relaxed line-clamp-3 mb-4 italic">
-                        "{memo.buyReason || memo.currentThought || '기록된 내용이 없습니다.'}"
+                      
+                      <p className="text-sm text-gray-400 font-medium leading-[1.8] line-clamp-3 mb-8 italic opacity-80 group-hover:opacity-100 transition-opacity">
+                        "{memo.buyReason || memo.currentThought || 'No thesis description available for this record.'}"
                       </p>
-                      <div className="flex items-center text-[10px] font-bold text-gray-500 group-hover:text-white transition-colors gap-1">
-                        <span>노트 상세 보기</span>
-                        <ArrowRight size={10} className="group-hover:translate-x-1 transition-transform" />
+                      
+                      <div className="flex items-center text-[10px] font-black text-gray-600 group-hover:text-primary-400 transition-all gap-2 uppercase tracking-[0.2em]">
+                        <span>Review Deep Analysis</span>
+                        <ArrowRight size={12} className="group-hover:translate-x-2 transition-transform duration-300" />
                       </div>
                     </Card>
                   </Link>
                 );
               })
             ) : (
-              <div className="bg-gray-900/10 border border-dashed border-gray-800 rounded-2xl p-16 text-center">
-                <p className="text-gray-600 text-sm font-bold italic">아직 기록이 없습니다.</p>
+              <div className="bg-gray-950/20 border border-dashed border-gray-800/40 rounded-[24px] p-20 text-center">
+                <p className="text-gray-700 text-[11px] font-black uppercase tracking-[0.3em] font-mono">Awaiting Records...</p>
               </div>
             )}
           </div>

@@ -476,32 +476,46 @@ z-index: 1000
 └─────────────────────────────────────────┘
 ```
 
-#### 전체 예수금 요약 카드
+#### 전체 예수금 요약 카드 (Hero Stats Section)
 ```
-배경: 그라데이션
-  linear-gradient(135deg, 
-    var(--color-primary-500), 
-    var(--color-primary-700))
-텍스트: white
-패딩: var(--space-8)
-둥근 모서리: var(--radius-xl)
-그림자: var(--shadow-lg)
+배경: Layered Premium Dark
+  - Surface: bg-gradient-to-br from-gray-900 via-gray-900 to-gray-950
+  - Border: 1px solid border-gray-800/50 (상단 및 좌측 광원 효과)
+  - Effects: 
+    * primary-600/10 Radial Glow (우측 상단)
+    * Backdrop-filter: blur(100px) 고도화
+    * Subtle Noise Texture (질감 오버레이)
 
-내용:
-┌─────────────────────────────────────────┐
-│  전체 예수금                              │
-│  ₩ 12,345,678                           │
-│  (큰 폰트, var(--text-4xl), bold)        │
-│                                         │
-│  마지막 업데이트: 2시간 전                │
-│  (작은 폰트, opacity 0.9)                │
-│                                         │
-│  [예수금 갱신하기] 버튼 (우측 하단)        │
-└─────────────────────────────────────────┘
+구성 요소 및 위계 (Typography Depth):
+┌───────────────────────────────────────────────────────────────┐
+│ [L4: text-base, font-black, text-gray-500]                    │
+│ TOTAL LIQUID CASH | 총 예수금                                  │
+│                                                               │
+│ [L1: text-6xl, font-black, text-white]                        │
+│ ₩ 12,345,678                                                  │
+│ (₩ 기호는 text-4xl로 하향 조정하여 숫자 데이터 강조)              │
+│                                                               │
+│ [Live Indicator: text-xs, font-bold, text-gray-600]           │
+│ ● 즉시 매수 가능한 자산 (Animate-pulse)                         │
+│                                                               │
+│   ┌───────────────────────────────────────────────────────┐   │
+│   │ [Floating Card: Glassmorphism]                        │   │
+│   │ 실현손익 (L4: text-base)                                │   │
+│   │ +₩ 1,234,567 (L3: text-3xl, font-black, text-white)   │   │
+│   │ [+10.5% ROI] (Badge: bg-danger/20, text-danger-light) │   │
+│   └───────────────────────────────────────────────────────┘   │
+│                                                               │
+│ ───────────────────────────────────────────────────────────── │
+│ 평가자산 (L4)       투자비용 (L4)       계좌 (L4)                │
+│ ₩ 50,000,000      ₩ 48,000,000      12 Nodes                  │
+│ [text-2xl, font-black, text-gray-100]                         │
+└───────────────────────────────────────────────────────────────┘
 
-숫자 포맷:
-- 천 단위 쉼표
-- 애니메이션: 카운트업 효과 (0 → 실제 값)
+디자인 디테일:
+- 화폐 기호(₩) 분리: 가격 데이터보다 2단계 낮은 텍스트 사이즈 적용하여 데이터 본연의 크기 강조
+- Tabular Nums: 모든 금액 수치에 산술적 정렬을 위한 고정폭 폰트 적용
+- Glassmorphism: 실현손익 카드는 배경보다 한 층 떠 있는 느낌을 위해 더 강한 blur와 대비 적용
+- Interactive: 호버 시 Radial Glow가 마우스 방향을 따라 미세하게 이동 (Phase 2)
 ```
 
 #### 계좌별 예수금 섹션
