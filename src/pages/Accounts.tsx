@@ -62,8 +62,8 @@ export default function Accounts() {
     <div className="space-y-8 animate-in fade-in duration-500">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white mb-2">계좌 관리</h1>
-          <p className="text-slate-400">증권사별 계좌와 예수금을 수동으로 관리하세요.</p>
+          <h1 className="text-3xl font-extrabold tracking-tight leading-tight text-white mb-2">계좌 관리</h1>
+          <p className="text-sm font-medium text-slate-400 leading-relaxed">증권사별 계좌와 예수금을 수동으로 관리하세요.</p>
         </div>
         <button 
           onClick={() => openModal()}
@@ -104,7 +104,7 @@ export default function Accounts() {
 
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-xl font-bold text-white mb-1">{account.brokerName}</h3>
+                  <h3 className="text-xl font-bold text-white mb-1 tracking-tight">{account.brokerName}</h3>
                   <p className="text-sm text-slate-500">
                     {account.memo || '기록된 메모가 없습니다.'}
                   </p>
@@ -112,8 +112,8 @@ export default function Accounts() {
                 
                 <div className="pt-4 border-t border-slate-800">
                   <div className="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wider">예수금</div>
-                  <div className="text-2xl font-bold text-white">
-                    {account.cashBalance.toLocaleString()} <span className="text-sm font-normal text-slate-400">원</span>
+                  <div className="text-2xl font-extrabold text-white tracking-tight">
+                    {account.cashBalance.toLocaleString()} <span className="text-sm font-medium text-slate-400">원</span>
                   </div>
                 </div>
 
@@ -129,8 +129,8 @@ export default function Accounts() {
             <div className="inline-flex p-5 bg-slate-800/50 rounded-full text-slate-600 mb-4">
               <Wallet size={48} />
             </div>
-            <h3 className="text-lg font-medium text-slate-400 mb-2">등록된 계좌가 없습니다.</h3>
-            <p className="text-slate-500 text-sm mb-8">증권사 계좌를 추가하고 예수금을 관리해 보세요.</p>
+            <h3 className="text-lg font-semibold text-slate-400 mb-2">등록된 계좌가 없습니다.</h3>
+            <p className="text-slate-500 text-sm font-medium mb-8 leading-relaxed">증권사 계좌를 추가하고 예수금을 관리해 보세요.</p>
             <button 
               onClick={() => openModal()}
               className="inline-flex items-center space-x-2 bg-slate-800 hover:bg-slate-700 text-white px-6 py-3 rounded-2xl font-semibold transition-colors border border-slate-700"
@@ -147,7 +147,7 @@ export default function Accounts() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between p-6 border-b border-slate-800">
-              <h2 className="text-xl font-bold text-white">
+              <h2 className="text-xl font-bold text-white tracking-tight">
                 {editingAccount ? '계좌 정보 수정' : '새 계좌 추가'}
               </h2>
               <button 

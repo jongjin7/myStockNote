@@ -41,8 +41,8 @@ export default function Watchlist() {
     <div className="space-y-8 animate-in fade-in duration-500">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white mb-2">관심 종목</h1>
-          <p className="text-slate-400">정찰 중인 종목과 리서치 자료를 관리합니다.</p>
+          <h1 className="text-3xl font-extrabold tracking-tight leading-tight text-white mb-2">관심 종목</h1>
+          <p className="text-sm font-medium text-slate-400 leading-relaxed">정찰 중인 종목과 리서치 자료를 관리합니다.</p>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
@@ -83,7 +83,7 @@ export default function Watchlist() {
                   <ChevronRight size={18} className="text-slate-700 group-hover:text-slate-400 transition-colors" />
                 </div>
                 
-                <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors mb-1">{stock.name}</h3>
+                <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors mb-1 tracking-tight">{stock.name}</h3>
                 <div className="text-sm text-slate-500 mb-6 font-mono">{stock.symbol || 'No code'}</div>
 
                 <div className="flex items-center justify-between pt-4 border-t border-slate-800/50">
@@ -104,7 +104,7 @@ export default function Watchlist() {
               <Bookmark size={48} />
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">관심 종목이 비어 있습니다.</h3>
-            <p className="text-slate-500 max-w-sm mx-auto mb-8">
+            <p className="text-slate-500 max-w-sm mx-auto mb-8 text-sm font-medium leading-relaxed">
               매수하고 싶거나 리서치가 필요한 종목을 추가해 보세요. 투자 판단을 기록하는 첫 걸음입니다.
             </p>
             <button 
@@ -123,7 +123,7 @@ export default function Watchlist() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between p-6 border-b border-slate-800">
-              <h2 className="text-xl font-bold text-white">관심 종목 추가</h2>
+              <h2 className="text-xl font-bold text-white tracking-tight">관심 종목 추가</h2>
               <button 
                 onClick={() => setIsModalOpen(false)}
                 className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"

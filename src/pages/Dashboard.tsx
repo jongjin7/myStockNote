@@ -21,8 +21,8 @@ export default function Dashboard() {
     <div className="space-y-10 animate-in fade-in duration-700">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-4xl font-extrabold tracking-tight text-white mb-2">대시보드</h1>
-          <p className="text-slate-400">투자 판단의 복기가 더 나은 결정으로 이어집니다.</p>
+          <h1 className="text-4xl font-extrabold tracking-tight leading-tight text-white mb-2">대시보드</h1>
+          <p className="text-sm font-medium text-slate-400 leading-relaxed">투자 판단의 복기가 더 나은 결정으로 이어집니다.</p>
         </div>
         <div className="flex items-center space-x-2 text-xs font-bold text-slate-500 bg-slate-900 border border-slate-800 px-4 py-2 rounded-full">
           <Clock size={14} className="text-blue-500" />
@@ -37,22 +37,22 @@ export default function Dashboard() {
           <div className="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" />
           <div className="relative z-10 flex flex-col h-full justify-between">
             <div>
-              <div className="flex items-center space-x-2 text-blue-100/70 font-bold text-sm mb-4 uppercase tracking-widest">
+              <div className="flex items-center space-x-2 text-blue-100/70 font-semibold text-xs mb-4 uppercase tracking-wider">
                 <ShieldCheck size={16} />
                 <span>총 관리 자산</span>
               </div>
-              <div className="text-4xl md:text-5xl font-black text-white leading-tight">
-                {(totalCash + totalInvested).toLocaleString()} <span className="text-xl font-medium opacity-70">원</span>
+              <div className="text-4xl md:text-5xl font-black text-white leading-none tracking-tight">
+                {(totalCash + totalInvested).toLocaleString()} <span className="text-xl font-semibold opacity-70">원</span>
               </div>
             </div>
             <div className="flex items-center space-x-6 mt-8 pt-6 border-t border-white/10">
               <div className="flex flex-col">
-                <span className="text-[10px] text-blue-100/60 font-bold uppercase mb-1">총 예수금</span>
-                <span className="text-lg font-bold text-white">{totalCash.toLocaleString()}원</span>
+                <span className="text-[10px] text-blue-100/60 font-semibold uppercase mb-1 tracking-wide">총 예수금</span>
+                <span className="text-lg font-bold text-white tracking-tight">{totalCash.toLocaleString()}원</span>
               </div>
               <div className="flex flex-col">
-                <span className="text-[10px] text-blue-100/60 font-bold uppercase mb-1">총 매수 금액</span>
-                <span className="text-lg font-bold text-white">{totalInvested.toLocaleString()}원</span>
+                <span className="text-[10px] text-blue-100/60 font-semibold uppercase mb-1 tracking-wide">총 매수 금액</span>
+                <span className="text-lg font-bold text-white tracking-tight">{totalInvested.toLocaleString()}원</span>
               </div>
             </div>
           </div>
@@ -64,13 +64,13 @@ export default function Dashboard() {
             <div className="p-4 bg-emerald-500/10 text-emerald-500 rounded-2xl group-hover:scale-110 transition-transform">
               <TrendingUp size={28} />
             </div>
-            <span className="text-xs font-black text-slate-500 tracking-tighter uppercase">Holdings</span>
+            <span className="text-xs font-extrabold text-slate-500 tracking-tight uppercase">Holdings</span>
           </div>
           <div>
-            <div className="text-4xl font-black text-white mb-2">
-              {holdingStocks.length} <span className="text-lg font-normal text-slate-500">개</span>
+            <div className="text-4xl font-black text-white mb-2 leading-none tracking-tight">
+              {holdingStocks.length} <span className="text-lg font-medium text-slate-500">개</span>
             </div>
-            <p className="text-xs text-slate-500 font-medium tracking-tight">현재 운용 중인 활성 종목</p>
+            <p className="text-xs text-slate-500 font-medium">현재 운용 중인 활성 종목</p>
           </div>
         </div>
 
@@ -80,13 +80,13 @@ export default function Dashboard() {
             <div className="p-4 bg-amber-500/10 text-amber-500 rounded-2xl group-hover:scale-110 transition-transform">
               <FileText size={28} />
             </div>
-            <span className="text-xs font-black text-slate-500 tracking-tighter uppercase">Notes</span>
+            <span className="text-xs font-extrabold text-slate-500 tracking-tight uppercase">Notes</span>
           </div>
           <div>
-            <div className="text-4xl font-black text-white mb-2">
-              {memos.length} <span className="text-lg font-normal text-slate-500">개</span>
+            <div className="text-4xl font-black text-white mb-2 leading-none tracking-tight">
+              {memos.length} <span className="text-lg font-medium text-slate-500">개</span>
             </div>
-            <p className="text-xs text-slate-500 font-medium tracking-tight">기록된 매수/매도/일반 노트</p>
+            <p className="text-xs text-slate-500 font-medium">기록된 매수/매도/일반 노트</p>
           </div>
         </div>
       </div>
@@ -108,7 +108,7 @@ export default function Dashboard() {
         <section className="lg:col-span-3 space-y-6">
           <div className="flex items-center justify-between px-2">
             <div className="flex items-center space-x-3">
-              <h2 className="text-2xl font-bold text-white">보유 종목</h2>
+              <h2 className="text-2xl font-bold text-white tracking-tight">보유 종목</h2>
               <span className="text-[10px] font-black bg-slate-800 text-slate-400 px-2.5 py-1 rounded-full">{holdingStocks.length}</span>
             </div>
             <Link to="/watchlist" className="group text-sm font-bold text-blue-500 hover:text-blue-400 flex items-center transition-colors">
@@ -182,7 +182,7 @@ export default function Dashboard() {
         {/* Recent Memos Section */}
         <section className="lg:col-span-2 space-y-6">
           <div className="flex items-center justify-between px-2">
-            <h2 className="text-2xl font-bold text-white">최근 투자 노트</h2>
+            <h2 className="text-2xl font-bold text-white tracking-tight">최근 투자 노트</h2>
           </div>
 
           <div className="space-y-4">
