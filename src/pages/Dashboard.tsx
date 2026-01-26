@@ -35,18 +35,30 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-12 animate-fade-in max-w-6xl mx-auto">
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-2">
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-4">
         <div>
           <h1 className="text-5xl font-black tracking-tighter text-white mb-3">
-            Portfolio <span className="text-primary-500 text-3xl ml-2 font-light">Summary</span>
+            Stock<span className="text-primary-500 font-light italic">Note</span>
           </h1>
-          <p className="text-sm font-bold text-gray-500 uppercase tracking-[0.2em]">
-            Investment decision & review analytics
+          <p className="text-xs font-black text-gray-500 uppercase tracking-[0.3em]">
+            Investment Decision Log
           </p>
         </div>
-        <div className="flex items-center gap-3 text-[10px] font-black text-gray-400 bg-gray-900/40 border border-gray-800/50 px-5 py-2.5 rounded-2xl backdrop-blur-xl">
-          <Clock size={14} className="text-primary-500 animate-pulse" />
-          <span className="uppercase tracking-widest">Live Update: {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+        <div className="flex items-center gap-4 bg-gradient-to-br from-gray-800/40 to-gray-950/60 border border-gray-700/30 px-5 py-2.5 rounded-2xl backdrop-blur-md shrink-0 cursor-default shadow-lg shadow-black/20">
+          <div className="flex flex-col items-end gap-1">
+            <span className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em] leading-none">Snapshot</span>
+            <span className="text-[11px] font-bold text-gray-300 tabular-nums uppercase tracking-widest leading-none">
+              {new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}
+            </span>
+          </div>
+          <div className="w-[1px] h-6 bg-gray-700/50" />
+          <div className="flex flex-col items-start gap-1">
+            <span className="text-[9px] font-black text-gray-600 uppercase tracking-[0.2em] leading-none">Update</span>
+            <div className="flex items-center gap-1.5 leading-none">
+              <div className="w-1.5 h-1.5 rounded-full bg-gray-600" />
+              <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Manual</span>
+            </div>
+          </div>
         </div>
       </header>
 
