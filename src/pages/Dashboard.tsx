@@ -26,6 +26,7 @@ export default function Dashboard() {
   
   const totalProfit = totalEvaluation - totalInvested;
   const totalProfitRate = totalInvested > 0 ? (totalProfit / totalInvested) * 100 : 0;
+  const profitStr = formatNumber(Math.abs(totalProfit));
 
   const totalAssets = totalCash + totalEvaluation;
   const cashRatio = totalAssets > 0 ? (totalCash / totalAssets) * 100 : 0;
@@ -73,9 +74,11 @@ export default function Dashboard() {
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-12">
               <div className="space-y-2">
                 <span className="font-light text-primary-500 uppercase tracking-[0.3em] ml-1">TOTAL ASSETS | 총 자산 가치</span>
-                <div className="font-black text-white tracking-tighter tabular-nums flex items-baseline gap-1">
-                  <span className="text-4xl font-black">₩</span>
-                  <span className="text-6xl font-black">{formatNumber(totalAssets)}</span>
+                <div className="font-black tracking-tighter tabular-nums flex items-baseline">
+                  <span className="text-3xl font-light text-gray-500 mr-3 opacity-50">₩</span>
+                  <span className="text-6xl font-black text-white">
+                    {formatNumber(totalAssets)}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600 font-bold uppercase tracking-widest ml-1">
                   <span className="w-2 h-2 rounded-full bg-gray-600" />
@@ -84,41 +87,45 @@ export default function Dashboard() {
               </div>
 
               <div className="flex flex-col sm:flex-row items-stretch gap-4 shrink-0">
-                <div className="bg-white/[0.03] backdrop-blur-3xl rounded-[28px] p-7 border border-white/10 min-w-[300px] shadow-2xl relative overflow-hidden group/card">
-                  {/* Card Highlight Effect */}
+                <div className="bg-white/[0.03] backdrop-blur-3xl rounded-[28px] p-7 border border-white/10 min-w-[300px] shadow-2xl relative overflow-hidden group/card @container">
+                
                   <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.02] to-white/[0.05] pointer-events-none" />
                   
                   <div className="relative z-10">
-                    <div className="flex items-center justify-between mb-5">
+                    <div className="flex items-start justify-between mb-8">
                       <div className="flex flex-col">
-                        <span className="font-semibold text-white/90 uppercase tracking-[0.2em]">평가손익</span>
-                        <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mt-0.5">Holdings P/L</span>
+                        <span className="text-xs text-gray-500 uppercase tracking-[0.1em]">Holdings P/L</span>
+                        <span className="text-xs text-gray-500 uppercase tracking-[0.2em] mt-0.5">평가손익</span>
                       </div>
                       <div className={cn(
-                        "p-2 rounded-xl transition-transform group-hover/card:scale-110 duration-500",
-                        totalProfit >= 0 ? "bg-danger/20 text-danger-light" : "bg-info/20 text-info-light"
-                      )}>
-                        {totalProfit >= 0 ? <TrendingUp size={32} strokeWidth={2.5} /> : <TrendingDown size={32} strokeWidth={2.5} />}
-                      </div>
-                    </div>
-                    
-                    <div className="font-black mb-3 tracking-tighter tabular-nums flex items-baseline">
-                      
-                      <span className="text-xl font-light text-gray-500 mr-2 opacity-50">₩</span>
-                      <span className="text-4xl font-black text-white">
-                        {formatNumber(Math.abs(totalProfit))}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div className={cn(
-                        "text-[12px] font-black px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 shadow-sm",
+                        "text-md font-black px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 shadow-sm backdrop-blur-md border border-white/5",
                         totalProfit >= 0 ? "bg-danger/20 text-danger-light" : "bg-info/20 text-info-light"
                       )}>
                         {totalProfit >= 0 ? '+' : ''}{totalProfitRate.toFixed(2)}%
                         <span className="opacity-40 font-bold ml-1 text-[9px]">ROI</span>
                       </div>
-                      <span className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">Live Static</span>
+                    </div>
+                    
+                    <div className="flex items-center gap-4">
+                      <div className={cn(
+                        "transition-all duration-500 shrink-0",
+                        totalProfit >= 0 ? "text-danger-light" : "text-info-light"
+                      )}>
+                        {totalProfit >= 0 ? <TrendingUp size={48} strokeWidth={2.5} className="w-[12cqi] h-[12cqi] min-w-[32px] max-w-[48px]" /> : <TrendingDown size={48} strokeWidth={2.5} className="w-[12cqi] h-[12cqi] min-w-[32px] max-w-[48px]" />}
+                      </div>
+                      
+                      <div className="flex flex-col min-w-0 flex-1">
+                        <div className="font-black tracking-tighter tabular-nums flex items-baseline leading-none">
+                          <span 
+                            className="text-white inline-block transition-all duration-300"
+                            style={{ 
+                              fontSize: `clamp(1rem, ${180 / (profitStr.length + 2)}cqi, 3.5rem)` 
+                            }}
+                          >
+                            {profitStr}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -128,15 +135,24 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mt-12 pt-10 border-t border-gray-800/40">
               <div className="space-y-2">
                 <span className="text-base font-black text-gray-600 uppercase tracking-widest">평가자산</span>
-                <p className="text-2xl font-black text-gray-100 tracking-tight tabular-nums">{formatCurrency(totalEvaluation)}</p>
+                <div className="flex items-baseline font-black tracking-tight tabular-nums">
+                  <span className="text-sm font-light text-gray-500 mr-2 opacity-50">₩</span>
+                  <p className="text-2xl text-gray-100">{formatNumber(totalEvaluation)}</p>
+                </div>
               </div>
               <div className="space-y-2">
                 <span className="text-base font-black text-gray-600 uppercase tracking-widest">총 예수금</span>
-                <p className="text-2xl font-black text-gray-100 tracking-tight tabular-nums">{formatCurrency(totalCash)}</p>
+                <div className="flex items-baseline font-black tracking-tight tabular-nums">
+                  <span className="text-sm font-light text-gray-500 mr-2 opacity-50">₩</span>
+                  <p className="text-2xl text-gray-100">{formatNumber(totalCash)}</p>
+                </div>
               </div>
               <div className="space-y-2">
                 <span className="text-base font-black text-gray-600 uppercase tracking-widest">투자비용</span>
-                <p className="text-2xl font-black text-gray-100 tracking-tight tabular-nums">{formatCurrency(totalInvested)}</p>
+                <div className="flex items-baseline font-black tracking-tight tabular-nums">
+                  <span className="text-sm font-light text-gray-500 mr-2 opacity-50">₩</span>
+                  <p className="text-2xl text-gray-100">{formatNumber(totalInvested)}</p>
+                </div>
               </div>
               <div className="space-y-2">
                 <span className="text-base font-black text-gray-600 uppercase tracking-widest">현금 비중</span>

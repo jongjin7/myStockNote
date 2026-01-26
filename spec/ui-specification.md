@@ -492,20 +492,21 @@ z-index: 1000
 │ TOTAL ASSETS | 총 자산 가치                                    │
 │                                                               │
 │ [L1: text-6xl, font-black, text-white]                        │
-│ ₩ 62,345,678                                                  │
-│ (₩ 기호는 text-4xl로 하향 조정하여 숫자 데이터 강조)              │
+│ ₩ (text-3xl, font-light, text-gray-500, opacity-50) 62,345,678 │
+│ (₩ 기호는 숫자의 6xl 대비 3단계 낮은 3xl로 조정하여 데이터 강조)    │
 │                                                               │
 │ [Live Indicator: text-sm, font-bold, text-gray-600]           │
 │ ● (text-gray-600) 자본 총합 (평가자산 + 총 예수금)               │
 │                                                               │
-│   ┌───────────────────────────────────────────────────────┐   │
-│   │ [Floating Card: Glassmorphism]                        │   │
-│   │ 평가손익 (Holdings P/L) [Trending Icon (32px)]         │   │
-│   │ (Label: font-semibold / Icon: Top-Right placement)    │   │
-│   │                                                       │   │
-│   │  ₩ (text-xl, font-light) 2,234,567 (text-4xl, black)  │   │
-│   │ [+4.5% ROI] (Badge: bg-danger/20, text-danger-light)  │   │
-│   └───────────────────────────────────────────────────────┘   │
+│   ┌───────────────────────────────────────────────────────────┐   │
+│   │ [Floating Card: Glassmorphism]                            │   │
+│   │ Holdings P/L (text-xs, gray-500)                          │   │
+│   │ 평가손익 (text-xs, gray-500) [ROI Badge: text-md]          │   │
+│   │                                                           │   │
+│   │ [Trending Icon] {Amount: Liquid Typography Scale}         │   │
+│   │ * Adaptive: fontSize: clamp(1rem, Dynamic Calc, 3.5rem)   │   │
+│   │ * Full display: Truncation prohibited for financial data   │   │
+│   └───────────────────────────────────────────────────────────┘   │
 │                                                               │
 │ ───────────────────────────────────────────────────────────── │
 │ 평가자산 (L4)       총 예수금 (L4)       투자비용 (L4)       현금 비중    │
