@@ -488,34 +488,36 @@ z-index: 1000
 
 구성 요소 및 위계 (Typography Depth):
 ┌───────────────────────────────────────────────────────────────┐
-│ [L4: text-base, font-black, text-gray-500]                    │
-│ TOTAL LIQUID CASH | 총 예수금                                  │
+│ [L4: text-base, font-black, text-primary-500]                 │
+│ TOTAL ASSETS | 총 자산 가치                                    │
 │                                                               │
 │ [L1: text-6xl, font-black, text-white]                        │
-│ ₩ 12,345,678                                                  │
+│ ₩ 62,345,678                                                  │
 │ (₩ 기호는 text-4xl로 하향 조정하여 숫자 데이터 강조)              │
 │                                                               │
-│ [Live Indicator: text-xs, font-bold, text-gray-600]           │
-│ ● 즉시 매수 가능한 자산 (Animate-pulse)                         │
+│ [Live Indicator: text-sm, font-bold, text-gray-600]           │
+│ ● (text-gray-600) 자본 총합 (평가자산 + 총 예수금)               │
 │                                                               │
 │   ┌───────────────────────────────────────────────────────┐   │
 │   │ [Floating Card: Glassmorphism]                        │   │
-│   │ 실현손익 (L4: text-base)                                │   │
-│   │ +₩ 1,234,567 (L3: text-3xl, font-black, text-white)   │   │
-│   │ [+10.5% ROI] (Badge: bg-danger/20, text-danger-light) │   │
+│   │ 평가손익 (Holdings P/L) [Trending Icon (32px)]         │   │
+│   │ (Label: font-semibold / Icon: Top-Right placement)    │   │
+│   │                                                       │   │
+│   │  ₩ (text-xl, font-light) 2,234,567 (text-4xl, black)  │   │
+│   │ [+4.5% ROI] (Badge: bg-danger/20, text-danger-light)  │   │
 │   └───────────────────────────────────────────────────────┘   │
 │                                                               │
 │ ───────────────────────────────────────────────────────────── │
-│ 평가자산 (L4)       투자비용 (L4)       계좌 (L4)                │
-│ ₩ 50,000,000      ₩ 48,000,000      12 Nodes                  │
-│ [text-2xl, font-black, text-gray-100]                         │
+│ 평가자산 (L4)       총 예수금 (L4)       투자비용 (L4)       현금 비중    │
+│ ₩ 50,000,000      ₩ 12,345,678      ₩ 48,000,000      19.7%       │
+│ [text-2xl, font-black, text-gray-100]                   [L3: 2xl] │
 └───────────────────────────────────────────────────────────────┘
 
 디자인 디테일:
-- 화폐 기호(₩) 분리: 가격 데이터보다 2단계 낮은 텍스트 사이즈 적용하여 데이터 본연의 크기 강조
+- 포트폴리오 센터: 가장 큰 지표(L1)를 총 자산 가치로 설정하여 전체 자산 규모를 한눈에 파악
+- 현금 비중 추가: 전략적 판단을 위한 핵심 지표(Cash Ratio)를 하단 요약 섹션의 마지막에 강조
+- 화폐 기호(₩) 분리: 가격 데이터보다 2단계 낮은 텍스트 사이즈 적용
 - Tabular Nums: 모든 금액 수치에 산술적 정렬을 위한 고정폭 폰트 적용
-- Glassmorphism: 실현손익 카드는 배경보다 한 층 떠 있는 느낌을 위해 더 강한 blur와 대비 적용
-- Interactive: 호버 시 Radial Glow가 마우스 방향을 따라 미세하게 이동 (Phase 2)
 ```
 
 #### 계좌별 예수금 섹션
