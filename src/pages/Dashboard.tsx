@@ -35,18 +35,7 @@ export default function Dashboard() {
   const watchlistCount = stocks.filter(s => s.status === 'WATCHLIST').length;
 
   return (
-    <div className="space-y-12 animate-fade-in max-w-6xl mx-auto">
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-4">
-        <div>
-          <h1 className="text-5xl font-black tracking-tighter text-white mb-3">
-            Stock<span className="text-primary-500 font-light italic">Note</span>
-          </h1>
-          <p className="text-xs font-black text-gray-500 uppercase tracking-[0.3em]">
-            Investment Decision Log
-          </p>
-        </div>
-
-      </header>
+    <div className="space-y-8 animate-fade-in max-w-6xl mx-auto">
 
       {/* Hero Stats Section */}
       <section className="relative">
@@ -83,11 +72,11 @@ export default function Dashboard() {
                         <span className="text-xs text-gray-500 uppercase tracking-[0.2em] mt-0.5">평가손익</span>
                       </div>
                       <div className={cn(
-                        "text-md font-black px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 shadow-sm backdrop-blur-md border border-white/5",
+                        "text-md font-black px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 shadow-sm backdrop-blur-md border border-white/5 font-num",
                         totalProfit >= 0 ? "bg-danger/20 text-danger-light" : "bg-info/20 text-info-light"
                       )}>
                         {totalProfit >= 0 ? '+' : ''}{totalProfitRate.toFixed(2)}%
-                        <span className="opacity-40 font-bold ml-1 text-[9px]">ROI</span>
+                        <span className="opacity-40 font-bold ml-1 text-[9px] font-sans">ROI</span>
                       </div>
                     </div>
                     
@@ -95,14 +84,16 @@ export default function Dashboard() {
                       <div className="font-black tracking-tighter tabular-nums flex items-baseline leading-none">
                         <span 
                           className={cn(
-                            "inline-block transition-all duration-300",
+                            "inline-block transition-all duration-300 font-num",
                             totalProfit >= 0 ? "text-white" : "text-info-light"
                           )}
                           style={{ 
                             fontSize: `clamp(1rem, ${180 / (profitStr.length + 3)}cqi, 3.5rem)` 
                           }}
                         >
-                          {totalProfit >= 0 ? '+' : '-'}{profitStr}
+                          {totalProfit >= 0 ? '+' : '-'}
+                          <span className="mx-2">{profitStr}</span>
+                          <span className="text-2xl mr-2 opacity-50">원</span>
                         </span>
                       </div>
                     </div>
@@ -121,26 +112,26 @@ export default function Dashboard() {
                 <span className="text-base font-black text-gray-600 uppercase tracking-widest">평가자산</span>
                 <div className="flex items-baseline font-black tracking-tight tabular-nums">
                   <span className="text-sm font-light text-gray-500 mr-2 opacity-50">₩</span>
-                  <p className="text-2xl text-gray-100">{formatNumber(totalEvaluation)}</p>
+                  <p className="text-2xl text-gray-100 font-num">{formatNumber(totalEvaluation)}</p>
                 </div>
               </div>
               <div className="space-y-2">
                 <span className="text-base font-black text-gray-600 uppercase tracking-widest">총 예수금</span>
                 <div className="flex items-baseline font-black tracking-tight tabular-nums">
                   <span className="text-sm font-light text-gray-500 mr-2 opacity-50">₩</span>
-                  <p className="text-2xl text-gray-100">{formatNumber(totalCash)}</p>
+                  <p className="text-2xl text-gray-100 font-num">{formatNumber(totalCash)}</p>
                 </div>
               </div>
               <div className="space-y-2">
                 <span className="text-base font-black text-gray-600 uppercase tracking-widest">투자비용</span>
                 <div className="flex items-baseline font-black tracking-tight tabular-nums">
                   <span className="text-sm font-light text-gray-500 mr-2 opacity-50">₩</span>
-                  <p className="text-2xl text-gray-100">{formatNumber(totalInvested)}</p>
+                  <p className="text-2xl text-gray-100 font-num">{formatNumber(totalInvested)}</p>
                 </div>
               </div>
               <div className="space-y-2">
                 <span className="text-base font-black text-gray-600 uppercase tracking-widest">현금 비중</span>
-                <p className="text-2xl font-black text-primary-400 tracking-tight tabular-nums">{cashRatio.toFixed(1)}%</p>
+                <p className="text-2xl font-black text-primary-400 tracking-tight tabular-nums font-num">{cashRatio.toFixed(1)}%</p>
               </div>
             </div>
           </div>
