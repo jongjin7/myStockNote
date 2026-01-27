@@ -1,6 +1,6 @@
-# 주식 노트 UI 상세 명세서 (UI Specification)
+# 주식 노트 UI 구현 가이드 (UI Implementation Guide)
 
-이 문서는 [PRD (MVP v2.0)](./prd.md)를 기반으로 각 화면의 UI 컴포넌트, 레이아웃, 인터랙션, 디자인 시스템을 상세히 정의한다.
+이 문서는 [PRD (MVP v2.0)](./prd.md)를 기반으로 프론트엔드 개발에 필요한 UI 컴포넌트, 레이아웃, 인터랙션, 디자인 시스템을 상세히 정의한다.
 
 ---
 
@@ -336,11 +336,11 @@ z-index: 1000
 #### Desktop Layout (1024px 이상)
 ```
 ┌─────────────────────────────────────────┐
-│  Header (고정, 64px)                     │
+│  Container (h-screen, overflow-hidden)   │
 ├──────────┬──────────────────────────────┤
 │          │                              │
 │ Sidebar  │  Main Content Area           │
-│ (240px)  │  (나머지 공간)                │
+│ (Fixed)  │  (Scrollable, overflow-auto) │
 │          │                              │
 │          │                              │
 └──────────┴──────────────────────────────┘
@@ -407,9 +407,15 @@ z-index: 1000
 
 #### Desktop Sidebar
 ```
-너비: 240px
+기본 너비: 288px (w-72)
+축소 너비: 80px (w-20)
 배경: var(--color-bg-secondary)
-패딩: var(--space-6)
+고정: h-full (sticky top-0) z-20
+
+기능:
+- 접기/펼치기 토글 버튼 (우측 상단, 호버 시 노출)
+- cursor-pointer 스타일 적용
+- overflow-visible (토글 버튼 잘림 방지)
 
 메뉴 구조:
 ┌─────────────────┐
@@ -422,19 +428,27 @@ z-index: 1000
 └─────────────────┘
 
 메뉴 아이템:
-- 높이: 44px
-- 패딩: var(--space-3) var(--space-4)
-- 둥근 모서리: var(--radius-md)
-- 폰트: var(--text-base), var(--font-medium)
+- 높이: 48px (py-4)
+- 패딩: 
+  - 기본: px-5
+  - 축소: px-0 justify-center
+- 둥근 모서리: var(--radius-2xl)
+- 폰트: var(--text-sm), var(--font-bold)
 
 활성 상태:
-- 배경: var(--color-primary-500)
+- 배경: var(--color-gray-900)
+- 테두리: 1px solid var(--color-gray-800)
 - 텍스트: white
-- 아이콘: white
+- 아이콘: var(--color-primary-500) scale-110
 
 비활성 상태:
-- 텍스트: var(--color-gray-700)
-- 호버: 배경 var(--color-gray-200)
+- 텍스트: var(--color-gray-500)
+- 호버: 텍스트 var(--color-gray-200), 배경 var(--color-gray-900/60)
+
+축소 상태 (Collapsed):
+- 로고: "SN" 심볼만 표시
+- 메뉴: 아이콘만 표시 (텍스트 숨김)
+- 하단 정보: 동기화 상태 등 숨김, 아이콘만 간략 표시
 ```
 
 #### Mobile Bottom Navigation

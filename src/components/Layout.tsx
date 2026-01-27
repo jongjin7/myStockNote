@@ -24,7 +24,7 @@ export default function Layout() {
       <nav 
         className={cn(
           "hidden md:flex flex-col border-r border-gray-800/50 bg-gray-950 h-full overflow-visible transition-all duration-300 ease-in-out relative z-20 group/sidebar",
-          isCollapsed ? "w-20" : "w-72"
+          isCollapsed ? "w-20" : "w-56"
         )}
       >
         {/* Toggle Button */}
@@ -37,16 +37,43 @@ export default function Layout() {
 
         {/* Logo */}
         <div className={cn("flex items-center gap-4 py-8 transition-all duration-300", isCollapsed ? "px-4 justify-center" : "px-8")}>
-          <div className="w-10 h-10 bg-gradient-to-tr from-primary-600 to-primary-400 rounded-2xl flex-shrink-0 flex items-center justify-center font-black text-white shadow-2xl shadow-primary-500/20 transform hover:rotate-3 transition-transform">
-            SN
-          </div>
-          {!isCollapsed && (
-            <div className="overflow-hidden whitespace-nowrap opacity-100 transition-opacity duration-300">
-              <span className="text-2xl font-bold tracking-tighter text-white block">StockNote</span>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mt-1">Investment Log</p>
-            </div>
-          )}
+          <Link to="/" className="cursor-pointer block">
+            {isCollapsed ? (
+              <div className="w-10 h-10 bg-gradient-to-tr from-primary-600 to-primary-400 rounded-2xl flex-shrink-0 flex items-center justify-center font-black text-white shadow-2xl shadow-primary-500/20 transform hover:rotate-3 transition-transform">
+                SN
+              </div>
+            ) : (
+              <img 
+                src="/logo_full.png" 
+                alt="StockNote" 
+                className="h-12 w-auto object-contain transition-all duration-300" 
+              />
+            )}
+          </Link>
         </div>
+
+        {/* Snapshot Badge */}
+        {/* Snapshot Badge */}
+        {!isCollapsed && (
+          <div className="px-5 mb-6 animate-fade-in transition-all duration-300 select-none cursor-default">
+            <div className="flex items-center justify-between gap-3 bg-gray-950/30 border border-dashed border-gray-800/60 px-4 py-3 rounded-lg">
+              <div className="flex flex-col items-end gap-0.5">
+                <span className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em] leading-none">Snapshot</span>
+                <span className="text-[10px] font-bold text-gray-400 tabular-nums uppercase tracking-widest leading-none mt-1">
+                  {new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}
+                </span>
+              </div>
+              <div className="w-[1px] h-6 bg-gray-800/50" />
+              <div className="flex flex-col items-start gap-0.5">
+                <span className="text-[9px] font-black text-gray-600 uppercase tracking-[0.2em] leading-none">Update</span>
+                <div className="flex items-center gap-1.5 leading-none mt-1">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary-500/80" />
+                  <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Live</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Main Navigation */}
         <div className="flex-1 px-3 py-4 space-y-2 overflow-y-auto custom-scrollbar overflow-x-hidden">
