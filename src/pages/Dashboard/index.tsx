@@ -31,7 +31,7 @@ export default function Dashboard() {
   const recentMemos = [...memos].sort((a: StockMemo, b: StockMemo) => b.updatedAt - a.updatedAt).slice(0, 3);
 
   return (
-    <div className="space-y-8 animate-fade-in max-w-7xl mx-auto">
+    <div className="space-y-12 animate-fade-in max-w-7xl mx-auto">
       {/* Hero Stats Section */}
       <HeroStats 
         totalAssets={totalAssets}
@@ -42,11 +42,6 @@ export default function Dashboard() {
         totalProfit={totalProfit}
         totalProfitRate={totalProfitRate}
         profitStr={profitStr}
-      />
-
-      {/* Grid Quick Stats */}
-      <QuickStats 
-        memosCount={memos.length}
       />
 
       {/* Portfolio & Watchlist Section */}
