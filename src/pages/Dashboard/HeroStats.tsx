@@ -80,7 +80,7 @@ export function HeroStats({
                             : 'clamp(1.25rem, 4vw, 1.875rem)' // 매우 긴 숫자: 매우 작게
                         }}
                       >
-                        <span className='relative -top-1'>{totalProfit >= 0 ? '+' : '-'} </span>
+                        <span className='relative -top-[0.05em]'>{totalProfit >= 0 ? '+' : '-'} </span>
                         <span 
                           className={cn(
                             "font-bold",
