@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Wallet, Bookmark, Settings, Download, RefreshCcw } from 'lucide-react';
+import { LayoutDashboard, Wallet, Bookmark, Settings, Download, RefreshCcw, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 export default function Layout() {
   const location = useLocation();
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const navItems = [
     { path: '/', icon: LayoutDashboard, label: '대시보드' },
@@ -17,23 +19,42 @@ export default function Layout() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100 flex flex-col md:flex-row font-sans selection:bg-primary-500/30 selection:text-white">
+    <div className="h-screen bg-gray-950 text-gray-100 flex flex-col md:flex-row font-sans selection:bg-primary-500/30 selection:text-white overflow-hidden">
       {/* Sidebar Navigation (Desktop) */}
-      <nav className="hidden md:flex flex-col w-72 border-r border-gray-800/50 bg-gray-950 sticky top-0 h-screen overflow-hidden">
+      <nav 
+        className={cn(
+          "hidden md:flex flex-col border-r border-gray-800/50 bg-gray-950 h-full overflow-visible transition-all duration-300 ease-in-out relative z-20 group/sidebar",
+          isCollapsed ? "w-20" : "w-72"
+        )}
+      >
+        {/* Toggle Button */}
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="absolute -right-3 top-10 bg-gray-900 border border-gray-800 text-gray-400 p-1 rounded-full hover:text-white hover:bg-gray-800 transition-colors z-50 opacity-0 group-hover/sidebar:opacity-100 focus:opacity-100 cursor-pointer"
+        >
+          {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+        </button>
+
         {/* Logo */}
-        <div className="flex items-center gap-4 px-8 py-10">
-          <div className="w-12 h-12 bg-gradient-to-tr from-primary-600 to-primary-400 rounded-2xl flex items-center justify-center font-black text-white shadow-2xl shadow-primary-500/20 transform hover:rotate-3 transition-transform">
+        <div className={cn("flex items-center gap-4 py-8 transition-all duration-300", isCollapsed ? "px-4 justify-center" : "px-8")}>
+          <div className="w-10 h-10 bg-gradient-to-tr from-primary-600 to-primary-400 rounded-2xl flex-shrink-0 flex items-center justify-center font-black text-white shadow-2xl shadow-primary-500/20 transform hover:rotate-3 transition-transform">
             SN
           </div>
-          <div>
-            <span className="text-2xl font-bold tracking-tighter text-white">StockNote</span>
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mt-1">Investment Log</p>
-          </div>
+          {!isCollapsed && (
+            <div className="overflow-hidden whitespace-nowrap opacity-100 transition-opacity duration-300">
+              <span className="text-2xl font-bold tracking-tighter text-white block">StockNote</span>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mt-1">Investment Log</p>
+            </div>
+          )}
         </div>
 
         {/* Main Navigation */}
-        <div className="flex-1 px-6 py-4 space-y-2 overflow-y-auto custom-scrollbar">
-          <div className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-600 px-4 mb-4">Main Menu</div>
+        <div className="flex-1 px-3 py-4 space-y-2 overflow-y-auto custom-scrollbar overflow-x-hidden">
+          {!isCollapsed && (
+            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-600 px-7 mb-4 whitespace-nowrap transition-opacity duration-300">
+              Main Menu
+            </div>
+          )}
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (
@@ -41,28 +62,35 @@ export default function Layout() {
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-300 group relative overflow-hidden",
+                  "flex items-center gap-4 py-4 rounded-2xl transition-all duration-300 group relative overflow-hidden",
                   isActive
                     ? "bg-gray-900 border border-gray-800 text-primary-400 shadow-lg shadow-black/20"
-                    : "text-gray-500 hover:text-gray-200 hover:bg-gray-900/60"
+                    : "text-gray-500 hover:text-gray-200 hover:bg-gray-900/60",
+                  isCollapsed ? "justify-center px-0" : "px-5"
                 )}
+                title={isCollapsed ? item.label : undefined}
               >
-                {isActive && (
+                {isActive && !isCollapsed && (
                   <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-primary-500 rounded-r-full shadow-[0_0_10px_rgba(59,130,246,1)]" />
                 )}
                 
                 <item.icon 
                   size={20} 
                   className={cn(
-                    "transition-all duration-300",
+                    "transition-all duration-300 flex-shrink-0",
                     isActive 
                       ? "text-primary-500 scale-110" 
                       : "text-gray-600 group-hover:scale-110"
                   )} 
                 />
-                <span className={cn("font-bold text-sm tracking-tight", isActive ? "text-white" : "")}>{item.label}</span>
                 
-                {isActive && (
+                {!isCollapsed && (
+                  <span className={cn("font-bold text-sm tracking-tight whitespace-nowrap overflow-hidden transition-all duration-300", isActive ? "text-white" : "")}>
+                    {item.label}
+                  </span>
+                )}
+                
+                {isActive && !isCollapsed && (
                   <div className="ml-auto w-1.5 h-1.5 rounded-full bg-primary-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]" />
                 )}
               </Link>
@@ -71,35 +99,51 @@ export default function Layout() {
         </div>
 
         {/* Bottom Navigation */}
-        <div className="px-6 pb-6 space-y-2">
-          <div className="h-px bg-gradient-to-r from-transparent via-gray-800 to-transparent mb-6" />
-          {bottomNavItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={cn(
-                "flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all duration-300 group",
-                location.pathname === item.path
-                  ? "bg-gray-900 text-primary-400 shadow-md"
-                  : "text-gray-600 hover:text-gray-300 hover:bg-gray-900/40"
-              )}
-            >
-              <item.icon size={18} className="flex-shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" />
-              <span className="text-xs font-bold tracking-tight">{item.label}</span>
-            </Link>
-          ))}
+        <div className="px-3 pb-6 space-y-2">
+          <div className="h-px bg-gradient-to-r from-transparent via-gray-800 to-transparent mb-6 mx-2" />
+          {bottomNavItems.map((item) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={cn(
+                  "flex items-center gap-4 py-3.5 rounded-2xl transition-all duration-300 group overflow-hidden",
+                  isActive 
+                    ? "bg-gray-900 text-primary-400 shadow-md"
+                    : "text-gray-600 hover:text-gray-300 hover:bg-gray-900/40",
+                  isCollapsed ? "justify-center px-0" : "px-5"
+                )}
+                title={isCollapsed ? item.label : undefined}
+              >
+                <item.icon size={18} className="flex-shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" />
+                {!isCollapsed && (
+                  <span className="text-xs font-bold tracking-tight whitespace-nowrap transition-all duration-300">{item.label}</span>
+                )}
+              </Link>
+            );
+          })}
 
           {/* Sync Status Card */}
-          <div className="mt-8 p-5 bg-gray-900/50 rounded-2xl border border-gray-800/30 group cursor-default">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-[10px] font-black uppercase tracking-[0.15em] text-gray-600">Sync Status</span>
-              <RefreshCcw size={14} className="text-gray-700 animate-spin-slow group-hover:text-primary-500 transition-colors" />
-            </div>
-            <div>
-              <p className="text-xs font-bold text-gray-300 mb-1">Local Storage Database</p>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-success shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                <span className="text-[10px] font-mono text-gray-500">Last: {new Date().toLocaleTimeString()}</span>
+          <div className={cn(
+            "mt-8 bg-gray-900/50 rounded-2xl border border-gray-800/30 group cursor-default transition-all duration-300 overflow-hidden",
+            isCollapsed ? "p-2 mx-auto w-10 h-10 flex items-center justify-center hover:w-full hover:p-5 hover:h-auto absolute bottom-6 left-0 right-0 mx-4 z-10 backdrop-blur-md" : "p-5"
+          )}>
+            {isCollapsed ? (
+              <RefreshCcw size={14} className="text-gray-700 animate-spin-slow group-hover:hidden" />
+            ) : null}
+            
+            <div className={cn(isCollapsed ? "hidden group-hover:block" : "block")}>
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-[10px] font-black uppercase tracking-[0.15em] text-gray-600">Sync Status</span>
+                <RefreshCcw size={14} className="text-gray-700 animate-spin-slow group-hover:text-primary-500 transition-colors" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-gray-300 mb-1 whitespace-nowrap">Local Storage Database</p>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-success shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                  <span className="text-[10px] font-mono text-gray-500 whitespace-nowrap">Last: {new Date().toLocaleTimeString()}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -114,7 +158,7 @@ export default function Layout() {
           </div>
           <span className="text-xl font-bold tracking-tight text-white">StockNote</span>
         </div>
-        <button className="p-3 bg-gray-900 rounded-xl hover:bg-gray-800 transition-colors">
+        <button className="p-3 bg-gray-900 rounded-xl hover:bg-gray-800 transition-colors cursor-pointer">
           <Settings size={20} className="text-gray-400" />
         </button>
       </nav>
