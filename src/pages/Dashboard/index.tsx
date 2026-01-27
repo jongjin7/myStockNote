@@ -29,10 +29,9 @@ export default function Dashboard() {
   const cashRatio = totalAssets > 0 ? (totalCash / totalAssets) * 100 : 0;
 
   const recentMemos = [...memos].sort((a: StockMemo, b: StockMemo) => b.updatedAt - a.updatedAt).slice(0, 3);
-  const watchlistCount = stocks.filter(s => s.status === 'WATCHLIST').length;
 
   return (
-    <div className="space-y-8 animate-fade-in max-w-6xl mx-auto">
+    <div className="space-y-8 animate-fade-in max-w-7xl mx-auto">
       {/* Hero Stats Section */}
       <HeroStats 
         totalAssets={totalAssets}
@@ -47,24 +46,21 @@ export default function Dashboard() {
 
       {/* Grid Quick Stats */}
       <QuickStats 
-        holdingStocksCount={holdingStocks.length}
         memosCount={memos.length}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
-        {/* Holding Stocks Section */}
-        <PortfolioSection 
-          holdingStocks={holdingStocks}
-          memos={memos}
-          watchlistCount={watchlistCount}
-        />
+      {/* Portfolio & Watchlist Section */}
+      <PortfolioSection 
+        holdingStocks={holdingStocks}
+        watchlistStocks={stocks.filter(s => s.status === 'WATCHLIST')}
+        memos={memos}
+      />
 
-        {/* Recent Memos Section */}
-        <RecentMemosSection 
-          recentMemos={recentMemos}
-          stocks={stocks}
-        />
-      </div>
+      {/* Recent Memos Section */}
+      <RecentMemosSection 
+        recentMemos={recentMemos}
+        stocks={stocks}
+      />
     </div>
   );
 }

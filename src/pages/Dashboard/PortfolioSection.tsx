@@ -1,4 +1,4 @@
-import { ChevronRight, PlusCircle, Target } from 'lucide-react';
+import { PlusCircle, Target, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Card, Badge, Button } from '../../components/ui';
 import { cn, formatCurrency } from '../../lib/utils';
@@ -77,46 +77,115 @@ function StockListItem({ stock, memos }: StockListItemProps) {
 
 interface PortfolioSectionProps {
   holdingStocks: Stock[];
+  watchlistStocks: Stock[];
   memos: StockMemo[];
-  watchlistCount: number;
 }
 
-export function PortfolioSection({ holdingStocks, memos, watchlistCount }: PortfolioSectionProps) {
+export function PortfolioSection({ holdingStocks, watchlistStocks, memos }: PortfolioSectionProps) {
   return (
-    <section className="lg:col-span-3 space-y-8">
-      <div className="flex items-center justify-between px-2">
-        <div className="flex items-center gap-4">
-          <h2 className="text-3xl font-black tracking-tight">주요 포트폴리오</h2>
-          <div className="px-3 py-1 bg-gray-900 border border-gray-800 rounded-full text-[10px] font-black text-gray-500 uppercase tracking-widest font-num">
-            {holdingStocks.length} ITEMS
+    <section className="lg:col-span-3">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* 포트폴리오 섹션 (좌측) */}
+        <Card className="p-10 border-gray-800/50 bg-gray-900/20 backdrop-blur-sm">
+          {/* 섹션 타이틀 */}
+          <div className="flex items-center gap-4 mb-10">
+            <h2 className="text-3xl font-black tracking-tight bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+              Portfolio
+            </h2>
+            <span className="text-lg text-gray-600 font-bold">|</span>
+            <span className="text-xl font-bold text-gray-500 tracking-tight">포트폴리오</span>
           </div>
-        </div>
-        <Link to="/watchlist" className="group text-xs font-black text-primary-500 hover:text-primary-400 flex items-center transition-all uppercase tracking-widest">
-          관심 종목 리스트 ({watchlistCount})
-          <ChevronRight size={14} className="ml-1 group-hover:translate-x-1 transition-transform" />
-        </Link>
-      </div>
-      
-      <div className="space-y-5">
-        {holdingStocks.length > 0 ? (
-          holdingStocks.map((stock) => (
-            <StockListItem key={stock.id} stock={stock} memos={memos} />
-          ))
-        ) : (
-          <div className="bg-gray-950/20 border-2 border-dashed border-gray-800/50 rounded-[32px] p-20 text-center">
-            <div className="mb-8 inline-flex p-8 bg-gray-900/50 rounded-full text-gray-700 shadow-inner">
-              <PlusCircle size={64} />
+
+          <div className="space-y-8">
+            {/* 운용 종목 통계 카드 */}
+            <Card className="p-6 border-gray-800/50 bg-gray-900/30 group overflow-hidden relative">
+              <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+                <TrendingUp size={80} />
+              </div>
+              <div className="relative z-10">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-3 bg-success/10 text-success rounded-xl">
+                    <TrendingUp size={20} />
+                  </div>
+                  <div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Holdings</div>
+                    <div className="text-2xl text-white tracking-tighter tabular-nums font-bold">
+                      {holdingStocks.length} <span className="text-sm text-gray-500">종목</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            {/* 보유 종목 리스트 */}
+            <div className="relative">
+              {/* 구분선 및 타이틀 */}
+              <div className="flex items-center gap-3 mb-6">
+                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-gray-800 to-transparent"></div>
+                <h3 className="text-sm font-black tracking-tight text-gray-400 uppercase">
+                  Holdings
+                </h3>
+                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-gray-800 to-transparent"></div>
+              </div>
+              
+              <div className="space-y-4">
+              {holdingStocks.length > 0 ? (
+                holdingStocks.map((stock) => (
+                  <StockListItem key={stock.id} stock={stock} memos={memos} />
+                ))
+              ) : (
+                <div className="bg-gray-950/20 border-2 border-dashed border-gray-800/50 rounded-2xl p-12 text-center">
+                  <div className="mb-6 inline-flex p-6 bg-gray-900/50 rounded-full text-gray-700 shadow-inner">
+                    <PlusCircle size={48} />
+                  </div>
+                  <h3 className="text-xl font-black text-gray-400 mb-2 tracking-tight">Empty</h3>
+                  <p className="text-gray-600 text-xs font-medium">종목을 추가해 보세요</p>
+                </div>
+              )}
+              </div>
             </div>
-            <h3 className="text-2xl font-black text-gray-400 mb-3 tracking-tight">Empty Portfolio</h3>
-            <p className="text-gray-600 mb-10 max-w-xs mx-auto text-sm font-medium leading-relaxed">준비된 자산이 없습니다. 계좌를 등록하고 첫 번째 투자 종목을 추가해 보세요.</p>
-            <Link to="/accounts">
-              <Button size="lg" className="shadow-2xl shadow-primary-500/30 px-12 h-14 rounded-2xl font-black">
-                <PlusCircle size={20} className="mr-3" />
-                <span>Get Started</span>
-              </Button>
-            </Link>
           </div>
-        )}
+        </Card>
+
+        {/* 관심 종목 섹션 (우측) */}
+        <Card className="p-10 border-gray-800/50 bg-gray-900/20 backdrop-blur-sm">
+          {/* 섹션 타이틀 */}
+          <div className="flex items-center gap-4 mb-10">
+            <h2 className="text-3xl font-black tracking-tight bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
+              Watchlist
+            </h2>
+            <span className="text-lg text-gray-600 font-bold">|</span>
+            <span className="text-xl font-bold text-gray-500 tracking-tight">관심 종목</span>
+          </div>
+
+          <div className="space-y-8">
+            {/* 관심 종목 통계 */}
+            <div className="flex items-center gap-3 p-5 bg-primary-500/5 border border-primary-500/20 rounded-xl">
+              <div className="text-xs text-gray-500 uppercase tracking-wider">Total</div>
+              <div className="px-2.5 py-1 bg-primary-500/10 border border-primary-500/30 rounded-lg">
+                <span className="text-lg font-black text-primary-400 font-num">{watchlistStocks.length}</span>
+                <span className="text-xs text-gray-500 ml-1">종목</span>
+              </div>
+            </div>
+
+            {/* 관심 종목 리스트 */}
+            {watchlistStocks.length > 0 ? (
+              <div className="space-y-4">
+                {watchlistStocks.map((stock) => (
+                  <StockListItem key={stock.id} stock={stock} memos={memos} />
+                ))}
+              </div>
+            ) : (
+              <div className="bg-gray-950/20 border-2 border-dashed border-primary-500/20 rounded-2xl p-12 text-center">
+                <div className="mb-6 inline-flex p-6 bg-primary-500/5 rounded-full text-primary-700 shadow-inner">
+                  <PlusCircle size={48} />
+                </div>
+                <h3 className="text-xl font-black text-gray-400 mb-2 tracking-tight">Empty</h3>
+                <p className="text-gray-600 text-xs font-medium">관심 종목을 추가해 보세요</p>
+              </div>
+            )}
+          </div>
+        </Card>
       </div>
     </section>
   );
