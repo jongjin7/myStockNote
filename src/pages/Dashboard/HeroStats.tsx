@@ -32,15 +32,15 @@ export function HeroStats({
         <div className="relative z-10">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-12">
             <div className="space-y-2">
-              <span className="text-primary-500 uppercase tracking-[0.3em] ml-1 text-sm font-black">PORTFOLIO VALUE | 포트폴리오 총 자산</span>
-              <div className="font-black tracking-tighter tabular-nums flex items-baseline mt-1">
-                <span className="text-3xl font-light text-gray-500 mr-3 opacity-30">₩</span>
-                <span className="text-6xl font-black text-white tracking-tight">
+              <span className="text-primary-500 uppercase tracking-[0.3em] ml-1 text-sm">PORTFOLIO VALUE | 포트폴리오 총 자산</span>
+              <div className="font-black tracking-tighter tabular-nums flex items-baseline gap-2 text-white">
+                <span className="text-3xl font-light">₩</span>
+                <span className="text-6xl font-bold  tracking-tight">
                   {formatNumber(totalAssets)}
                 </span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-gray-500 font-bold uppercase tracking-widest ml-1 opacity-70">
-                <span className="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse" />
+              <div className="flex items-center gap-2 text-sm text-gray-500 tracking-widest ml-1 opacity-70">
+                <span className="w-1.5 h-1.5 rounded-full bg-gray-500 animate-pulse" />
                 실시간 자본 총합 (평가자산 + 총 예수금)
               </div>
             </div>
@@ -64,15 +64,15 @@ export function HeroStats({
                   </div>
                   
                   <div className="mt-2 flex flex-col min-w-0">
-                    <div className="font-black tracking-tighter tabular-nums flex items-baseline leading-none text-white">
+                    <div className="tracking-tighter tabular-nums flex items-baseline leading-none">
                       <span className={cn(
-                        "inline-block transition-all duration-300 font-num",
+                        "flex items-center gap-1 text-6xl transition-all duration-300",
                         totalProfit >= 0 ? "text-white" : "text-info-light"
-                      )}
-                      style={{ fontSize: '2.5rem' }}>
-                        {totalProfit >= 0 ? '+' : '-'}{profitStr}
+                      )}>
+                        <span className='relative -top-1'>{totalProfit >= 0 ? '+' : '-'} </span>
+                        <span className='font-bold '>{profitStr}</span>
                       </span>
-                      <span className="text-xl ml-2 opacity-40 font-bold">원</span>
+                      <span className="text-2xl opacity-40 ml-2 ">원</span>
                     </div>
                   </div>
 

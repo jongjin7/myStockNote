@@ -10,10 +10,10 @@ interface SummaryStatProps {
 export function SummaryStat({ label, value, prefix, valueClassName }: SummaryStatProps) {
   return (
     <div className="space-y-2">
-      <span className="text-gray-500 uppercase tracking-widest text-[11px] font-bold">{label}</span>
+      <span className="text-gray-500 uppercase tracking-widest ">{label}</span>
       <div className="flex items-baseline font-black tracking-tight tabular-nums mt-1">
-        {prefix && <span className="text-xs font-light text-gray-600 mr-2 opacity-50">{prefix}</span>}
-        <p className={cn("text-2xl text-gray-100 font-num", valueClassName)}>
+        {prefix && <span className="relative -top-0.5 text-sm font-light mr-2">{prefix}</span>}
+        <p className={cn("text-3xl text-gray-100 font-num", valueClassName)}>
           {typeof value === 'number' ? formatNumber(value) : value}
         </p>
       </div>

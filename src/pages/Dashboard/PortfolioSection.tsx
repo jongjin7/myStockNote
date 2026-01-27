@@ -86,7 +86,7 @@ export function PortfolioSection({ holdingStocks, memos, watchlistCount }: Portf
     <section className="lg:col-span-3 space-y-8">
       <div className="flex items-center justify-between px-2">
         <div className="flex items-center gap-4">
-          <h2 className="text-3xl font-black text-white tracking-tight">주요 포트폴리오</h2>
+          <h2 className="text-3xl font-black tracking-tight">주요 포트폴리오</h2>
           <div className="px-3 py-1 bg-gray-900 border border-gray-800 rounded-full text-[10px] font-black text-gray-500 uppercase tracking-widest font-num">
             {holdingStocks.length} ITEMS
           </div>
