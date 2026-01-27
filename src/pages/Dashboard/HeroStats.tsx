@@ -65,14 +65,32 @@ export function HeroStats({
                   
                   <div className="mt-2 flex flex-col min-w-0">
                     <div className="tracking-tighter tabular-nums flex items-baseline leading-none">
-                      <span className={cn(
-                        "flex items-center gap-1 text-6xl transition-all duration-300",
-                        totalProfit >= 0 ? "text-white" : "text-info-light"
-                      )}>
+                      <span 
+                        className={cn(
+                          "flex items-center gap-1 transition-all duration-300",
+                          totalProfit >= 0 ? "text-white" : "text-info-light"
+                        )}
+                        style={{ 
+                          fontSize: profitStr.length <= 4 
+                            ? 'clamp(2.5rem, 8vw, 3.75rem)'  // 짧은 숫자: 크게
+                            : profitStr.length <= 7 
+                            ? 'clamp(2rem, 6vw, 3rem)'        // 중간 숫자: 보통
+                            : profitStr.length <= 10
+                            ? 'clamp(1.5rem, 5vw, 2.25rem)'   // 긴 숫자: 작게
+                            : 'clamp(1.25rem, 4vw, 1.875rem)' // 매우 긴 숫자: 매우 작게
+                        }}
+                      >
                         <span className='relative -top-1'>{totalProfit >= 0 ? '+' : '-'} </span>
-                        <span className='font-bold '>{profitStr}</span>
+                        <span 
+                          className={cn(
+                            "font-bold",
+                            totalProfit >= 0 ? "text-white" : "text-info-light"
+                          )}
+                        >
+                          {profitStr}
+                        </span>
                       </span>
-                      <span className="text-2xl opacity-40 ml-2 ">원</span>
+                      <span className="text-2xl opacity-40 ml-2">원</span>
                     </div>
                   </div>
 
