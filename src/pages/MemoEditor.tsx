@@ -179,8 +179,8 @@ export default function MemoEditor() {
                   <h3 className={cn("font-bold", type === item.id ? "text-white" : "text-gray-400")}>
                     {item.label}
                   </h3>
-                  <p className="text-[10px] text-gray-600 font-medium uppercase tracking-widest mt-0.5">
-                    {item.id} Record
+                  <p className="text-[10px] text-gray-600 font-medium uppercase tracking-widest mt-0.5 font-num">
+                    {item.id} RECORD
                   </p>
                 </div>
                 {type === item.id && (
@@ -272,8 +272,8 @@ export default function MemoEditor() {
               <ImageIcon size={18} className="mr-2 text-primary-500" />
               리서치 자료 아카이빙 (최대 5개)
             </label>
-            <div className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">
-              {(memoAttachments.length + newAttachments.length)} / 5 files
+            <div className="text-[10px] font-bold text-gray-600 uppercase tracking-widest font-num">
+              {(memoAttachments.length + newAttachments.length)} / 5 FILES
             </div>
           </div>
 
@@ -307,8 +307,8 @@ export default function MemoEditor() {
                   src={att.data} 
                   className="w-full h-full object-cover rounded-2xl border border-primary-500 shadow-xl"
                 />
-                <div className="absolute top-2 left-2 px-2 py-0.5 bg-primary-500 text-[8px] font-bold text-white rounded uppercase tracking-widest shadow-lg">
-                  New
+                <div className="absolute top-2 left-2 px-2 py-0.5 bg-primary-500 text-[8px] font-black text-white rounded uppercase tracking-widest shadow-lg">
+                  NEW | 신규
                 </div>
                 <button 
                   type="button"
@@ -328,7 +328,7 @@ export default function MemoEditor() {
                 className="aspect-square bg-gray-900/20 border-2 border-dashed border-gray-800 hover:border-primary-500 hover:bg-primary-500/5 rounded-2xl flex flex-col items-center justify-center text-gray-700 hover:text-primary-500 transition-all group"
               >
                 <Plus size={32} className="mb-3 group-hover:scale-110 group-hover:rotate-90 transition-all duration-300" />
-                <span className="text-[10px] font-bold uppercase tracking-widest">Image Upload</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest">이미지 업로드</span>
               </button>
             )}
             <input 

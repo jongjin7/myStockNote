@@ -53,22 +53,21 @@ export default function Layout() {
         </div>
 
         {/* Snapshot Badge */}
-        {/* Snapshot Badge */}
         {!isCollapsed && (
           <div className="px-5 mb-6 animate-fade-in transition-all duration-300 select-none cursor-default">
-            <div className="flex items-center justify-between gap-3 bg-gray-950/30 border border-dashed border-gray-800/60 px-4 py-3 rounded-lg">
+            <div className="flex items-center justify-between gap-3 bg-gray-950/30 border border-dashed border-gray-800/60 px-4 py-3 rounded-lg font-num">
               <div className="flex flex-col items-end gap-0.5">
-                <span className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em] leading-none">Snapshot</span>
+                <span className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em] leading-none">SNAPSHOT | 스냅샷</span>
                 <span className="text-[10px] font-bold text-gray-400 tabular-nums uppercase tracking-widest leading-none mt-1">
-                  {new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}
+                  {new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'short', day: '2-digit' })}
                 </span>
               </div>
               <div className="w-[1px] h-6 bg-gray-800/50" />
               <div className="flex flex-col items-start gap-0.5">
-                <span className="text-[9px] font-black text-gray-600 uppercase tracking-[0.2em] leading-none">Update</span>
+                <span className="text-[9px] font-black text-gray-600 uppercase tracking-[0.2em] leading-none">UPDATE | 업데이트</span>
                 <div className="flex items-center gap-1.5 leading-none mt-1">
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary-500/80" />
-                  <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Live</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary-500/80 animate-pulse" />
+                  <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">LIVE | 활성</span>
                 </div>
               </div>
             </div>
@@ -78,8 +77,8 @@ export default function Layout() {
         {/* Main Navigation */}
         <div className="flex-1 px-3 py-4 space-y-2 overflow-y-auto custom-scrollbar overflow-x-hidden">
           {!isCollapsed && (
-            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-600 px-7 mb-4 whitespace-nowrap transition-opacity duration-300">
-              Main Menu
+            <div className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-600 px-7 mb-4 whitespace-nowrap transition-opacity duration-300">
+              메뉴 목록
             </div>
           )}
           {navItems.map((item) => {
@@ -162,14 +161,14 @@ export default function Layout() {
             
             <div className={cn(isCollapsed ? "hidden group-hover:block" : "block")}>
               <div className="flex items-center justify-between mb-3">
-                <span className="text-[10px] font-black uppercase tracking-[0.15em] text-gray-600">Sync Status</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.15em] text-gray-600">SYNC STATUS | 동기화</span>
                 <RefreshCcw size={14} className="text-gray-700 animate-spin-slow group-hover:text-primary-500 transition-colors" />
               </div>
-              <div>
-                <p className="text-xs font-bold text-gray-300 mb-1 whitespace-nowrap">Local Storage Database</p>
+              <div className="font-num">
+                <p className="text-[11px] font-bold text-gray-300 mb-1 whitespace-nowrap">DATABASE | 로컬 저장소</p>
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-success shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                  <span className="text-[10px] font-mono text-gray-500 whitespace-nowrap">Last: {new Date().toLocaleTimeString()}</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-success shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                  <span className="text-[9px] font-mono text-gray-500 whitespace-nowrap uppercase tracking-tighter">최근: {new Date().toLocaleTimeString('ko-KR')}</span>
                 </div>
               </div>
             </div>

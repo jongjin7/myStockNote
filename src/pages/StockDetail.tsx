@@ -183,7 +183,7 @@ export default function StockDetail() {
           <Card className="border-primary-500/10 bg-primary-500/5 p-8 space-y-6">
             <h3 className="text-xs font-bold text-primary-400 flex items-center uppercase tracking-widest">
               <Bookmark size={14} className="mr-2" />
-              Quick Actions
+              주요 액션
             </h3>
             <div className="flex flex-col gap-4">
               <Link to={`/stocks/${stock.id}/memos/new`} className="w-full">
