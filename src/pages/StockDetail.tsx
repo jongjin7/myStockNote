@@ -251,20 +251,53 @@ export default function StockDetail() {
                     <div className="space-y-6">
                       {memo.buyReason && (
                         <div>
-                          <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">매수 판단 근거</p>
+                          <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">
+                            {stock.status === 'WATCHLIST' ? '분석 및 관심 사유' : '매수 판단 근거'}
+                          </p>
                           <p className="text-sm text-gray-300 leading-relaxed font-medium">{memo.buyReason}</p>
                         </div>
                       )}
+                      
+                      {memo.expectedScenario && (
+                        <div className="py-4 border-y border-gray-800/30">
+                          <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3 flex items-center">
+                            <Activity size={12} className="mr-2 text-primary-400" />
+                            향후 시나리오
+                          </p>
+                          <p className="text-sm text-gray-300 leading-relaxed font-medium">{memo.expectedScenario}</p>
+                        </div>
+                      )}
+
+                      {memo.risks && (
+                        <div className="flex items-start gap-3 p-4 bg-danger/5 rounded-xl border border-danger/10">
+                          <AlertCircle size={16} className="text-danger shrink-0 mt-0.5" />
+                          <div>
+                            <p className="text-[10px] font-bold text-danger/70 uppercase tracking-widest mb-1.5">리스크 분석</p>
+                            <p className="text-xs text-gray-400 leading-relaxed">{memo.risks}</p>
+                          </div>
+                        </div>
+                      )}
+
                       {memo.currentThought && (
                         <div className="bg-gray-950/50 p-6 rounded-2xl border border-gray-800/50 relative overflow-hidden">
                           <div className="absolute top-0 right-0 p-3 opacity-5">
                             <TrendingUp size={48} />
                           </div>
-                          <p className="text-[10px] font-bold text-primary-400 uppercase tracking-widest mb-3">현재 보유 관점</p>
+                          <p className="text-[10px] font-bold text-primary-400 uppercase tracking-widest mb-3">
+                            {stock.status === 'WATCHLIST' ? '리서치 메모' : '현재 보유 관점'}
+                          </p>
                           <p className="text-sm text-gray-300 italic font-medium">"{memo.currentThought}"</p>
                         </div>
                       )}
-                      {!memo.buyReason && !memo.currentThought && (
+
+                      {memo.sellReview && (
+                        <div className="bg-danger/5 p-6 rounded-2xl border border-danger/20">
+                          <p className="text-[10px] font-bold text-danger-light uppercase tracking-widest mb-3">매매 복기 (Sell Review)</p>
+                          <p className="text-sm text-gray-300 leading-relaxed">{memo.sellReview}</p>
+                        </div>
+                      )}
+
+                      {!memo.buyReason && !memo.currentThought && !memo.sellReview && (
                         <p className="text-sm text-gray-600 italic font-medium">내용이 비어 있는 노트입니다.</p>
                       )}
                     </div>

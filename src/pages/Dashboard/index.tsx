@@ -1,6 +1,10 @@
+import { useState } from 'react';
 import { useApp } from '../../contexts/AppContext';
 import { formatNumber } from '../../lib/utils';
-import type { Account, Stock, StockMemo } from '../../types';
+import type { Account, Stock, StockMemo, StockStatus } from '../../types';
+import { PlusCircle } from 'lucide-react';
+import { Button } from '../../components/ui';
+import { StockModal } from '../../components/StockModal';
 
 import { HeroStats } from './HeroStats';
 import { QuickStats } from './QuickStats';
@@ -10,6 +14,14 @@ import { RecentMemosSection } from './RecentMemosSection';
 export default function Dashboard() {
   const { data } = useApp();
   const { accounts, stocks, memos } = data;
+
+  const [isStockModalOpen, setIsStockModalOpen] = useState(false);
+  const [modalInitialStatus, setModalInitialStatus] = useState<StockStatus>('HOLDING');
+
+  const handleOpenAddModal = (status: StockStatus = 'HOLDING') => {
+    setModalInitialStatus(status);
+    setIsStockModalOpen(true);
+  };
 
   // -- Calculations --
   const totalCash = accounts.reduce((acc: number, curr: Account) => acc + (Number(curr.cashBalance) || 0), 0);
@@ -32,6 +44,18 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-12 animate-fade-in max-w-7xl mx-auto">
+      {/* Dashboard Header */}
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-4">
+        <div>
+          <h1 className="text-4xl font-bold tracking-tight text-white mb-2">대시보드</h1>
+          <p className="text-sm font-medium text-gray-400">나의 주식 자산과 투자 기록을 한눈에 파악합니다.</p>
+        </div>
+        <Button onClick={() => handleOpenAddModal('HOLDING')} className="shadow-lg shadow-primary-500/20 h-12 px-6">
+          <PlusCircle size={20} className="mr-2" />
+          <span>종목 추가</span>
+        </Button>
+      </header>
+
       {/* Hero Stats Section */}
       <HeroStats 
         totalAssets={totalAssets}
@@ -49,12 +73,20 @@ export default function Dashboard() {
         holdingStocks={holdingStocks}
         watchlistStocks={stocks.filter(s => s.status === 'WATCHLIST')}
         memos={memos}
+        onAddClick={handleOpenAddModal}
       />
 
       {/* Recent Memos Section */}
       <RecentMemosSection 
         recentMemos={recentMemos}
         stocks={stocks}
+      />
+
+      {/* Stock Addition Modal */}
+      <StockModal 
+        isOpen={isStockModalOpen} 
+        onClose={() => setIsStockModalOpen(false)} 
+        initialStatus={modalInitialStatus}
       />
     </div>
   );

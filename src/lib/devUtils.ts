@@ -1,4 +1,3 @@
-import { storage } from '../lib/storage';
 import { mockScenarios } from '../lib/mockData';
 import { setMockScenario, resetMockData, getCurrentMockData, clearMockData } from '../mocks/handlers';
 import { api } from './api';
@@ -9,6 +8,7 @@ import { api } from './api';
  */
 export function loadMockDataForDevelopment() {
   console.log('🎭 목 데이터를 생성하고 있습니다...');
+  localStorage.clear();
   resetMockData();
   window.location.reload();
 }
@@ -18,6 +18,7 @@ export function loadMockDataForDevelopment() {
  */
 export function loadScenario(scenario: keyof typeof mockScenarios) {
   console.log(`🎬 시나리오 "${scenario}" 로드 중...`);
+  localStorage.clear();
   setMockScenario(scenario);
   console.log('✅ 시나리오 데이터 로드 완료!');
   window.location.reload();
@@ -28,9 +29,9 @@ export function loadScenario(scenario: keyof typeof mockScenarios) {
  */
 export function clearAllData() {
   if (confirm('⚠️ 모든 데이터를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
-    storage.clear();
     clearMockData();
-    console.log('🗑️ 모든 데이터가 삭제되었습니다.');
+    localStorage.clear();
+    console.log('🗑️ 모든 데이터와 로컬스토리지가 삭제되었습니다.');
     window.location.reload();
   }
 }

@@ -1,6 +1,6 @@
-import { PlusCircle, Target, TrendingUp } from 'lucide-react';
+import { PlusCircle, Target, TrendingUp, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Card, Badge } from '../../components/ui';
+import { Card, Badge, Button } from '../../components/ui';
 import { cn, formatCurrency } from '../../lib/utils';
 import type { Stock, StockMemo } from '../../types';
 
@@ -78,16 +78,29 @@ function StockListItem({ stock, memos }: StockListItemProps) {
 interface SectionTitleProps {
   title: string;
   subtitle: string;
+  onAddClick?: () => void;
 }
 
-function SectionTitle({ title, subtitle }: SectionTitleProps) {
+function SectionTitle({ title, subtitle, onAddClick }: SectionTitleProps) {
   return (
-    <div className="flex items-center gap-4 mb-4 px-3">
-      <h2 className="text-4xl font-bold tracking-tight">
-        {title}
-      </h2>
-      <span className="text-lg text-gray-600">|</span>
-      <span className="text-xl text-gray-500 tracking-tight">{subtitle}</span>
+    <div className="flex items-center justify-between mb-4 px-3">
+      <div className="flex items-center gap-4">
+        <h2 className="text-4xl font-bold tracking-tight">
+          {title}
+        </h2>
+        <span className="text-lg text-gray-600">|</span>
+        <span className="text-xl text-gray-500 tracking-tight">{subtitle}</span>
+      </div>
+      {onAddClick && (
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={onAddClick}
+          className="bg-gray-900/40 hover:bg-gray-800 text-gray-400 hover:text-white rounded-full p-2 h-auto"
+        >
+          <Plus size={24} />
+        </Button>
+      )}
     </div>
   );
 }
@@ -129,9 +142,10 @@ interface StockListProps {
   memos: StockMemo[];
   emptyMessage: string;
   variant: 'portfolio' | 'watchlist';
+  onAddClick: () => void;
 }
 
-function StockList({ stocks, memos, emptyMessage, variant }: StockListProps) {
+function StockList({ stocks, memos, emptyMessage, variant, onAddClick }: StockListProps) {
   return (
     <div className="relative">
       <div className="flex flex-col gap-4">
@@ -140,23 +154,26 @@ function StockList({ stocks, memos, emptyMessage, variant }: StockListProps) {
             <StockListItem key={stock.id} stock={stock} memos={memos} />
           ))
         ) : (
-          <div className={cn(
-            "border-2 border-dashed rounded-2xl p-12 text-center",
-            variant === "portfolio" 
-              ? "bg-gray-950/20 border-gray-800/50" 
-              : "bg-gray-950/20 border-primary-500/20"
-          )}>
-            <div className={cn(
-              "mb-6 inline-flex p-6 rounded-full shadow-inner",
+          <button 
+            onClick={onAddClick}
+            className={cn(
+              "border-2 border-dashed rounded-2xl p-12 text-center transition-all group",
               variant === "portfolio" 
-                ? "bg-gray-900/50 text-gray-700" 
-                : "bg-primary-500/5 text-primary-700"
+                ? "bg-gray-950/20 border-gray-800/50 hover:border-gray-600 hover:bg-gray-950/30" 
+                : "bg-gray-950/20 border-primary-500/20 hover:border-primary-500/40 hover:bg-primary-500/5"
+            )}
+          >
+            <div className={cn(
+              "mb-6 inline-flex p-6 rounded-full shadow-inner transition-transform group-hover:scale-110",
+              variant === "portfolio" 
+                ? "bg-gray-900/50 text-gray-700 group-hover:text-gray-500" 
+                : "bg-primary-500/5 text-primary-700 group-hover:text-primary-500"
             )}>
               <PlusCircle size={48} />
             </div>
             <h3 className="text-xl font-black text-gray-400 mb-2 tracking-tight">Empty</h3>
             <p className="text-gray-600 text-xs font-medium">{emptyMessage}</p>
-          </div>
+          </button>
         )}
       </div>
     </div>
@@ -171,6 +188,7 @@ interface StockSectionCardProps {
   memos: StockMemo[];
   emptyMessage: string;
   variant: 'portfolio' | 'watchlist';
+  onAddClick: () => void;
 }
 
 function StockSectionCard({
@@ -180,12 +198,13 @@ function StockSectionCard({
   stocks,
   memos,
   emptyMessage,
-  variant
+  variant,
+  onAddClick
 }: StockSectionCardProps) {
   return (
     <div className="">
       {/* 섹션 타이틀 */}
-      <SectionTitle title={title} subtitle={subtitle} />
+      <SectionTitle title={title} subtitle={subtitle} onAddClick={onAddClick} />
 
       <div className="space-y-8">
         {/* 통계 카드 */}
@@ -197,6 +216,7 @@ function StockSectionCard({
           memos={memos} 
           emptyMessage={emptyMessage} 
           variant={variant} 
+          onAddClick={onAddClick}
         />
       </div>
     </div>
@@ -207,9 +227,10 @@ interface PortfolioSectionProps {
   holdingStocks: Stock[];
   watchlistStocks: Stock[];
   memos: StockMemo[];
+  onAddClick: (status: 'HOLDING' | 'WATCHLIST') => void;
 }
 
-export function PortfolioSection({ holdingStocks, watchlistStocks, memos }: PortfolioSectionProps) {
+export function PortfolioSection({ holdingStocks, watchlistStocks, memos, onAddClick }: PortfolioSectionProps) {
   return (
     <section className="lg:col-span-3">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -222,6 +243,7 @@ export function PortfolioSection({ holdingStocks, watchlistStocks, memos }: Port
           memos={memos}
           emptyMessage="종목을 추가해 보세요"
           variant="portfolio"
+          onAddClick={() => onAddClick('HOLDING')}
         />
 
         {/* 관심 종목 섹션 (우측) */}
@@ -233,6 +255,7 @@ export function PortfolioSection({ holdingStocks, watchlistStocks, memos }: Port
           memos={memos}
           emptyMessage="관심 종목을 추가해 보세요"
           variant="watchlist"
+          onAddClick={() => onAddClick('WATCHLIST')}
         />
       </div>
     </section>
