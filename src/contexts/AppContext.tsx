@@ -1,18 +1,21 @@
 import { useState, useEffect, createContext, useContext, useCallback, type ReactNode } from 'react';
 import type { AppData, Account, Stock, StockMemo, Attachment } from '../types';
-import { storage, initialData } from '../lib/storage';
+import { initialData } from '../lib/storage';
+import { api } from '../lib/api';
 
 interface AppContextType {
   data: AppData;
+  isLoading: boolean;
+  error: Error | null;
   actions: {
-    refresh: () => void;
-    saveAccount: (account: Account) => void;
-    deleteAccount: (id: string) => void;
-    saveStock: (stock: Stock) => void;
-    deleteStock: (id: string) => void;
-    saveMemo: (memo: StockMemo) => void;
-    saveAttachment: (attachment: Attachment) => void;
-    deleteAttachment: (id: string) => void;
+    refresh: () => Promise<void>;
+    saveAccount: (account: Account) => Promise<void>;
+    deleteAccount: (id: string) => Promise<void>;
+    saveStock: (stock: Stock) => Promise<void>;
+    deleteStock: (id: string) => Promise<void>;
+    saveMemo: (memo: StockMemo) => Promise<void>;
+    saveAttachment: (attachment: Attachment) => Promise<void>;
+    deleteAttachment: (id: string) => Promise<void>;
   };
 }
 
@@ -20,59 +23,61 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<AppData>(initialData);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
-  const refresh = useCallback(() => {
-    const loaded = storage.load();
-    setData(loaded);
+  const refresh = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const loaded = await api.getData();
+      setData(loaded);
+      setError(null);
+    } catch (err) {
+      console.error('Failed to fetch data:', err);
+      setError(err instanceof Error ? err : new Error('Unknown error'));
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
   useEffect(() => {
     refresh();
-
-    // Listen for storage changes from other tabs
-    const handleStorage = (e: StorageEvent) => {
-      if (e.key === 'stock_note_data_v1') {
-        refresh();
-      }
-    };
-    window.addEventListener('storage', handleStorage);
-    return () => window.removeEventListener('storage', handleStorage);
   }, [refresh]);
 
   const actions = {
     refresh,
-    saveAccount: (account: Account) => {
-      storage.saveAccount(account);
-      refresh();
+    saveAccount: async (account: Account) => {
+      await api.saveAccount(account);
+      await refresh();
     },
-    deleteAccount: (id: string) => {
-      storage.deleteAccount(id);
-      refresh();
+    deleteAccount: async (id: string) => {
+      await api.deleteAccount(id);
+      await refresh();
     },
-    saveStock: (stock: Stock) => {
-      storage.saveStock(stock);
-      refresh();
+    saveStock: async (stock: Stock) => {
+      await api.saveStock(stock);
+      await refresh();
     },
-    deleteStock: (id: string) => {
-      storage.deleteStock(id);
-      refresh();
+    deleteStock: async (id: string) => {
+      await api.deleteStock(id);
+      await refresh();
     },
-    saveMemo: (memo: StockMemo) => {
-      storage.saveMemo(memo);
-      refresh();
+    saveMemo: async (memo: StockMemo) => {
+      await api.saveMemo(memo);
+      await refresh();
     },
-    saveAttachment: (attachment: Attachment) => {
-      storage.saveAttachment(attachment);
-      refresh();
+    saveAttachment: async (attachment: Attachment) => {
+      await api.saveAttachment(attachment);
+      await refresh();
     },
-    deleteAttachment: (id: string) => {
-      storage.deleteAttachment(id);
-      refresh();
+    deleteAttachment: async (id: string) => {
+      await api.deleteAttachment(id);
+      await refresh();
     },
   };
 
   return (
-    <AppContext.Provider value={{ data, actions }}>
+    <AppContext.Provider value={{ data, isLoading, error, actions }}>
       {children}
     </AppContext.Provider>
   );
@@ -85,3 +90,4 @@ export function useApp() {
   }
   return context;
 }
+

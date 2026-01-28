@@ -1,12 +1,23 @@
 import { http, HttpResponse } from 'msw';
+import { storage } from '../lib/storage';
 import { generateMockData, mockScenarios } from '../lib/mockData';
 import type { AppData, Account, Stock, StockMemo, Attachment } from '../types';
 
-// 현재 활성화된 목 데이터
-let currentMockData: AppData = generateMockData();
-
-// API 엔드포인트 (실제로는 localStorage를 사용하지만 MSW로 시뮬레이션)
+// API 엔드포인트
 const BASE_URL = '/api';
+
+// 서버 사이드 데이터 시뮬레이션 (초기 로드 시 localStorage에서 가져옴)
+let currentMockData: AppData = storage.load();
+
+// 만약 데이터가 전혀 없으면 기본 목 데이터 생성
+if (currentMockData.accounts.length === 0 && currentMockData.stocks.length === 0) {
+  currentMockData = generateMockData();
+  storage.save(currentMockData);
+}
+
+const syncToStorage = () => {
+  storage.save(currentMockData);
+};
 
 export const handlers = [
   // 전체 데이터 조회
@@ -28,6 +39,7 @@ export const handlers = [
     } else {
       currentMockData.accounts.push(account);
     }
+    syncToStorage();
     return HttpResponse.json(account);
   }),
 
@@ -35,6 +47,11 @@ export const handlers = [
   http.delete(`${BASE_URL}/accounts/:id`, ({ params }) => {
     const id = String(params.id);
     currentMockData.accounts = currentMockData.accounts.filter((a) => a.id !== id);
+    // 연관된 주식 처리 (계좌 미지정으로 변경)
+    currentMockData.stocks = currentMockData.stocks.map(s => 
+      s.accountId === id ? { ...s, accountId: null, status: 'WATCHLIST' as const } : s
+    );
+    syncToStorage();
     return HttpResponse.json({ success: true });
   }),
 
@@ -52,13 +69,20 @@ export const handlers = [
     } else {
       currentMockData.stocks.push(stock);
     }
+    syncToStorage();
     return HttpResponse.json(stock);
   }),
 
   // 주식 삭제
   http.delete(`${BASE_URL}/stocks/:id`, ({ params }) => {
     const id = String(params.id);
+    // 연관된 메모들과 첨부파일도 삭제
+    const memoIdsToClean = currentMockData.memos.filter(m => m.stockId === id).map(m => m.id);
     currentMockData.stocks = currentMockData.stocks.filter((s) => s.id !== id);
+    currentMockData.memos = currentMockData.memos.filter(m => m.stockId !== id);
+    currentMockData.attachments = currentMockData.attachments.filter(a => !memoIdsToClean.includes(a.memoId));
+    
+    syncToStorage();
     return HttpResponse.json({ success: true });
   }),
 
@@ -84,6 +108,7 @@ export const handlers = [
     } else {
       currentMockData.memos.push(memo);
     }
+    syncToStorage();
     return HttpResponse.json(memo);
   }),
 
@@ -104,6 +129,7 @@ export const handlers = [
   http.post(`${BASE_URL}/attachments`, async ({ request }) => {
     const attachment = await request.json() as Attachment;
     currentMockData.attachments.push(attachment);
+    syncToStorage();
     return HttpResponse.json(attachment);
   }),
 
@@ -111,6 +137,7 @@ export const handlers = [
   http.delete(`${BASE_URL}/attachments/:id`, ({ params }) => {
     const id = String(params.id);
     currentMockData.attachments = currentMockData.attachments.filter((a) => a.id !== id);
+    syncToStorage();
     return HttpResponse.json({ success: true });
   }),
 ];
@@ -118,20 +145,31 @@ export const handlers = [
 // 시나리오 변경 함수
 export function setMockScenario(scenario: keyof typeof mockScenarios) {
   currentMockData = mockScenarios[scenario]();
+  syncToStorage();
   console.log(`🎬 MSW 시나리오 "${scenario}"로 변경되었습니다.`);
-  console.log(`- 계좌: ${currentMockData.accounts.length}개`);
-  console.log(`- 종목: ${currentMockData.stocks.length}개`);
-  console.log(`- 메모: ${currentMockData.memos.length}개`);
-  console.log(`- 첨부파일: ${currentMockData.attachments.length}개`);
 }
 
 // 목 데이터 초기화
 export function resetMockData() {
   currentMockData = generateMockData();
+  syncToStorage();
   console.log('🔄 MSW 목 데이터가 초기화되었습니다.');
+}
+
+// 모든 데이터 완전 삭제 (빈 상태로)
+export function clearMockData() {
+  currentMockData = {
+    accounts: [],
+    stocks: [],
+    memos: [],
+    attachments: [],
+  };
+  syncToStorage();
+  console.log('🗑️ 모든 데이터가 완전히 삭제되었습니다.');
 }
 
 // 현재 목 데이터 가져오기
 export function getCurrentMockData() {
   return currentMockData;
 }
+

@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Wallet, Bookmark, Settings, Download, RefreshCcw, ChevronLeft, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, Wallet, Bookmark, Settings, Download, RefreshCcw, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { useApp } from '../contexts/AppContext';
 
 export default function Layout() {
+  const { isLoading } = useApp();
   const location = useLocation();
+
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const navItems = [
@@ -162,16 +165,23 @@ export default function Layout() {
             <div className={cn(isCollapsed ? "hidden group-hover:block" : "block")}>
               <div className="flex items-center justify-between mb-3">
                 <span className="text-[10px] font-black uppercase tracking-[0.15em] text-gray-600">SYNC STATUS | 동기화</span>
-                <RefreshCcw size={14} className="text-gray-700 animate-spin-slow group-hover:text-primary-500 transition-colors" />
+                {isLoading ? (
+                  <Loader2 size={14} className="text-primary-500 animate-spin" />
+                ) : (
+                  <RefreshCcw size={14} className="text-gray-700 group-hover:text-primary-500 transition-colors" />
+                )}
               </div>
               <div className="font-num">
-                <p className="text-[11px] font-bold text-gray-300 mb-1 whitespace-nowrap">DATABASE | 로컬 저장소</p>
+                <p className="text-[11px] font-bold text-gray-300 mb-1 whitespace-nowrap">API SERVER | 온라인</p>
                 <div className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-success shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                  <span className="text-[9px] font-mono text-gray-500 whitespace-nowrap uppercase tracking-tighter">최근: {new Date().toLocaleTimeString('ko-KR')}</span>
+                  <div className={cn("w-1.5 h-1.5 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)]", isLoading ? "bg-primary-500 animate-pulse" : "bg-success")} />
+                  <span className="text-[9px] font-mono text-gray-500 whitespace-nowrap uppercase tracking-tighter">
+                    {isLoading ? '동기화 중...' : `최근: ${new Date().toLocaleTimeString('ko-KR')}`}
+                  </span>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </nav>
@@ -190,13 +200,23 @@ export default function Layout() {
       </nav>
 
       {/* Main Content Area */}
-      <main className="flex-1 overflow-auto bg-grid-pattern">
+      <main className="flex-1 overflow-auto bg-grid-pattern relative">
+        {/* Loading Bar */}
+        {isLoading && (
+          <div className="absolute top-0 left-0 right-0 h-1 z-50 overflow-hidden">
+            <div className="w-full h-full bg-primary-500/20 animate-pulse">
+              <div className="h-full bg-primary-500 animate-loading-bar w-1/3" />
+            </div>
+          </div>
+        )}
+        
         <div className="min-h-full p-6 md:p-12 lg:p-16">
           <div className="max-w-7xl mx-auto">
             <Outlet />
           </div>
         </div>
       </main>
+
 
       {/* Mobile Bottom Nav */}
       <nav className="md:hidden flex items-center justify-around px-4 py-4 border-t border-gray-800/50 bg-gray-950/90 backdrop-blur-xl sticky bottom-0 z-50 shadow-2xl shadow-black/50">

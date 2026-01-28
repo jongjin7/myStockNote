@@ -235,3 +235,28 @@ body {
 .animate-scale-in {
   animation: scaleIn var(--transition-base) ease-out;
 }
+
+@keyframes loading-bar {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+  100% { transform: translateX(300%); }
+}
+
+.animate-loading-bar {
+  animation: loading-bar 2s infinite ease-in-out;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+.bg-grid-pattern {
+  background-image: radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.03) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+

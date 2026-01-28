@@ -1,4 +1,4 @@
-import type { AppData, Account, Stock, StockMemo, Attachment } from '../types';
+import type { AppData } from '../types';
 
 const STORAGE_KEY = 'stock_note_data_v1';
 
@@ -10,6 +10,10 @@ export const initialData: AppData = {
 };
 
 export const storage = {
+  /**
+   * 로컬 스토리지에서 데이터를 로드합니다.
+   * (이제 직접 UI에서 사용하지 않고 MSW 핸들러에서만 서버 저장소 역할을 위해 사용합니다)
+   */
   load: (): AppData => {
     const data = localStorage.getItem(STORAGE_KEY);
     if (!data) return initialData;
@@ -21,6 +25,9 @@ export const storage = {
     }
   },
 
+  /**
+   * 로컬 스토리지에 데이터를 저장합니다.
+   */
   save: (data: AppData) => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -33,75 +40,10 @@ export const storage = {
     }
   },
 
-  // Account operations
-  getAccounts: () => storage.load().accounts,
-  saveAccount: (account: Account) => {
-    const data = storage.load();
-    const index = data.accounts.findIndex(a => a.id === account.id);
-    if (index >= 0) {
-      data.accounts[index] = account;
-    } else {
-      data.accounts.push(account);
-    }
-    storage.save(data);
-  },
-  deleteAccount: (id: string) => {
-    const data = storage.load();
-    data.accounts = data.accounts.filter(a => a.id !== id);
-    // Also handle stocks linked to this account? 
-    // PRD says WATCHLIST stocks have null accountId. 
-    // Maybe set accountId to null for attached stocks?
-    data.stocks = data.stocks.map(s => s.accountId === id ? { ...s, accountId: null, status: 'WATCHLIST' as const } : s);
-    storage.save(data);
-  },
-
-  // Stock operations
-  getStocks: () => storage.load().stocks,
-  saveStock: (stock: Stock) => {
-    const data = storage.load();
-    const index = data.stocks.findIndex(s => s.id === stock.id);
-    if (index >= 0) {
-      data.stocks[index] = stock;
-    } else {
-      data.stocks.push(stock);
-    }
-    storage.save(data);
-  },
-  deleteStock: (id: string) => {
-    const data = storage.load();
-    const memoIdsToClean = data.memos.filter(m => m.stockId === id).map(m => m.id);
-    data.stocks = data.stocks.filter(s => s.id !== id);
-    data.memos = data.memos.filter(m => m.stockId !== id);
-    data.attachments = data.attachments.filter(a => !memoIdsToClean.includes(a.memoId));
-    storage.save(data);
-  },
-
-  // Memo operations
-  getMemos: (stockId?: string) => {
-    const memos = storage.load().memos;
-    return stockId ? memos.filter(m => m.stockId === stockId) : memos;
-  },
-  saveMemo: (memo: StockMemo) => {
-    const data = storage.load();
-    const index = data.memos.findIndex(m => m.id === memo.id);
-    if (index >= 0) {
-      data.memos[index] = memo;
-    } else {
-      data.memos.push(memo);
-    }
-    storage.save(data);
-  },
-
-  // Attachment operations
-  getAttachments: (memoId: string) => storage.load().attachments.filter(a => a.memoId === memoId),
-  saveAttachment: (attachment: Attachment) => {
-    const data = storage.load();
-    data.attachments.push(attachment);
-    storage.save(data);
-  },
-  deleteAttachment: (id: string) => {
-    const data = storage.load();
-    data.attachments = data.attachments.filter(a => a.id !== id);
-    storage.save(data);
+  /**
+   * 모든 데이터를 초기화합니다.
+   */
+  clear: () => {
+    localStorage.removeItem(STORAGE_KEY);
   }
 };

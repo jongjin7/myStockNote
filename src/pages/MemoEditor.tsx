@@ -71,17 +71,18 @@ export default function MemoEditor() {
     });
   };
 
-  const removeAttachment = (id: string, isExisting: boolean) => {
+  const removeAttachment = async (id: string, isExisting: boolean) => {
     if (isExisting) {
       if (window.confirm('기존 첨부파일을 삭제하시겠습니까?')) {
-        actions.deleteAttachment(id);
+        await actions.deleteAttachment(id);
       }
     } else {
       setNewAttachments(prev => prev.filter(a => a.id !== id));
     }
   };
 
-  const handleSave = (e: React.FormEvent) => {
+
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentStockId) return;
 
@@ -99,18 +100,19 @@ export default function MemoEditor() {
       updatedAt: Date.now(),
     };
 
-    actions.saveMemo(memoData);
+    await actions.saveMemo(memoData);
 
     // Save new attachments with real memoId
-    newAttachments.forEach(att => {
-      actions.saveAttachment({
+    for (const att of newAttachments) {
+      await actions.saveAttachment({
         ...att,
         memoId: newMemoId
       });
-    });
+    }
 
     navigate(`/stocks/${currentStockId}`);
   };
+
 
   if (!stock && !editingMemo) return null;
 

@@ -48,7 +48,7 @@ export default function StockDetail() {
     );
   }
 
-  const handleUpdateStock = (e: React.FormEvent) => {
+  const handleUpdateStock = async (e: React.FormEvent) => {
     e.preventDefault();
     const updatedStock: Stock = {
       ...stock,
@@ -61,16 +61,18 @@ export default function StockDetail() {
       currentPrice: status === 'WATCHLIST' ? 0 : currentPrice,
       updatedAt: Date.now(),
     };
-    actions.saveStock(updatedStock);
+    await actions.saveStock(updatedStock);
     setIsEditModalOpen(false);
   };
 
-  const handleDelete = () => {
+
+  const handleDelete = async () => {
     if (window.confirm('정말 삭제하시겠습니까? 관련 모든 노트와 첨부파일이 영구적으로 삭제됩니다.')) {
-      actions.deleteStock(stock.id);
+      await actions.deleteStock(stock.id);
       navigate('/');
     }
   };
+
 
   const getHeroCardBg = (s: string) => {
     switch (s) {

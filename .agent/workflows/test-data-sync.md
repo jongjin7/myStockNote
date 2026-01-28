@@ -19,20 +19,23 @@ description: 대시보드 데이터 동기화 테스트
 2. Console 탭에서 다음 스크립트 실행:
 
 ```javascript
-// 현재 localStorage 데이터 확인
-const data = JSON.parse(localStorage.getItem('stock_note_data_v1'));
-console.log('Accounts:', data.accounts.length);
-console.log('Stocks:', data.stocks.length);
-console.log('Memos:', data.memos.length);
+// API를 통해 현재 데이터 확인
+const data = await api.getData();
+console.table({
+  'Accounts': data.accounts.length,
+  'Stocks': data.stocks.length,
+  'Memos': data.memos.length
+});
 
 // 예상 계산값
 const totalCash = data.accounts.reduce((sum, acc) => sum + Number(acc.cashBalance || 0), 0);
 const holding = data.stocks.filter(s => s.status === 'HOLDING' || s.status === 'PARTIAL_SOLD');
 const totalInvested = holding.reduce((sum, s) => sum + (Number(s.quantity || 0) * Number(s.avgPrice || 0)), 0);
 
-console.log('Expected Total Cash:', totalCash.toLocaleString());
-console.log('Expected Total Invested:', totalInvested.toLocaleString());
-console.log('Expected Total Assets:', (totalCash + totalInvested).toLocaleString());
+console.log('%c[검증 결과]', 'color: #3b82f6; font-weight: bold;');
+console.log('예상 총 예수금:', totalCash.toLocaleString() + '원');
+console.log('예상 총 투자금:', totalInvested.toLocaleString() + '원');
+console.log('예상 총 자산:', (totalCash + totalInvested).toLocaleString() + '원');
 ```
 
 3. 대시보드 UI의 값과 비교
@@ -120,6 +123,10 @@ console.log('Expected Total Assets:', (totalCash + totalInvested).toLocaleString
 // AppContext 상태 강제 새로고침
 window.location.reload();
 
-// 또는 localStorage 직접 확인
-console.log(JSON.parse(localStorage.getItem('stock_note_data_v1')));
+// API 상태 확인
+console.log(await api.getData());
+
+// Mock 유틸리티 사용 (데이터 강제 초기화 등)
+mockUtils.load(); // 기본 데이터 로드
+mockUtils.loadScenario('bigProfit'); // 수익 시나리오 로드
 ```

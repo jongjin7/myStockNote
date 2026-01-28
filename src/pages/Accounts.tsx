@@ -41,7 +41,7 @@ export default function Accounts() {
     setEditingAccount(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     const accountData: Account = {
@@ -53,15 +53,17 @@ export default function Accounts() {
       updatedAt: Date.now(),
     };
 
-    actions.saveAccount(accountData);
+    await actions.saveAccount(accountData);
     closeModal();
   };
 
-  const handleDelete = (id: string) => {
+
+  const handleDelete = async (id: string) => {
     if (window.confirm('정말 삭제하시겠습니까? 해당 계좌에 연결된 종목들의 계좌 정보가 초기화됩니다.')) {
-      actions.deleteAccount(id);
+      await actions.deleteAccount(id);
     }
   };
+
 
   return (
     <div className="space-y-10 animate-fade-in">

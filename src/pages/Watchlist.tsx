@@ -26,7 +26,7 @@ export default function Watchlist() {
     (stock.symbol && stock.symbol.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  const handleAddStock = (e: React.FormEvent) => {
+  const handleAddStock = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newStockName.trim()) return;
 
@@ -42,11 +42,12 @@ export default function Watchlist() {
       updatedAt: Date.now(),
     };
 
-    actions.saveStock(stock);
+    await actions.saveStock(stock);
     setNewStockName('');
     setNewStockSymbol('');
     setIsModalOpen(false);
   };
+
 
   return (
     <div className="space-y-10 animate-fade-in">
