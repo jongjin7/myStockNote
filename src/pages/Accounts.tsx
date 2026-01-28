@@ -5,7 +5,7 @@ import type { Account } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 import { 
   Card,
-  Button, Input, Textarea, Modal, ModalBody, ModalFooter 
+  Button, Input, Textarea, ActionModal 
 } from '../components/ui';
 import { formatCurrency, formatDateTime } from '../lib/utils';
 
@@ -145,55 +145,45 @@ export default function Accounts() {
       </div>
 
       {/* Account Add/Edit Modal */}
-      <Modal 
+      <ActionModal 
         isOpen={isModalOpen} 
         onClose={closeModal}
+        onSubmit={handleSubmit}
         title={editingAccount ? '계좌 정보 수정' : '새 계좌 추가'}
+        submitLabel={editingAccount ? '변경사항 저장' : '계좌 추가하기'}
       >
-        <form onSubmit={handleSubmit}>
-          <ModalBody>
-            <div className="space-y-6">
-              <Input 
-                label="증권사명"
-                value={brokerName}
-                onChange={(e) => setBrokerName(e.target.value)}
-                placeholder="예: 한국투자증권, 유안타증권"
-                required
-                className="bg-gray-950 border-gray-800"
-              />
+        <div className="space-y-6">
+          <Input 
+            label="증권사명"
+            value={brokerName}
+            onChange={(e) => setBrokerName(e.target.value)}
+            placeholder="예: 한국투자증권, 유안타증권"
+            required
+            className="bg-gray-950 border-gray-800"
+          />
 
-              <Input 
-                label="현재 예수금 (원)"
-                type="number" 
-                value={cashBalance}
-                onChange={(e) => setCashBalance(Number(e.target.value))}
-                placeholder="0"
-                min="0"
-                required
-                className="bg-gray-950 border-gray-800"
-              />
+          <Input 
+            label="현재 예수금 (원)"
+            type="number" 
+            value={cashBalance}
+            onChange={(e) => setCashBalance(Number(e.target.value))}
+            placeholder="0"
+            min="0"
+            required
+            className="bg-gray-950 border-gray-800"
+          />
 
-              <Textarea 
-                label="메모 (선택)"
-                value={memo}
-                onChange={(e) => setMemo(e.target.value)}
-                placeholder="계좌 번호나 사용 목적 등을 자유롭게 기록하세요."
-                maxLength={200}
-                showCharCount
-                className="bg-gray-950 border-gray-800"
-              />
-            </div>
-          </ModalBody>
-          <ModalFooter>
-            <Button variant="secondary" type="button" onClick={closeModal}>
-              취소
-            </Button>
-            <Button type="submit">
-              {editingAccount ? '변경사항 저장' : '계좌 추가하기'}
-            </Button>
-          </ModalFooter>
-        </form>
-      </Modal>
+          <Textarea 
+            label="메모 (선택)"
+            value={memo}
+            onChange={(e) => setMemo(e.target.value)}
+            placeholder="계좌 번호나 사용 목적 등을 자유롭게 기록하세요."
+            maxLength={200}
+            showCharCount
+            className="bg-gray-950 border-gray-800"
+          />
+        </div>
+      </ActionModal>
     </div>
   );
 }

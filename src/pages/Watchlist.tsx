@@ -6,7 +6,7 @@ import type { Stock } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 import { 
   Card,
-  Button, Input, Modal, ModalBody, ModalFooter 
+  Button, Input, ActionModal 
 } from '../components/ui';
 import { formatDate } from '../lib/utils';
 
@@ -127,44 +127,34 @@ export default function Watchlist() {
       </div>
 
       {/* Add Modal */}
-      <Modal 
+      <ActionModal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)}
+        onSubmit={handleAddStock}
         title="관심 종목 추가"
+        submitLabel="관심 종목 추가하기"
       >
-        <form onSubmit={handleAddStock}>
-          <ModalBody>
-            <div className="space-y-6">
-              <Input 
-                label="종목명"
-                value={newStockName}
-                onChange={(e) => setNewStockName(e.target.value)}
-                placeholder="예: 삼성전자, 엔비디아, 테슬라"
-                autoFocus
-                required
-                className="bg-gray-950 border-gray-800"
-              />
+        <div className="space-y-6">
+          <Input 
+            label="종목명"
+            value={newStockName}
+            onChange={(e) => setNewStockName(e.target.value)}
+            placeholder="예: 삼성전자, 엔비디아, 테슬라"
+            autoFocus
+            required
+            className="bg-gray-950 border-gray-800"
+          />
 
-              <Input 
-                label="종목코드/심볼 (선택)"
-                value={newStockSymbol}
-                onChange={(e) => setNewStockSymbol(e.target.value)}
-                placeholder="예: 005930, NVDA, TSLA"
-                className="bg-gray-950 border-gray-800"
-                helperText="심볼을 입력하면 시세 연동 등 향후 기능 확장에 용이합니다."
-              />
-            </div>
-          </ModalBody>
-          <ModalFooter>
-            <Button variant="secondary" type="button" onClick={() => setIsModalOpen(false)}>
-              취소
-            </Button>
-            <Button type="submit">
-              관심 종목 추가하기
-            </Button>
-          </ModalFooter>
-        </form>
-      </Modal>
+          <Input 
+            label="종목코드/심볼 (선택)"
+            value={newStockSymbol}
+            onChange={(e) => setNewStockSymbol(e.target.value)}
+            placeholder="예: 005930, NVDA, TSLA"
+            className="bg-gray-950 border-gray-800"
+            helperText="심볼을 입력하면 시세 연동 등 향후 기능 확장에 용이합니다."
+          />
+        </div>
+      </ActionModal>
     </div>
   );
 }
