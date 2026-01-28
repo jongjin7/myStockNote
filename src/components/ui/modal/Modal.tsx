@@ -13,6 +13,7 @@ export interface ModalProps {
   children: ReactNode;
   title?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl';
+  className?: string;
 }
 
 const sizeConfig = {
@@ -22,12 +23,13 @@ const sizeConfig = {
   xl: 'max-w-4xl',
 };
 
-export default function Modal({ 
+export function Modal({ 
   isOpen, 
   onClose, 
   children, 
   title,
-  size = 'md' 
+  size = 'md',
+  className
 }: ModalProps) {
   useEffect(() => {
     if (isOpen) {
@@ -56,54 +58,47 @@ export default function Modal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden"
     >
       {/* Overlay */}
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm animate-scale-in"
+        className="absolute inset-0 bg-black/80 backdrop-blur-md animate-fade-in"
+        onClick={onClose}
         aria-hidden="true"
       />
 
       {/* Modal Container */}
       <div
         className={cn(
-          'relative w-full bg-surface rounded-xl shadow-2xl',
-          'p-8 animate-scale-in',
-          sizeConfig[size]
+          'relative w-full bg-gray-900 border border-gray-800 rounded-3xl shadow-2xl',
+          'animate-scale-in flex flex-col',
+          sizeConfig[size],
+          className
         )}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
       >
         {/* Header */}
-        {title && (
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
+        <div className="flex items-center justify-between p-8 pb-4">
+          {title ? (
+            <h2 className="text-2xl font-bold text-white tracking-tight">
               {title}
             </h2>
-            <button
-              onClick={onClose}
-              className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors"
-              aria-label="닫기"
-            >
-              <X size={24} />
-            </button>
-          </div>
-        )}
-
-        {!title && (
+          ) : (
+            <div />
+          )}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+            className="p-2 rounded-xl text-gray-500 hover:bg-white/5 hover:text-white transition-all transform hover:rotate-90"
             aria-label="닫기"
           >
             <X size={24} />
           </button>
-        )}
+        </div>
 
         {/* Content */}
-        <div className="overflow-y-auto max-h-[calc(100vh-12rem)]">
+        <div className="overflow-y-auto max-h-[calc(100vh-16rem)] thin-scrollbar">
           {children}
         </div>
       </div>
@@ -113,11 +108,12 @@ export default function Modal({
 
 export interface ModalHeaderProps {
   children: ReactNode;
+  className?: string;
 }
 
-export function ModalHeader({ children }: ModalHeaderProps) {
+export function ModalHeader({ children, className }: ModalHeaderProps) {
   return (
-    <div className="mb-6">
+    <div className={cn("px-8 py-4", className)}>
       {children}
     </div>
   );
@@ -125,11 +121,12 @@ export function ModalHeader({ children }: ModalHeaderProps) {
 
 export interface ModalBodyProps {
   children: ReactNode;
+  className?: string;
 }
 
-export function ModalBody({ children }: ModalBodyProps) {
+export function ModalBody({ children, className }: ModalBodyProps) {
   return (
-    <div className="mb-6">
+    <div className={cn("px-8 py-6", className)}>
       {children}
     </div>
   );
@@ -137,11 +134,12 @@ export function ModalBody({ children }: ModalBodyProps) {
 
 export interface ModalFooterProps {
   children: ReactNode;
+  className?: string;
 }
 
-export function ModalFooter({ children }: ModalFooterProps) {
+export function ModalFooter({ children, className }: ModalFooterProps) {
   return (
-    <div className="flex items-center justify-end gap-3 pt-6 border-t border-gray-200">
+    <div className={cn("px-8 py-6 bg-gray-950/50 flex items-center justify-end gap-3 rounded-b-3xl border-t border-gray-800", className)}>
       {children}
     </div>
   );

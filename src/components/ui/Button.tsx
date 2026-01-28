@@ -7,7 +7,7 @@ function cn(...inputs: ClassValue[]) {
 }
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'success';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
 }
@@ -24,41 +24,39 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   }, ref) => {
     const baseStyles = cn(
       'inline-flex items-center justify-center',
-      'font-medium transition-all duration-200',
-      'focus:outline-none focus:ring-2 focus:ring-offset-2',
-      'disabled:opacity-50 disabled:cursor-not-allowed',
-      'active:scale-[0.98]'
+      'font-bold transition-all duration-300',
+      'focus:outline-none focus:ring-2 focus:ring-primary-500/40',
+      'disabled:opacity-40 disabled:cursor-not-allowed',
+      'active:scale-[0.96]'
     );
 
     const variantStyles = {
       primary: cn(
         'bg-primary-500 text-white',
-        'hover:bg-primary-600 hover:scale-[1.02]',
-        'focus:ring-primary-500',
-        'shadow-sm hover:shadow-md'
+        'hover:bg-primary-600 hover:shadow-lg hover:shadow-primary-500/20',
       ),
       secondary: cn(
-        'bg-transparent border border-gray-300 text-gray-700',
-        'hover:bg-gray-100',
-        'focus:ring-gray-500'
+        'bg-white/5 border border-white/10 text-gray-300',
+        'hover:bg-white/10 hover:text-white',
+      ),
+      success: cn(
+        'bg-success text-white',
+        'hover:bg-success-dark hover:shadow-lg hover:shadow-success/20',
       ),
       danger: cn(
-        'bg-danger text-white',
-        'hover:bg-danger-dark hover:scale-[1.02]',
-        'focus:ring-danger',
-        'shadow-sm hover:shadow-md'
+       'bg-danger text-white',
+       'hover:bg-danger-dark hover:shadow-lg hover:shadow-danger/20',
       ),
       ghost: cn(
-        'bg-transparent text-primary-500',
-        'hover:bg-primary-50',
-        'focus:ring-primary-500'
+        'bg-transparent text-gray-400',
+        'hover:bg-white/5 hover:text-white',
       ),
     };
 
     const sizeStyles = {
-      sm: 'px-4 py-2 text-sm rounded-md',
-      md: 'px-6 py-3 text-base rounded-lg',
-      lg: 'px-8 py-4 text-lg rounded-xl',
+      sm: 'px-4 py-2 text-xs rounded-xl tracking-wider',
+      md: 'px-6 py-3 text-sm rounded-2xl tracking-wide',
+      lg: 'px-8 py-4 text-base rounded-3xl tracking-widest uppercase',
     };
 
     return (
