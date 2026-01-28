@@ -45,16 +45,48 @@ if (import.meta.env.DEV) {
     clear: clearAllData,
     scenarios: Object.keys(mockScenarios),
     getCurrentData: getCurrentMockData,
+    help: () => {
+      console.clear();
+      console.log('%c🛠️ StockNote 개발 도구', 'color: #3b82f6; font-size: 16px; font-weight: bold; margin-bottom: 8px;');
+
+      const logSection = (title: string, items: Record<string, string>) => {
+        console.log(`\n%c${title}`, 'color: #64748b; font-weight: bold;');
+        Object.entries(items).forEach(([cmd, desc]) => {
+          console.log(
+            `%c${cmd.padEnd(42)} %c${desc}`,
+            'color: #2563eb; font-family: monospace;',
+            'color: #475569;'
+          );
+        });
+      };
+
+      logSection('📦 기본 명령어', {
+        'mockUtils.load()': '기본 샘플 데이터 로드',
+        'mockUtils.clear()': '모든 데이터 완전 삭제 (빈 상태)',
+        'mockUtils.getCurrentData()': '현재 메모리 데이터 확인',
+        'await api.getData()': 'API로 전체 데이터 조회'
+      });
+
+      logSection('🎬 시나리오 로드', {
+        'mockUtils.loadScenario("bigProfit")': '💰 50~200% 상승',
+        'mockUtils.loadScenario("bigLoss")': '📉 -50~-10% 하락',
+        'mockUtils.loadScenario("smallPortfolio")': '🌱 계좌 1개, 종목 3개',
+        'mockUtils.loadScenario("largePortfolio")': '🏢 계좌 5개, 종목 20개'
+      });
+
+      logSection('🧪 Empty State 테스트', {
+        'mockUtils.loadScenario("onlyAccounts")': '💳 종목 0개',
+        'mockUtils.loadScenario("onlyWatchlist")': '👀 보유 0개',
+        'mockUtils.loadScenario("noMemos")': '📝 메모 0개',
+        'mockUtils.loadScenario("minimal")': '⚡ 각 1개씩'
+      });
+
+      console.log('\n%c💡 모든 시나리오는 자동으로 페이지를 새로고침합니다.', 'color: #94a3b8; font-style: italic; font-size: 11px;');
+    }
   };
 
-  
-  console.log('🛠️ MSW 개발 도구가 활성화되었습니다!');
-  console.log('사용 가능한 명령어:');
-  console.log('  - mockUtils.load() : 기본 목 데이터 로드');
-  console.log('  - mockUtils.loadScenario("bigProfit") : 큰 수익 시나리오');
-  console.log('  - mockUtils.loadScenario("bigLoss") : 손실 시나리오');
-  console.log('  - mockUtils.loadScenario("smallPortfolio") : 소액 투자');
-  console.log('  - mockUtils.loadScenario("largePortfolio") : 대규모 포트폴리오');
-  console.log('  - mockUtils.clear() : 모든 데이터 삭제');
-  console.log('  - mockUtils.getCurrentData() : 현재 데이터 확인');
+  // 초기 도움말 표시
+  (window as any).mockUtils.help();
 }
+
+

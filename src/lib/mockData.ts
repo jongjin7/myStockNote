@@ -258,4 +258,64 @@ export const mockScenarios = {
     const attachments = generateMockAttachments(memos, 20);
     return { accounts, stocks, memos, attachments };
   },
+
+  // 시나리오 5: 계좌만 있는 경우 (Empty State 테스트)
+  onlyAccounts: (): AppData => {
+    const accounts = generateMockAccounts(2);
+    return { 
+      accounts, 
+      stocks: [], 
+      memos: [], 
+      attachments: [] 
+    };
+  },
+
+  // 시나리오 6: 관심 종목만 있는 경우
+  onlyWatchlist: (): AppData => {
+    const accounts = generateMockAccounts(1);
+    const stocks = generateMockStocks(accounts, 5).map(stock => ({
+      ...stock,
+      status: 'WATCHLIST' as const,
+      accountId: null,
+      quantity: 0,
+      avgPrice: 0,
+      currentPrice: null,
+    }));
+    return { 
+      accounts, 
+      stocks, 
+      memos: [], 
+      attachments: [] 
+    };
+  },
+
+  // 시나리오 7: 메모가 없는 경우
+  noMemos: (): AppData => {
+    const accounts = generateMockAccounts(2);
+    const stocks = generateMockStocks(accounts, 8);
+    return { 
+      accounts, 
+      stocks, 
+      memos: [], 
+      attachments: [] 
+    };
+  },
+
+  // 시나리오 8: 최소 데이터 (각 1개씩)
+  minimal: (): AppData => {
+    const accounts = generateMockAccounts(1);
+    accounts[0].cashBalance = 1000000;
+    const stocks = generateMockStocks(accounts, 1);
+    stocks[0].status = 'HOLDING';
+    stocks[0].quantity = 10;
+    stocks[0].avgPrice = 50000;
+    const memos = generateMockMemos(stocks, 1);
+    return { 
+      accounts, 
+      stocks, 
+      memos, 
+      attachments: [] 
+    };
+  },
 };
+

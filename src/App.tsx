@@ -6,6 +6,7 @@ import Watchlist from './pages/Watchlist';
 import StockDetail from './pages/StockDetail';
 import MemoEditor from './pages/MemoEditor';
 
+
 function App() {
   return (
     <Router>
@@ -19,8 +20,11 @@ function App() {
           <Route path="memos/:memoId/edit" element={<MemoEditor />} />
         </Route>
       </Routes>
+      
+
     </Router>
   );
 }
 
 export default App;
+
