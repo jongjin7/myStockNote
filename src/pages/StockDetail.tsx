@@ -5,7 +5,7 @@ import {
  ArrowLeft, Pencil, Trash2, FileText, Plus, 
  ChevronRight, Calendar, Bookmark, Activity, 
  TrendingUp, AlertCircle, Info,
- ExternalLink
+ ExternalLink, RefreshCw
 } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import type { Stock } from '../types';
@@ -42,6 +42,62 @@ export default function StockDetail() {
  const [quantity, setQuantity] = useState(stock?.quantity || 0);
  const [avgPrice, setAvgPrice] = useState(stock?.avgPrice || 0);
  const [currentPrice, setCurrentPrice] = useState(stock?.currentPrice || stock?.avgPrice || 0);
+ const [isUpdatingPrice, setIsUpdatingPrice] = useState(false);
+
+ const fetchCurrentPrice = async () => {
+  if (!stock?.symbol) {
+   alert('종목 코드가 등록되어 있지 않아 가격을 가져올 수 없습니다.');
+   return;
+  }
+
+  setIsUpdatingPrice(true);
+  try {
+   const symbol = stock.symbol.trim();
+   let yahooSymbol = symbol;
+   if (/^\d{6}$/.test(symbol)) {
+    yahooSymbol = `${symbol}.KS`; 
+   }
+
+   const url = `https://query1.finance.yahoo.com/v8/finance/chart/${yahooSymbol}?interval=1m&range=1d`;
+   const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+
+   const response = await fetch(proxyUrl);
+   const data = await response.json();
+   const result = JSON.parse(data.contents);
+   
+   let meta = result.chart?.result?.[0]?.meta;
+
+   if (!meta?.regularMarketPrice && yahooSymbol.endsWith('.KS')) {
+    const kqSymbol = yahooSymbol.replace('.KS', '.KQ');
+    const kqUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${kqSymbol}?interval=1m&range=1d`;
+    const kqProxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(kqUrl)}`;
+    
+    const kqRes = await fetch(kqProxyUrl);
+    const kqData = await kqRes.json();
+    const kqResult = JSON.parse(kqData.contents);
+    meta = kqResult.chart?.result?.[0]?.meta;
+   }
+
+   if (!meta?.regularMarketPrice) {
+    throw new Error('주가 정보를 찾을 수 없습니다.');
+   }
+
+   const newPrice = Math.round(meta.regularMarketPrice);
+   const updatedStock = {
+    ...stock,
+    currentPrice: newPrice,
+    updatedAt: Date.now()
+   };
+   
+   await actions.saveStock(updatedStock);
+   setCurrentPrice(newPrice);
+  } catch (error) {
+   console.error('Failed to update price:', error);
+   alert('주가 정보를 가져오는데 실패했습니다. 심볼을 확인해주세요.');
+  } finally {
+   setIsUpdatingPrice(false);
+  }
+ };
 
  if (!stock) {
  return (
@@ -208,36 +264,91 @@ export default function StockDetail() {
   <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
   {/* Left Column: Stats & Actions */}
   <div className="space-y-8">
-   {stock.status !== 'WATCHLIST' && (
-   <Card className="border-gray-800 bg-gray-900/40 backdrop-blur-sm p-8">
-    <h3 className="text-xs font-bold text-gray-500 mb-8 flex items-center uppercase tracking-widest">
-    <TrendingUp size={16} className="mr-2 text-success" />
-    보유 현황
-    </h3>
-    <div className="space-y-8">
-    <div className="flex justify-between items-end">
-     <span className="text-gray-500 text-sm font-bold uppercase tracking-widest">보유 수량</span>
-     <span className="text-3xl font-bold text-white tracking-tight">
-     {stock.quantity.toLocaleString()} <span className="text-sm font-medium text-gray-500">주</span>
-     </span>
-    </div>
-    <div className="flex justify-between items-end">
-     <span className="text-gray-500 text-sm font-bold uppercase tracking-widest">평균 단가</span>
-     <span className="text-3xl font-bold text-white tracking-tight">
-     {formatCurrency(stock.avgPrice)}
-     </span>
-    </div>
-    <div className="pt-8 border-t border-gray-800">
-     <div className="flex justify-between items-end">
-     <span className="text-gray-500 text-sm font-bold uppercase tracking-widest">총 매수 금액</span>
-     <span className="font-bold text-xl text-primary-400">
-      {formatCurrency(stock.quantity * stock.avgPrice)}
-     </span>
+    {stock.status !== 'WATCHLIST' && (
+    <Card className="border-gray-800 bg-gray-900/40 backdrop-blur-sm p-8">
+     <div className="flex items-center justify-between mb-8">
+      <h3 className="text-xs font-bold text-gray-500 flex items-center uppercase tracking-widest">
+       <TrendingUp size={16} className="mr-2 text-success" />
+       보유 현황
+      </h3>
+      <button 
+        onClick={fetchCurrentPrice} 
+        disabled={isUpdatingPrice}
+        className={cn(
+          "p-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-400 transition-all",
+          isUpdatingPrice && "animate-spin text-primary-500"
+        )}
+        title="현재가 갱신"
+      >
+        <RefreshCw size={14} />
+      </button>
      </div>
-    </div>
-    </div>
-   </Card>
-   )}
+     
+     <div className="space-y-6">
+      <div className="flex justify-between items-end">
+       <span className="text-gray-500 text-sm font-bold uppercase tracking-widest">현재가</span>
+       <div className="text-right">
+         <span className="text-3xl font-black text-white tracking-tight">
+          {formatCurrency(currentPrice)}
+         </span>
+       </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 py-6 border-y border-gray-800/50">
+       <div className="space-y-1">
+        <div className="text-[11px] font-bold text-gray-600 uppercase tracking-widest">보유 수량</div>
+        <div className="text-lg font-bold text-white tabular-nums">
+         {stock.quantity.toLocaleString()} <span className="text-xs text-gray-500 lowercase">주</span>
+        </div>
+       </div>
+       <div className="space-y-1 text-right">
+        <div className="text-[11px] font-bold text-gray-600 uppercase tracking-widest">평균 단가</div>
+        <div className="text-lg font-bold text-white tabular-nums">
+         {formatCurrency(stock.avgPrice)}
+        </div>
+       </div>
+      </div>
+
+      <div className="space-y-4 pt-2">
+       <div className="flex justify-between items-center">
+        <span className="text-gray-500 text-sm font-bold uppercase tracking-widest">평가 금액</span>
+        <span className="text-xl font-bold text-white tabular-nums">
+         {formatCurrency(stock.quantity * currentPrice)}
+        </span>
+       </div>
+
+       <div className="flex justify-between items-center">
+        <span className="text-gray-500 text-sm font-bold uppercase tracking-widest">누적 수익</span>
+        <div className="text-right flex items-center gap-3">
+         <Badge 
+          variant={((currentPrice - stock.avgPrice) >= 0) ? 'danger' : 'info'} 
+          className="text-xs font-black shadow-sm"
+         >
+          {((currentPrice - stock.avgPrice) >= 0) ? '+' : ''}
+          {(((currentPrice - stock.avgPrice) / stock.avgPrice) * 100).toFixed(2)}%
+         </Badge>
+         <span className={cn(
+           "text-xl font-black tabular-nums",
+           (currentPrice - stock.avgPrice) >= 0 ? "text-danger-light" : "text-info-light"
+         )}>
+          {(currentPrice - stock.avgPrice) >= 0 ? '+' : ''}
+          {formatCurrency((currentPrice - stock.avgPrice) * stock.quantity)}
+         </span>
+        </div>
+       </div>
+      </div>
+
+      <div className="pt-6 border-t border-gray-800">
+       <div className="flex justify-between items-end">
+       <span className="text-gray-500 text-sm font-bold uppercase tracking-widest">총 매수 금액</span>
+       <span className="font-bold text-sm text-gray-400">
+        {formatCurrency(stock.quantity * stock.avgPrice)}
+       </span>
+       </div>
+      </div>
+     </div>
+    </Card>
+    )}
 
    <Card className="border-primary-500/10 bg-primary-500/5 p-8 space-y-6">
    <h3 className="text-xs font-bold text-primary-400 flex items-center uppercase tracking-widest">
@@ -551,6 +662,3 @@ export default function StockDetail() {
  </div>
  );
 }
-
-
-
