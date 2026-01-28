@@ -16,16 +16,16 @@ export default function Card({
  children, 
  className, 
  interactive = false,
- hover = true,
+ hover = false,
  ...props 
 }: CardProps) {
  return (
  <div
   className={cn(
-  'bg-surface border border-gray-200 rounded-lg shadow-sm',
+  'bg-surface border border-gray-200 rounded-3xl shadow-sm',
   'p-6',
   'transition-all duration-200',
-  hover && 'hover:shadow-md hover:-translate-y-0.5',
+  (hover || interactive) && 'hover:shadow-md hover:-translate-y-0.5',
   interactive && 'cursor-pointer hover:bg-surface-hover',
   className
   )}

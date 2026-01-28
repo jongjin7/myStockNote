@@ -25,7 +25,7 @@ export function HeroStats({
 }: HeroStatsProps) {
  return (
  <section className="relative">
-  <div className="bg-gradient-to-br from-gray-900 to-gray-950 p-10 rounded-[32px] border border-gray-800/50 shadow-2xl relative overflow-hidden group ">
+  <div className="bg-gradient-to-br from-gray-900 to-gray-950 p-10 rounded-3xl border border-gray-800/50 shadow-2xl relative overflow-hidden group ">
   <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary-500/5 to-transparent pointer-events-none" />
   <div className="absolute -right-20 -top-20 w-96 h-96 bg-primary-600/10 rounded-full blur-[100px] pointer-events-none" />
   
@@ -46,7 +46,7 @@ export function HeroStats({
    </div>
 
    <div className="flex flex-col sm:flex-row items-stretch gap-4 shrink-0">
-    <div className="bg-white/[0.03] backdrop-blur-3xl rounded-[28px] p-7 border border-white/10 min-w-[300px] shadow-2xl relative overflow-hidden group/card @container">
+    <div className="bg-white/[0.03] backdrop-blur-3xl rounded-2xl p-7 border border-white/10 min-w-[300px] shadow-2xl relative overflow-hidden group/card @container">
     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.02] to-white/[0.05] pointer-events-none" />
     <div className="relative z-10">
      <div className="flex items-start justify-between mb-8">

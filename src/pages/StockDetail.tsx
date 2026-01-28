@@ -200,64 +200,97 @@ export default function StockDetail() {
  return (
  <div className="space-y-10 animate-fade-in">
   <header className="flex flex-col space-y-6">
-  <button 
-   onClick={() => navigate(-1)}
-   className="inline-flex items-center text-gray-500 hover:text-white transition-colors w-fit group"
-  >
-   <ArrowLeft size={18} className="mr-2 group-hover:-translate-x-1 transition-transform" />
-   <span className="font-bold text-sm">목록으로 돌아가기</span>
-  </button>
-  
-  <div className="bg-gradient-to-br p-8 rounded-2xl shadow-xl relative overflow-hidden group">
-   {/* Decorative Elements */}
-   <div className={cn(
-   "absolute inset-0 bg-gradient-to-br transition-all duration-500",
-   getHeroCardBg(stock.status)
-   )} />
-   <div className="absolute -right-20 -top-20 w-80 h-80 bg-white/10 rounded-full blur-3xl" />
-   
-   <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-   <div className="space-y-4">
-    <div className="flex items-center gap-4">
-    <h1 className="text-4xl font-bold tracking-tight text-white">{stock.name}</h1>
-    <Badge status={stock.status} className="bg-white/20 text-white border-white/10" />
-    </div>
-    <div className="flex flex-wrap items-center gap-6 text-white/70">
-    {stock.symbol && (
-     <span className=" bg-black/20 border border-white/10 px-2.5 py-1 rounded text-sm font-bold tracking-widest">
-     {stock.symbol}
-     </span>
-    )}
-    {account && (
-     <div className="flex items-center gap-2">
-     <Activity size={16} />
-     <span className="text-sm font-bold">{account.brokerName}</span>
-     </div>
-    )}
-    <div className="flex items-center gap-2">
-     <Calendar size={16} />
-     <span className="text-sm font-bold">{formatDate(new Date(stock.createdAt))} 등록</span>
-    </div>
-    </div>
-   </div>
+   <div className="flex items-center justify-between w-full">
+    <button 
+     onClick={() => navigate(-1)}
+     className="inline-flex items-center text-gray-400 hover:text-white transition-colors group"
+    >
+     <ArrowLeft size={18} className="mr-2 group-hover:-translate-x-1 transition-transform" />
+     <span className="font-bold text-sm">목록으로 돌아가기</span>
+    </button>
 
-   <div className="flex items-center gap-3">
-    <Button 
-    variant="ghost" 
-    onClick={() => setIsEditModalOpen(true)}
-    className="bg-white/10 hover:bg-white/20 text-white border-white/20"
-    >
-    <Pencil size={20} />
-    </Button>
-    <Button 
-    variant="ghost" 
-    onClick={handleDelete}
-    className="bg-white/10 hover:bg-danger/40 text-white border-white/20"
-    >
-    <Trash2 size={20} />
-    </Button>
+    <div className="flex items-center gap-1">
+     <Button 
+      variant="ghost" 
+      size="sm"
+      onClick={() => setIsEditModalOpen(true)}
+      className="p-2 h-auto hover:bg-white/5 text-gray-500 hover:text-white border-none transition-all"
+      title="종목 정보 수정"
+     >
+      <Pencil size={18} />
+     </Button>
+     <Button 
+      variant="ghost" 
+      size="sm"
+      onClick={handleDelete}
+      className="p-2 h-auto hover:bg-danger/10 text-gray-500 hover:text-danger-light border-none transition-all"
+      title="종목 삭제"
+     >
+      <Trash2 size={18} />
+     </Button>
+    </div>
    </div>
-   </div>
+  
+  <div className="relative rounded-3xl shadow-xl overflow-hidden border border-white/10 group">
+   {/* Dynamic Background Layer */}
+   <div className={cn(
+    "absolute inset-0 bg-gradient-to-r transition-all duration-700 opacity-90",
+    getHeroCardBg(stock.status)
+   )} />
+   <div className="absolute inset-0 bg-black/10 backdrop-blur-[2px]" />
+   <div className="absolute -right-10 -top-10 w-64 h-64 bg-white/10 rounded-full blur-3xl opacity-50" />
+      <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between px-8 py-10 gap-10">
+     {/* Left: Stock Info */}
+     <div className="flex flex-col gap-4 w-full lg:w-auto">
+      <div className="flex items-center gap-4">
+       <h1 className="text-4xl font-black tracking-tighter text-white drop-shadow-sm">{stock.name}</h1>
+       <Badge status={stock.status} className="bg-white/10 text-white border-white/5 py-1 px-4 text-[11px] font-black uppercase tracking-widest" />
+      </div>
+      
+      <div className="flex flex-wrap items-center gap-6 text-white/70">
+       {stock.symbol && (
+        <span className="bg-black/30 border border-white/10 px-2.5 py-1 rounded-lg text-[11px] font-black tracking-widest text-white">
+         {stock.symbol}
+        </span>
+       )}
+       <div className="flex items-center gap-2 text-sm font-bold">
+        <Activity size={16} className="opacity-60" />
+        <span>{account?.brokerName || '계좌 미지정'}</span>
+       </div>
+       <div className="flex items-center gap-2 text-sm font-bold">
+        <Calendar size={16} className="opacity-60" />
+        <span>{formatDate(new Date(stock.createdAt))}</span>
+       </div>
+      </div>
+     </div>
+
+     {/* Right: Focused Evaluation Box */}
+     <div className="bg-black/30 backdrop-blur-md px-8 py-7 rounded-2xl border border-white/5 shadow-2xl flex items-center gap-10 w-full lg:w-auto justify-between lg:justify-end">
+      <div className="flex flex-col">
+       <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] mb-1.5">Current Value</span>
+       <div className="text-4xl font-black text-white tracking-tighter tabular-nums text-right leading-none">
+        {formatCurrency(stock.quantity * currentPrice)}
+       </div>
+      </div>
+      
+      <div className="flex flex-col items-end">
+       <div className={cn(
+        "text-xl font-black tabular-nums tracking-tighter leading-none mb-2 px-3 py-1 rounded-full shadow-lg",
+        (currentPrice - stock.avgPrice) >= 0 ? "bg-danger text-white" : "bg-info text-white"
+       )}>
+        {(currentPrice - stock.avgPrice) >= 0 ? '+' : ''}
+        {(((currentPrice - stock.avgPrice) / stock.avgPrice) * 100).toFixed(2)}%
+       </div>
+       <div className={cn(
+        "text-sm font-black tabular-nums tracking-tight",
+        (currentPrice - stock.avgPrice) >= 0 ? "text-danger-light" : "text-info-light"
+       )}>
+        {(currentPrice - stock.avgPrice) >= 0 ? '+' : ''}
+        {formatCurrency((currentPrice - stock.avgPrice) * stock.quantity)}
+       </div>
+      </div>
+     </div>
+    </div>
   </div>
   </header>
 
@@ -265,92 +298,53 @@ export default function StockDetail() {
   {/* Left Column: Stats & Actions */}
   <div className="space-y-8">
     {stock.status !== 'WATCHLIST' && (
-    <Card className="border-gray-800 bg-gray-900/40 backdrop-blur-sm p-8">
-     <div className="flex items-center justify-between mb-8">
-      <h3 className="text-xs font-bold text-gray-500 flex items-center uppercase tracking-widest">
-       <TrendingUp size={16} className="mr-2 text-success" />
-       보유 현황
+    <Card className="border-gray-800 bg-gray-900/40 backdrop-blur-sm pt-4 pb-4 px-5 rounded-3xl">
+     <div className="mb-6">
+      <h3 className="text-2xl font-bold text-white flex items-center tracking-tight">
+       <TrendingUp size={24} className="mr-3 text-success opacity-80" />
+       핵심 투자 지표
       </h3>
-      <button 
-        onClick={fetchCurrentPrice} 
-        disabled={isUpdatingPrice}
-        className={cn(
-          "p-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-400 transition-all",
-          isUpdatingPrice && "animate-spin text-primary-500"
-        )}
-        title="현재가 갱신"
-      >
-        <RefreshCw size={14} />
-      </button>
      </div>
      
-     <div className="space-y-6">
-      <div className="flex justify-between items-end">
-       <span className="text-gray-500 text-sm font-bold uppercase tracking-widest">현재가</span>
-       <div className="text-right">
-         <span className="text-3xl font-black text-white tracking-tight">
-          {formatCurrency(currentPrice)}
-         </span>
-       </div>
+     <div className="space-y-0 divide-y divide-white/5 border-y border-white/5 -mx-5 px-5">
+      <div className="flex justify-between items-center py-4">
+       <span className="text-sm font-bold text-gray-500 uppercase tracking-widest">보유 수량</span>
+       <span className="text-xl font-black text-white tabular-nums">{stock.quantity.toLocaleString()} <span className="text-xs text-gray-600 font-medium ml-1 lowercase">주</span></span>
       </div>
-
-      <div className="grid grid-cols-2 gap-4 py-6 border-y border-gray-800/50">
-       <div className="space-y-1">
-        <div className="text-[11px] font-bold text-gray-600 uppercase tracking-widest">보유 수량</div>
-        <div className="text-lg font-bold text-white tabular-nums">
-         {stock.quantity.toLocaleString()} <span className="text-xs text-gray-500 lowercase">주</span>
-        </div>
+      
+      <div className="grid grid-cols-2">
+       <div className="py-4 pr-4 border-r border-white/5 space-y-1">
+        <div className="text-sm font-bold text-gray-500 uppercase tracking-widest">평균 단가</div>
+        <div className="text-lg font-bold text-gray-300 tabular-nums">{formatCurrency(stock.avgPrice)}</div>
        </div>
-       <div className="space-y-1 text-right">
-        <div className="text-[11px] font-bold text-gray-600 uppercase tracking-widest">평균 단가</div>
-        <div className="text-lg font-bold text-white tabular-nums">
-         {formatCurrency(stock.avgPrice)}
-        </div>
-       </div>
-      </div>
-
-      <div className="space-y-4 pt-2">
-       <div className="flex justify-between items-center">
-        <span className="text-gray-500 text-sm font-bold uppercase tracking-widest">평가 금액</span>
-        <span className="text-xl font-bold text-white tabular-nums">
-         {formatCurrency(stock.quantity * currentPrice)}
-        </span>
-       </div>
-
-       <div className="flex justify-between items-center">
-        <span className="text-gray-500 text-sm font-bold uppercase tracking-widest">누적 수익</span>
-        <div className="text-right flex items-center gap-3">
-         <Badge 
-          variant={((currentPrice - stock.avgPrice) >= 0) ? 'danger' : 'info'} 
-          className="text-xs font-black shadow-sm"
+       <div className="py-4 pl-5 space-y-1">
+        <div className="flex items-center gap-2">
+         <div className="text-sm font-bold text-primary-500 uppercase tracking-widest">현재가</div>
+         <button 
+           onClick={fetchCurrentPrice} 
+           disabled={isUpdatingPrice}
+           className={cn(
+             "p-1.5 rounded-md bg-primary-500/10 hover:bg-primary-500/20 text-primary-500 transition-all",
+             isUpdatingPrice && "animate-spin"
+           )}
+           title="현재가 갱신"
          >
-          {((currentPrice - stock.avgPrice) >= 0) ? '+' : ''}
-          {(((currentPrice - stock.avgPrice) / stock.avgPrice) * 100).toFixed(2)}%
-         </Badge>
-         <span className={cn(
-           "text-xl font-black tabular-nums",
-           (currentPrice - stock.avgPrice) >= 0 ? "text-danger-light" : "text-info-light"
-         )}>
-          {(currentPrice - stock.avgPrice) >= 0 ? '+' : ''}
-          {formatCurrency((currentPrice - stock.avgPrice) * stock.quantity)}
-         </span>
+           <RefreshCw size={12} />
+         </button>
         </div>
+        <div className="text-lg font-black text-primary-400 tabular-nums">{formatCurrency(currentPrice)}</div>
        </div>
       </div>
 
-      <div className="pt-6 border-t border-gray-800">
-       <div className="flex justify-between items-end">
-       <span className="text-gray-500 text-sm font-bold uppercase tracking-widest">총 매수 금액</span>
-       <span className="font-bold text-sm text-gray-400">
-        {formatCurrency(stock.quantity * stock.avgPrice)}
-       </span>
-       </div>
+      <div className="py-4 flex justify-between items-center">
+       <span className="text-sm font-bold text-gray-500 uppercase tracking-widest">투자 원금 (Total)</span>
+       <span className="text-lg font-bold text-gray-400 tabular-nums">{formatCurrency(stock.quantity * stock.avgPrice)}</span>
       </div>
      </div>
     </Card>
     )}
 
-   <Card className="border-primary-500/10 bg-primary-500/5 p-8 space-y-6">
+   <Card className="border-primary-500/10 bg-primary-500/5 p-8 space-y-6 rounded-3xl">
    <h3 className="text-xs font-bold text-primary-400 flex items-center uppercase tracking-widest">
     <Bookmark size={14} className="mr-2" />
     주요 액션
@@ -395,10 +389,10 @@ export default function StockDetail() {
 
    {stockMemos.length > 0 ? (
     stockMemos.map((memo) => (
-    <div key={memo.id} className="relative pl-14 pb-12 group last:pb-0">
-     <div className="absolute left-4 top-2 w-4 h-4 rounded-full bg-gray-950 border-2 border-gray-700 group-hover:border-primary-500 group-hover:bg-primary-500 transition-all z-10 shadow-[0_0_10px_rgba(0,0,0,0.5)]" />
+    <div key={memo.id} className="relative pl-14 pb-12 last:pb-0">
+     <div className="absolute left-4 top-2 w-4 h-4 rounded-full bg-gray-950 border-2 border-gray-700 transition-all z-10 shadow-[0_0_10px_rgba(0,0,0,0.5)]" />
      
-     <Card interactive className="border-gray-800 bg-gray-900/30 hover:bg-gray-900/50 p-8 group-hover:border-gray-700">
+     <Card className="border-gray-800 bg-gray-900/30 p-8 rounded-3xl">
      <div className="flex items-center justify-between mb-6">
       <div className="flex items-center gap-4">
       <Badge variant={memo.type === 'PURCHASE' ? 'success' : memo.type === 'SELL' ? 'danger' : 'info'}>
@@ -422,17 +416,17 @@ export default function StockDetail() {
        <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">
        {stock.status === 'WATCHLIST' ? '분석 및 관심 사유' : '매수 판단 근거'}
        </p>
-       <p className="text-sm text-gray-300 leading-relaxed font-medium">{memo.buyReason}</p>
+       <p className="text-sm text-gray-200 leading-relaxed font-medium">{memo.buyReason}</p>
       </div>
       )}
       
       {memo.expectedScenario && (
       <div className="py-4 border-y border-gray-800/30">
-       <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3 flex items-center">
-       <Activity size={12} className="mr-2 text-primary-400" />
-       향후 시나리오
+       <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-3 flex items-center">
+        <Activity size={12} className="mr-2 text-primary-500/70" />
+        EXPECTED SCENARIO
        </p>
-       <p className="text-sm text-gray-300 leading-relaxed font-medium">{memo.expectedScenario}</p>
+       <p className="text-sm text-gray-300 leading-relaxed">{memo.expectedScenario}</p>
       </div>
       )}
 
@@ -459,7 +453,7 @@ export default function StockDetail() {
       )}
 
       {memo.sellReview && (
-      <div className="bg-danger/5 p-6 rounded-2xl border border-danger/20">
+      <div className="bg-danger/5 p-6 rounded-3xl border border-danger/20">
        <p className="text-sm font-bold text-danger-light uppercase tracking-widest mb-3">매매 복기 (Sell Review)</p>
        <p className="text-sm text-gray-300 leading-relaxed">{memo.sellReview}</p>
       </div>
@@ -643,7 +637,7 @@ export default function StockDetail() {
    </div>
 
    {stockMemos.some(m => m.type === 'GENERAL') && (
-    <label className="flex items-center gap-3 p-4 bg-gray-900/50 rounded-2xl border border-gray-800 cursor-pointer hover:bg-gray-900 hover:border-gray-700 transition-all">
+    <label className="flex items-center gap-3 p-4 bg-gray-900/50 rounded-3xl border border-gray-800 cursor-pointer hover:bg-gray-900 hover:border-gray-700 transition-all">
     <input 
      type="checkbox" 
      checked={shouldCopyMemo}
