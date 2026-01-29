@@ -1,46 +1,69 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
 import { PlusCircle, Bookmark } from 'lucide-react';
 import type { Stock } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 import { 
- Button, Input, ActionModal, PageHeader, Badge 
+ Button, Input, ActionModal, PageHeader, Badge, Tabs 
 } from '../components/ui';
 import { StockList } from '../components/StockList';
 
 export default function Watchlist() {
- const { data, actions } = useApp();
- const { stocks, memos } = data;
+  const { data, actions } = useApp();
+  const { stocks, memos } = data;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTabId = searchParams.get('tab') || 'all';
 
- const watchlistStocks = stocks.filter(s => s.status === 'WATCHLIST');
-  const activeResearchCount = watchlistStocks.filter(s => memos.some(m => m.stockId === s.id)).length;
-  const totalMemos = memos.filter(m => watchlistStocks.some(s => s.id === m.stockId)).length;
+  const watchlistStocks = stocks.filter(s => {
+    const isWatch = s.status === 'WATCHLIST';
+    if (!isWatch) return false;
+    if (activeTabId === 'research') return memos.some(m => m.stockId === s.id);
+    return true;
+  });
 
- const [isModalOpen, setIsModalOpen] = useState(false);
- const [newStockName, setNewStockName] = useState('');
- const [newStockSymbol, setNewStockSymbol] = useState('');
+  const activeResearchCount = stocks.filter(s => s.status === 'WATCHLIST' && memos.some(m => m.stockId === s.id)).length;
+  const totalMemos = memos.filter(m => stocks.some(s => s.id === m.stockId && s.status === 'WATCHLIST')).length;
 
- const handleAddStock = async (e: React.FormEvent) => {
- e.preventDefault();
- if (!newStockName.trim()) return;
+  const tabItems = [
+    { id: 'all', label: '전체 관심', count: stocks.filter(s => s.status === 'WATCHLIST').length },
+    { id: 'research', label: '리서치 중', count: activeResearchCount }
+  ];
 
- const stock: Stock = {
-  id: uuidv4(),
-  name: newStockName.trim(),
-  symbol: newStockSymbol.trim() || null,
-  status: 'WATCHLIST',
-  accountId: null,
-  quantity: 0,
-  avgPrice: 0,
-  createdAt: Date.now(),
-  updatedAt: Date.now(),
- };
+  const handleTabChange = (id: string) => {
+    if (id === 'all') {
+      searchParams.delete('tab');
+    } else {
+      searchParams.set('tab', id);
+    }
+    setSearchParams(searchParams);
+  };
 
- await actions.saveStock(stock);
- setNewStockName('');
- setNewStockSymbol('');
- setIsModalOpen(false);
- };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newStockName, setNewStockName] = useState('');
+  const [newStockSymbol, setNewStockSymbol] = useState('');
+
+  const handleAddStock = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newStockName.trim()) return;
+
+    const stock: Stock = {
+      id: uuidv4(),
+      name: newStockName.trim(),
+      symbol: newStockSymbol.trim() || null,
+      status: 'WATCHLIST',
+      accountId: null,
+      quantity: 0,
+      avgPrice: 0,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    };
+
+    await actions.saveStock(stock);
+    setNewStockName('');
+    setNewStockSymbol('');
+    setIsModalOpen(false);
+  };
 
 
  return (
@@ -59,36 +82,45 @@ export default function Watchlist() {
     }
   />
 
-  {/* 관심 종목 요약 섹션 */}
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div className="bg-gray-900/40 border border-gray-800 p-8 rounded-[2rem] flex items-center justify-between group">
-      <div>
-        <div className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em] mb-2">전체 관심 종목</div>
-        <div className="text-3xl font-black text-white tabular-nums tracking-tighter">
-          {watchlistStocks.length}<span className="text-lg ml-1 text-gray-600 font-bold group-hover:text-primary-500 transition-colors">종목</span>
-        </div>
-      </div>
-      <Button onClick={() => setIsModalOpen(true)} className="rounded-2xl h-12 px-6 font-bold shadow-lg shadow-primary-500/10 transition-all hover:scale-105 active:scale-95">
-        <PlusCircle size={20} className="mr-2" />
-        종목 추가
-      </Button>
-    </div>
+  {/* Watchlist Tabs */}
+  <div className="space-y-6">
+    <Tabs 
+      items={tabItems} 
+      activeId={activeTabId} 
+      onTabChange={handleTabChange} 
+    />
     
-    <div className="bg-primary-500/5 border border-primary-500/10 p-8 rounded-[2rem] group">
-      <div className="flex justify-between items-start mb-2">
-        <div className="text-[10px] font-black text-primary-500 uppercase tracking-[0.2em]">액티브 리서치</div>
-        <Badge variant="info" className="text-[10px] font-black px-2 py-0.5 rounded-lg">
-          {watchlistStocks.length > 0 ? ((activeResearchCount / watchlistStocks.length) * 100).toFixed(0) : 0}% 분석중
-        </Badge>
+    {/* 관심 종목 요약 섹션 */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="bg-gray-900/40 border border-gray-800 p-8 rounded-[2rem] flex items-center justify-between group">
+        <div>
+          <div className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em] mb-2">전체 관심 종목</div>
+          <div className="text-3xl font-black text-white tabular-nums tracking-tighter">
+            {watchlistStocks.length}<span className="text-lg ml-1 text-gray-600 font-bold group-hover:text-primary-500 transition-colors">종목</span>
+          </div>
+        </div>
+        <Button onClick={() => setIsModalOpen(true)} className="rounded-2xl h-12 px-6 font-bold shadow-lg shadow-primary-500/10 transition-all hover:scale-105 active:scale-95">
+          <PlusCircle size={20} className="mr-2" />
+          종목 추가
+        </Button>
       </div>
-      <div className="text-3xl font-black text-white tabular-nums tracking-tighter leading-none">
-        {activeResearchCount}<span className="text-lg ml-1 text-gray-600 font-bold group-hover:text-primary-500 transition-colors">종합</span>
+      
+      <div className="bg-primary-500/5 border border-primary-500/10 p-8 rounded-[2rem] group">
+        <div className="flex justify-between items-start mb-2">
+          <div className="text-[10px] font-black text-primary-500 uppercase tracking-[0.2em]">액티브 리서치</div>
+          <Badge variant="info" className="text-[10px] font-black px-2 py-0.5 rounded-lg">
+            {watchlistStocks.length > 0 ? ((activeResearchCount / watchlistStocks.length) * 100).toFixed(0) : 0}% 분석중
+          </Badge>
+        </div>
+        <div className="text-3xl font-black text-white tabular-nums tracking-tighter leading-none">
+          {activeResearchCount}<span className="text-lg ml-1 text-gray-600 font-bold group-hover:text-primary-500 transition-colors">종합</span>
+        </div>
       </div>
     </div>
   </div>
 
    <StockList 
-     title="관심 종목 리스트"
+     title={activeTabId === 'all' ? "관심 종목 리스트" : "리서치 활성 리스트"}
      stocks={watchlistStocks}
      memos={memos}
      icon={Bookmark}

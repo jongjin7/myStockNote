@@ -82,7 +82,7 @@ export function AccountCard({ account, stocks, onEdit, onDelete }: AccountCardPr
         >
           예수금 수정
         </Button>
-        <Link to={`/accounts/${account.id}/stocks`} className="w-full">
+        <Link to={`/holdings?accountId=${account.id}`} className="w-full">
           <Button 
             variant="ghost" 
             size="sm" 
