@@ -14,7 +14,7 @@ import { InvestmentMilestone } from './InvestmentMilestone';
 
 export default function Dashboard() {
  const { data } = useApp();
- const { accounts, stocks, memos } = data;
+ const { accounts, stocks } = data;
 
  const [isStockModalOpen, setIsStockModalOpen] = useState(false);
  const [modalInitialStatus, setModalInitialStatus] = useState<StockStatus>('HOLDING');
@@ -88,12 +88,12 @@ export default function Dashboard() {
    </div>
   </div>
 
-  {/* Portfolio & Watchlist Section */}
+  {/* Portfolio Summary Section */}
   <PortfolioSection 
-  holdingStocks={holdingStocks}
-  watchlistStocks={stocks.filter(s => s.status === 'WATCHLIST')}
-  memos={memos}
-  onAddClick={handleOpenAddModal}
+   holdingStocks={holdingStocks}
+   watchlistStocks={stocks.filter(s => s.status === 'WATCHLIST')}
+   memos={data.memos}
+   onAddClick={handleOpenAddModal}
   />
 
 
