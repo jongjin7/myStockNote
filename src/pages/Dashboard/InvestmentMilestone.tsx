@@ -1,4 +1,5 @@
 import { Target } from 'lucide-react';
+import { SectionHeader } from '../../components/ui';
 import { formatNumber } from '../../lib/utils';
 
 interface InvestmentMilestoneProps {
@@ -18,15 +19,11 @@ export function InvestmentMilestone({ totalAssets }: InvestmentMilestoneProps) {
       </div>
 
       <div className="relative z-10 flex flex-col h-full">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="p-2 bg-primary-500/20 rounded-lg text-primary-400">
-            <Target size={20} />
-          </div>
-          <div>
-            <h3 className="text-lg font-bold text-white tracking-tight">투자 마일스톤</h3>
-            <p className="text-[10px] text-primary-400/70 uppercase tracking-widest font-black">Target Achievement</p>
-          </div>
-        </div>
+        <SectionHeader 
+          icon={Target}
+          title="투자 마일스톤"
+          className="px-0 mb-8"
+        />
 
         <div className="flex-1 flex flex-col justify-center">
           <div className="text-center mb-6">

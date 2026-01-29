@@ -15,6 +15,9 @@ export type { CardProps, CardHeaderProps, CardTitleProps, CardDescriptionProps, 
 export { default as Badge } from './Badge';
 export type { BadgeProps, BadgeStatus } from './Badge';
 
+export { default as PageHeader } from './PageHeader';
+export { default as SectionHeader } from './SectionHeader';
+
 export * from './modal/index';
 
 

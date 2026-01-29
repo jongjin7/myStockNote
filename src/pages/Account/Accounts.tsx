@@ -4,7 +4,7 @@ import { PlusCircle } from 'lucide-react';
 import type { Account } from '../../types';
 import { v4 as uuidv4 } from 'uuid';
 import { 
-  Button, Input, Textarea, ActionModal 
+  Button, Input, Textarea, ActionModal, PageHeader 
 } from '../../components/ui';
 import { AccountCard } from './components/AccountCard';
 import { AccountEmptyState } from './components/AccountEmptyState';
@@ -69,17 +69,18 @@ export default function Accounts() {
   };
 
   return (
-    <div className="space-y-10 animate-fade-in">
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div>
-          <h1 className="text-4xl font-bold tracking-tight text-white mb-2">Managed Accounts | 계좌 관리</h1>
-          <p className="text-sm font-medium text-gray-400">모든 자산은 KRW(원화)를 기준으로 하며, 증권사별 예수금을 관리합니다.</p>
-        </div>
+   <div className="space-y-10 animate-fade-in">
+    <PageHeader 
+      title="계좌 관리"
+      subtitle="Accounts"
+      description="모든 자산은 KRW(원화)를 기준으로 하며, 증권사별 예수금을 관리합니다."
+      extra={
         <Button onClick={() => openModal()} className="shadow-lg shadow-primary-500/10">
           <PlusCircle size={20} className="mr-2" />
           <span>새 계좌 추가</span>
         </Button>
-      </header>
+      }
+    />
 
       {/* Account List Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -6,7 +6,7 @@ import type { Stock } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 import { 
  Card,
- Button, Input, ActionModal 
+ Button, Input, ActionModal, PageHeader 
 } from '../components/ui';
 import { formatDate } from '../lib/utils';
 
@@ -51,16 +51,17 @@ export default function Watchlist() {
 
  return (
  <div className="space-y-10 animate-fade-in">
-  <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-  <div>
-   <h1 className="text-4xl font-bold tracking-tight text-white mb-2">Watchlist | 관심 종목</h1>
-   <p className="text-sm font-medium text-gray-400">정찰 중인 종목과 리서치 자료를 관리하며 매수 기회를 포착합니다.</p>
-  </div>
-  <Button onClick={() => setIsModalOpen(true)} className="shadow-lg shadow-primary-500/10">
-   <PlusCircle size={20} className="mr-2" />
-   <span>관심 종목 추가</span>
-  </Button>
-  </header>
+  <PageHeader 
+    title="관심 종목"
+    subtitle="Watchlist"
+    description="정찰 중인 종목과 리서치 자료를 관리하며 매수 기회를 포착합니다."
+    extra={
+      <Button onClick={() => setIsModalOpen(true)} className="shadow-lg shadow-primary-500/10">
+        <PlusCircle size={20} className="mr-2" />
+        <span>관심 종목 추가</span>
+      </Button>
+    }
+  />
 
   {/* Search Bar */}
   <div className="relative group max-w-2xl">

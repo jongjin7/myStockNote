@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { cn, formatCurrency } from '../../lib/utils';
 import type { Stock } from '../../types';
 import { PieChart, Info, TrendingUp, ShieldCheck } from 'lucide-react';
+import { SectionHeader } from '../../components/ui';
 
 interface AssetAllocationProps {
   holdingStocks: Stock[];
@@ -75,23 +76,19 @@ export function AssetAllocation({ holdingStocks, totalEvaluation }: AssetAllocat
       {/* Background Decor */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/5 blur-[100px] -mr-32 -mt-32 pointer-events-none" />
       
-      <div className="flex items-center justify-between mb-10 relative z-10">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-primary-500/10 rounded-xl text-primary-500">
-            <PieChart size={20} />
+      <SectionHeader 
+        icon={PieChart}
+        title="자산 비중 리포트"
+        className="mb-10 px-0 relative z-10"
+        extra={
+          <div className="flex flex-col items-end">
+            <span className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em] mb-1">Portfolio Valuation</span>
+            <span className="text-2xl font-black text-white tabular-nums tracking-tighter leading-none group-hover/card:text-primary-400 transition-colors">
+              {totalEvaluation > 100000000 ? `${(totalEvaluation / 100000000).toFixed(2)}억` : formatCurrency(totalEvaluation)}
+            </span>
           </div>
-          <div>
-            <h3 className="text-xl font-bold text-white tracking-tight">자산 비중 리포트</h3>
-            <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-widest font-black">Holdings Distribution Matrix</p>
-          </div>
-        </div>
-        <div className="flex flex-col items-end">
-          <span className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em] mb-1">Portfolio Valuation</span>
-          <span className="text-2xl font-black text-white tabular-nums tracking-tighter leading-none group-hover/card:text-primary-400 transition-colors">
-            {totalEvaluation > 100000000 ? `${(totalEvaluation / 100000000).toFixed(2)}억` : formatCurrency(totalEvaluation)}
-          </span>
-        </div>
-      </div>
+        }
+      />
 
       <div className="flex-1 flex flex-col xl:flex-row items-center justify-center gap-12 py-4 relative z-10">
         {/* Pie Chart Display */}

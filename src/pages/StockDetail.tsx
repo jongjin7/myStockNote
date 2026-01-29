@@ -11,7 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 import type { Stock } from '../types';
 import { 
  Card, CardTitle, CardDescription,
- Button, Input, ActionModal, Badge, BackButton 
+ Button, Input, ActionModal, Badge, BackButton, SectionHeader 
 } from '../components/ui';
 import { cn, formatCurrency, formatDate, formatDateTime } from '../lib/utils';
 
@@ -294,10 +294,11 @@ export default function StockDetail() {
     {stock.status !== 'WATCHLIST' && (
     <Card className="border-gray-800 bg-gray-900/40 backdrop-blur-sm pt-4 pb-4 px-5 rounded-3xl">
      <div className="mb-6">
-      <h3 className="text-2xl font-bold text-white flex items-center tracking-tight">
-       <TrendingUp size={24} className="mr-3 text-success opacity-80" />
-       핵심 투자 지표
-      </h3>
+      <SectionHeader 
+        icon={TrendingUp}
+        title="핵심 투자 지표"
+        className="px-0"
+      />
      </div>
      
      <div className="space-y-0 divide-y divide-white/5 border-y border-white/5 -mx-5 px-5">
@@ -366,15 +367,12 @@ export default function StockDetail() {
 
   {/* Right Column: Notes History */}
   <div className="lg:col-span-2 space-y-8">
-   <div className="flex items-center justify-between px-2">
-   <h2 className="text-2xl font-bold text-white flex items-center tracking-tight">
-    <FileText size={20} className="mr-3 text-primary-500" />
-    투자 노트 기록
-    <Badge variant="default" className="ml-4 bg-gray-800 text-gray-400">
-    총 {stockMemos.length}건
-    </Badge>
-   </h2>
-   </div>
+    <SectionHeader 
+      icon={FileText}
+      title="투자 노트 기록"
+      count={stockMemos.length}
+      className="px-0"
+    />
 
    <div className="space-y-6 relative">
    {stockMemos.length > 0 && (

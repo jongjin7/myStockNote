@@ -1,4 +1,5 @@
 import { Landmark } from 'lucide-react';
+import { SectionHeader } from '../../components/ui';
 import { formatCurrency } from '../../lib/utils';
 import type { Account, Stock } from '../../types';
 
@@ -25,15 +26,11 @@ export function BrokerDistribution({ accounts, stocks, totalAssets }: BrokerDist
 
   return (
     <div className="bg-gray-900/40 backdrop-blur-sm border border-gray-800/50 rounded-3xl p-8 h-full">
-      <div className="flex items-center gap-3 mb-8">
-        <div className="p-2 bg-primary-500/10 rounded-lg text-primary-500">
-          <Landmark size={20} />
-        </div>
-        <div>
-          <h3 className="text-lg font-bold text-white tracking-tight">계좌별 자산 분포</h3>
-          <p className="text-[10px] text-gray-500 uppercase tracking-widest font-black">Broker Distribution</p>
-        </div>
-      </div>
+      <SectionHeader 
+        icon={Landmark}
+        title="계좌별 자산 분포"
+        className="px-0 mb-8"
+      />
 
       <div className="space-y-6">
         {accountStats.map((stat, index) => (

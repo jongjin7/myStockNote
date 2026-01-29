@@ -3,7 +3,7 @@ import { useApp } from '../../contexts/AppContext';
 import { formatNumber } from '../../lib/utils';
 import type { Account, Stock, StockStatus } from '../../types';
 import { PlusCircle } from 'lucide-react';
-import { Button } from '../../components/ui';
+import { Button, PageHeader } from '../../components/ui';
 import { StockModal } from '../../components/StockModal';
 
 import { HeroStats } from './HeroStats';
@@ -45,16 +45,18 @@ export default function Dashboard() {
  return (
  <div className="space-y-12 animate-fade-in max-w-7xl mx-auto">
   {/* Dashboard Header */}
-  <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-4">
-  <div>
-   <h1 className="text-4xl font-bold tracking-tight text-white mb-2">대시보드</h1>
-   <p className="text-sm font-medium text-gray-400">나의 주식 자산과 투자 기록을 한눈에 파악합니다.</p>
-  </div>
-  <Button onClick={() => handleOpenAddModal('HOLDING')} className="shadow-lg shadow-primary-500/20 h-12 px-6">
-   <PlusCircle size={20} className="mr-2" />
-   <span>종목 추가</span>
-  </Button>
-  </header>
+  <PageHeader 
+   title="대시보드"
+   subtitle="Dashboard"
+   description="나의 주식 자산과 투자 기록을 한눈에 파악합니다."
+   className="px-4"
+   extra={
+     <Button onClick={() => handleOpenAddModal('HOLDING')} className="shadow-lg shadow-primary-500/20 h-12 px-6">
+       <PlusCircle size={20} className="mr-2" />
+       <span>종목 추가</span>
+     </Button>
+   }
+  />
 
   {/* Hero Stats Section */}
   <HeroStats 
