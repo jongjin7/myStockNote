@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
 import { 
- ArrowLeft, Pencil, Trash2, FileText, Plus, 
+ Pencil, Trash2, FileText, Plus, 
  ChevronRight, Calendar, Bookmark, Activity, 
  TrendingUp, AlertCircle, Info,
  ExternalLink, RefreshCw
@@ -11,7 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 import type { Stock } from '../types';
 import { 
  Card, CardTitle, CardDescription,
- Button, Input, ActionModal, Badge 
+ Button, Input, ActionModal, Badge, BackButton 
 } from '../components/ui';
 import { cn, formatCurrency, formatDate, formatDateTime } from '../lib/utils';
 
@@ -201,13 +201,7 @@ export default function StockDetail() {
  <div className="space-y-10 animate-fade-in">
   <header className="flex flex-col space-y-6">
    <div className="flex items-center justify-between w-full">
-    <button 
-     onClick={() => navigate(-1)}
-     className="inline-flex items-center text-gray-400 hover:text-white transition-colors group"
-    >
-     <ArrowLeft size={18} className="mr-2 group-hover:-translate-x-1 transition-transform" />
-     <span className="font-bold text-sm">목록으로 돌아가기</span>
-    </button>
+    <BackButton />
 
     <div className="flex items-center gap-1">
      <Button 

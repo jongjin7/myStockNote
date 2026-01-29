@@ -1,11 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
-import Accounts from './pages/Accounts';
+import Accounts from './pages/Account/Accounts';
 import Watchlist from './pages/Watchlist';
 import StockDetail from './pages/StockDetail';
 import MemoEditor from './pages/MemoEditor';
-import AccountStocks from './pages/AccountStocks';
+import AccountStocks from './pages/Account/AccountStocks';
 
 
 function App() {
