@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import { useApp } from '../../contexts/AppContext';
 import { formatNumber } from '../../lib/utils';
-import type { Account, Stock, StockMemo, StockStatus } from '../../types';
+import type { Account, Stock, StockStatus } from '../../types';
 import { PlusCircle } from 'lucide-react';
 import { Button } from '../../components/ui';
 import { StockModal } from '../../components/StockModal';
 
 import { HeroStats } from './HeroStats';
-import { QuickStats } from './QuickStats';
 import { PortfolioSection } from './PortfolioSection';
-import { RecentMemosSection } from './RecentMemosSection';
+import { AssetAllocation } from './AssetAllocation';
+import { BrokerDistribution } from './BrokerDistribution';
+import { InvestmentMilestone } from './InvestmentMilestone';
 
 export default function Dashboard() {
  const { data } = useApp();
@@ -40,7 +41,6 @@ export default function Dashboard() {
  const totalAssets = totalCash + totalEvaluation;
  const cashRatio = totalAssets > 0 ? (totalCash / totalAssets) * 100 : 0;
 
- const recentMemos = [...memos].sort((a: StockMemo, b: StockMemo) => b.updatedAt - a.updatedAt).slice(0, 3);
 
  return (
  <div className="space-y-12 animate-fade-in max-w-7xl mx-auto">
@@ -68,6 +68,26 @@ export default function Dashboard() {
   profitStr={profitStr}
   />
 
+  {/* Analysis Grid: Asset Allocation (1), Broker Distribution (2), Milestone (3) */}
+  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 px-4 mb-12">
+   <div className="lg:col-span-7">
+    <AssetAllocation 
+     holdingStocks={holdingStocks} 
+     totalEvaluation={totalEvaluation} 
+    />
+   </div>
+   <div className="lg:col-span-5 flex flex-col gap-8">
+    <BrokerDistribution 
+     accounts={accounts} 
+     stocks={stocks} 
+     totalAssets={totalAssets} 
+    />
+    <InvestmentMilestone 
+     totalAssets={totalAssets} 
+    />
+   </div>
+  </div>
+
   {/* Portfolio & Watchlist Section */}
   <PortfolioSection 
   holdingStocks={holdingStocks}
@@ -76,11 +96,6 @@ export default function Dashboard() {
   onAddClick={handleOpenAddModal}
   />
 
-  {/* Recent Memos Section */}
-  <RecentMemosSection 
-  recentMemos={recentMemos}
-  stocks={stocks}
-  />
 
   {/* Stock Addition Modal */}
   <StockModal 
