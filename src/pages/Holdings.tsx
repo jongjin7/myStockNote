@@ -73,45 +73,56 @@ export default function Holdings() {
         }
       />
 
-      {/* Account Tabs */}
-      <div className="space-y-6">
-        <Tabs 
-          items={tabItems} 
-          activeId={activeAccountId} 
-          onTabChange={handleTabChange} 
-        />
+      {/* Asset Control Hub Area */}
+      <div className="space-y-8 relative">
+        {/* Subtle Background Accent */}
+        <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-3/4 h-64 bg-primary-500/5 blur-[120px] pointer-events-none rounded-full" />
         
-        {/* 자산 요약 섹션 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-gray-900/40 border border-gray-800 p-8 rounded-[2rem]">
-            <div className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em] mb-2">투자 원금</div>
-            <div className="text-3xl font-black text-white tabular-nums tracking-tighter">{formatCurrency(totalInvested)}</div>
+        <div className="space-y-8 relative z-10">
+          <div className="flex flex-col gap-6">
+            <div className="flex items-center justify-between">
+              <div className="text-[11px] font-black text-gray-500 uppercase tracking-[0.3em]">Portfolio Filter | 필터링</div>
+            </div>
+            <Tabs 
+              items={tabItems} 
+              activeId={activeAccountId} 
+              onTabChange={handleTabChange} 
+              className="w-fit"
+            />
           </div>
           
-          <div className={cn(
-            "p-8 rounded-[2rem] border border-white/[0.05]",
-            totalProfit >= 0 ? "bg-danger/10" : "bg-info/10"
-          )}>
-            <div className="flex justify-between items-start mb-2">
-              <div className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em]">누적 수익</div>
-              <Badge 
-                variant={totalProfit >= 0 ? 'danger' : 'info'} 
-                className="text-[10px] font-black px-2 py-0.5 rounded-lg"
-              >
-                {totalProfit >= 0 ? '+' : ''}{totalProfitRate.toFixed(2)}%
-              </Badge>
+          {/* 자산 요약 섹션 */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-gray-900/40 border border-gray-800 p-8 rounded-[2.5rem] backdrop-blur-sm hover:border-white/10 hover:bg-gray-900/60 transition-all duration-500 group">
+              <div className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em] mb-3 group-hover:text-gray-400 transition-colors">투자 원금 (Principal)</div>
+              <div className="text-3xl font-black text-white tabular-nums tracking-tighter group-hover:scale-[1.02] transition-transform origin-left">{formatCurrency(totalInvested)}</div>
             </div>
+            
             <div className={cn(
-              "text-3xl font-black tabular-nums tracking-tighter leading-none",
-              totalProfit >= 0 ? "text-danger-light" : "text-info-light"
+              "p-8 rounded-[2.5rem] border border-white/[0.05] backdrop-blur-md transition-all duration-500 hover:scale-[1.02] cursor-default",
+              totalProfit >= 0 ? "bg-danger/10 hover:bg-danger/[0.12] hover:border-danger/20" : "bg-info/10 hover:bg-info/[0.12] hover:border-info/20"
             )}>
-              {totalProfit >= 0 ? '+' : ''}{formatCurrency(totalProfit)}
+              <div className="flex justify-between items-start mb-3">
+                <div className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em]">통합 수익 (P/L)</div>
+                <Badge 
+                  variant={totalProfit >= 0 ? 'danger' : 'info'} 
+                  className="text-[10px] font-black px-2.5 py-1 rounded-lg shadow-lg"
+                >
+                  {totalProfit >= 0 ? '+' : ''}{totalProfitRate.toFixed(2)}%
+                </Badge>
+              </div>
+              <div className={cn(
+                "text-3xl font-black tabular-nums tracking-tighter leading-none",
+                totalProfit >= 0 ? "text-danger-light" : "text-info-light"
+              )}>
+                {totalProfit >= 0 ? '+' : ''}{formatCurrency(totalProfit)}
+              </div>
             </div>
-          </div>
 
-          <div className="bg-gray-900/40 border border-gray-800 p-8 rounded-[2rem]">
-            <div className="text-[10px] font-black text-primary-500 uppercase tracking-[0.2em] mb-2">보유 현금 (CASH)</div>
-            <div className="text-3xl font-black text-white tabular-nums tracking-tighter">{formatCurrency(totalCash)}</div>
+            <div className="bg-gray-900/40 border border-gray-800 p-8 rounded-[2.5rem] backdrop-blur-sm hover:border-primary-500/30 hover:bg-gray-900/60 transition-all duration-500 group">
+              <div className="text-[10px] font-black text-primary-500 uppercase tracking-[0.2em] mb-3 opacity-60 group-hover:opacity-100 transition-opacity">보유 현금 (Cash)</div>
+              <div className="text-3xl font-black text-white tabular-nums tracking-tighter group-hover:scale-[1.02] transition-transform origin-left">{formatCurrency(totalCash)}</div>
+            </div>
           </div>
         </div>
       </div>

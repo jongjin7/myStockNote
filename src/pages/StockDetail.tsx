@@ -203,37 +203,40 @@ export default function StockDetail() {
    <div className="flex items-center justify-between w-full">
     <BackButton />
 
-    <div className="flex items-center gap-1">
-     <Button 
-      variant="ghost" 
-      size="sm"
-      onClick={() => setIsEditModalOpen(true)}
-      className="p-2 h-auto hover:bg-white/5 text-gray-500 hover:text-white border-none transition-all"
-      title="종목 정보 수정"
-     >
-      <Pencil size={18} />
-     </Button>
-     <Button 
-      variant="ghost" 
-      size="sm"
-      onClick={handleDelete}
-      className="p-2 h-auto hover:bg-danger/10 text-gray-500 hover:text-danger-light border-none transition-all"
-      title="종목 삭제"
-     >
-      <Trash2 size={18} />
-     </Button>
-    </div>
    </div>
   
   <div className="relative rounded-3xl shadow-xl overflow-hidden border border-white/10 group">
    {/* Dynamic Background Layer */}
    <div className={cn(
-    "absolute inset-0 bg-gradient-to-r transition-all duration-700 opacity-90",
+    "absolute inset-0 bg-gradient-to-r opacity-90",
     getHeroCardBg(stock.status)
    )} />
-   <div className="absolute inset-0 bg-black/10 backdrop-blur-[2px]" />
+   <div className="absolute inset-0 bg-black/10" />
    <div className="absolute -right-10 -top-10 w-64 h-64 bg-white/10 rounded-full blur-3xl opacity-50" />
-      <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between px-8 py-10 gap-10">
+   
+   {/* Management Actions inside Hero */}
+   <div className="absolute top-2 right-6 z-20 flex items-center gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
+    <Button 
+     variant="ghost" 
+     size="sm"
+     onClick={() => setIsEditModalOpen(true)}
+     className="p-2.5 h-auto hover:bg-white/10 text-white border border-white/5 rounded-xl transition-all shadow-lg"
+     title="종목 정보 수정"
+    >
+     <Pencil size={18} />
+    </Button>
+    <Button 
+     variant="ghost" 
+     size="sm"
+     onClick={handleDelete}
+     className="p-2.5 h-auto hover:bg-danger/20 text-white hover:text-danger-light border border-white/5 rounded-xl transition-all shadow-lg"
+     title="종목 삭제"
+    >
+     <Trash2 size={18} />
+    </Button>
+   </div>
+
+   <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between px-8 py-10 gap-10">
      {/* Left: Stock Info */}
      <div className="flex flex-col gap-4 w-full lg:w-auto">
       <div className="flex items-center gap-4">

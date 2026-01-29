@@ -95,7 +95,6 @@ export default function Dashboard() {
    holdingStocks={holdingStocks}
    watchlistStocks={stocks.filter(s => s.status === 'WATCHLIST')}
    memos={data.memos}
-   onAddClick={handleOpenAddModal}
   />
 
 

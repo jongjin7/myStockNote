@@ -55,6 +55,11 @@ export function StockCard({ stock, hasNote, compact = false }: StockCardProps) {
                 {stock.symbol}
               </span>
             )}
+            {stock.category && !compact && (
+              <span className="text-[9px] font-black text-primary-400/80 bg-primary-500/5 px-1.5 py-0.5 rounded-md border border-primary-500/10 tracking-tighter shrink-0">
+                {stock.category}
+              </span>
+            )}
           </div>
 
           <div className={cn(

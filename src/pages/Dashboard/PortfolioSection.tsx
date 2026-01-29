@@ -3,16 +3,15 @@ import { LayoutList, TrendingUp, Bookmark, LayoutDashboard } from 'lucide-react'
 import { Card, Badge, SectionHeader } from '../../components/ui';
 import { StockList } from '../../components/StockList';
 import { formatCurrency } from '../../lib/utils';
-import type { Stock, StockMemo, StockStatus } from '../../types';
+import type { Stock, StockMemo } from '../../types';
 
 interface PortfolioSectionProps {
   holdingStocks: Stock[];
   watchlistStocks: Stock[];
   memos: StockMemo[];
-  onAddClick: (status: StockStatus) => void;
 }
 
-export function PortfolioSection({ holdingStocks, watchlistStocks, memos, onAddClick }: PortfolioSectionProps) {
+export function PortfolioSection({ holdingStocks, watchlistStocks, memos }: PortfolioSectionProps) {
   const navigate = useNavigate();
 
   // Calculate portfolio metrics
@@ -103,7 +102,7 @@ export function PortfolioSection({ holdingStocks, watchlistStocks, memos, onAddC
           title="보유 리스트"
           stocks={holdingStocks}
           memos={memos}
-          onAddClick={() => onAddClick('HOLDING')}
+          onAddClick={() => navigate('/holdings')}
           emptyMessage="보유 중인 종목이 없습니다."
           compact
         />
@@ -114,7 +113,7 @@ export function PortfolioSection({ holdingStocks, watchlistStocks, memos, onAddC
           title="관심 리스트"
           stocks={watchlistStocks}
           memos={memos}
-          onAddClick={() => onAddClick('WATCHLIST')}
+          onAddClick={() => navigate('/watchlist')}
           emptyMessage="관심 종목이 없습니다."
           compact
         />

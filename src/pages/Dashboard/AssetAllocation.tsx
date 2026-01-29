@@ -161,7 +161,7 @@ export function AssetAllocation({ holdingStocks, totalEvaluation }: AssetAllocat
           
           {/* Dynamic Label for Active/Highest Stock */}
           {sortedAll.length > 0 && (
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 bg-gray-950/90 backdrop-blur-xl border border-white/10 px-4 py-1.5 rounded-full text-[10px] font-black text-white shadow-[0_20px_40px_rgba(0,0,0,0.4)] z-20 flex items-center gap-2 whitespace-nowrap group-hover/card:border-primary-500/30 transition-all">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-4 bg-gray-950/80 backdrop-blur-xl px-4 py-1.5 rounded-full text-[10px] font-bold text-white shadow-[0_8px_16px_rgba(0,0,0,0.4)] z-20 flex items-center gap-2 whitespace-nowrap">
               <span className={cn(
                 "w-1.5 h-1.5 rounded-full animate-ping",
                 activeStockId ? "bg-primary-400" : "bg-primary-500"
