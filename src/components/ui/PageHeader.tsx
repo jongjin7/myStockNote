@@ -20,7 +20,7 @@ export default function PageHeader({
     <header className={cn("flex flex-col md:flex-row md:items-center justify-between gap-6", className)}>
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-4">
-          <h1 className="text-[2.75rem] font-black text-gray-400 tracking-tight leading-none">
+          <h1 className="text-[2.75rem] font-black text-gray-300 tracking-tight leading-none">
             {title}
           </h1>
           <span className="text-2xl font-light text-gray-700 leading-none">|</span>

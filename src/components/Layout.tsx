@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Wallet, Bookmark, Settings, Download, RefreshCcw, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { LayoutDashboard, Wallet, Bookmark, Settings, Download, RefreshCcw, ChevronLeft, ChevronRight, Loader2, LayoutList } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useApp } from '../contexts/AppContext';
 
@@ -12,6 +12,7 @@ export default function Layout() {
 
  const navItems = [
  { path: '/', icon: LayoutDashboard, label: '대시보드' },
+ { path: '/holdings', icon: LayoutList, label: '보유 종목' },
  { path: '/accounts', icon: Wallet, label: '계좌 관리' },
  { path: '/watchlist', icon: Bookmark, label: '관심 종목' },
  ];

@@ -3,12 +3,9 @@ import { useApp } from '../../contexts/AppContext';
 import { 
   LayoutDashboard, AlertCircle
 } from 'lucide-react';
-import { Card, Button, BackButton, PageHeader, SectionHeader } from '../../components/ui';
-import { formatCurrency } from '../../lib/utils';
-
-import { AccountSummaryStrip } from './components/AccountSummaryStrip';
-import { StockCard } from '../../components/StockCard';
-import { StockEmptyState } from './components/StockEmptyState';
+import { Card, Button, BackButton, PageHeader, Badge } from '../../components/ui';
+import { cn, formatCurrency } from '../../lib/utils';
+import { StockList } from '../../components/StockList';
 
 export default function AccountStocks() {
   const { id: accountId } = useParams<{ id: string }>();
@@ -59,39 +56,48 @@ export default function AccountStocks() {
          />
        </header>
 
-      {/* Account Stats Strip */}
-      <AccountSummaryStrip 
-        totalInvested={totalInvested}
-        totalProfit={totalProfit}
-        totalProfitRate={totalProfitRate}
-        cashBalance={account.cashBalance}
-      />
+      {/* Account Stats Summary */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-gray-900/40 border border-gray-800 p-8 rounded-[2rem]">
+          <div className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em] mb-2">원화 투자 원금</div>
+          <div className="text-3xl font-black text-white tabular-nums tracking-tighter">{formatCurrency(totalInvested)}</div>
+        </div>
+        
+        <div className={cn(
+          "p-8 rounded-[2rem] border border-white/[0.05]",
+          totalProfit >= 0 ? "bg-danger/10" : "bg-info/10"
+        )}>
+          <div className="flex justify-between items-start mb-2">
+            <div className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em]">계좌 누적 수익</div>
+            <Badge 
+              variant={totalProfit >= 0 ? 'danger' : 'info'} 
+              className="text-[10px] font-black px-2 py-0.5 rounded-lg"
+            >
+              {totalProfit >= 0 ? '+' : ''}{totalProfitRate.toFixed(2)}%
+            </Badge>
+          </div>
+          <div className={cn(
+            "text-3xl font-black tabular-nums tracking-tighter leading-none",
+            totalProfit >= 0 ? "text-danger-light" : "text-info-light"
+          )}>
+            {totalProfit >= 0 ? '+' : ''}{formatCurrency(totalProfit)}
+          </div>
+        </div>
 
-      {/* Stock List */}
-      <div className="space-y-6">
-        <SectionHeader 
-          icon={LayoutDashboard}
-          title="보유 종목"
-          count={accountStocks.length}
-        />
-
-        <div className="grid grid-cols-1 gap-4">
-          {accountStocks.length > 0 ? (
-            accountStocks.map((stock) => {
-              const hasNote = memos.some(m => m.stockId === stock.id);
-              return (
-                <StockCard 
-                  key={stock.id}
-                  stock={stock}
-                  hasNote={hasNote}
-                />
-              );
-            })
-          ) : (
-            <StockEmptyState />
-          )}
+        <div className="bg-gray-900/40 border border-gray-800 p-8 rounded-[2rem]">
+          <div className="text-[10px] font-black text-primary-500 uppercase tracking-[0.2em] mb-2">계좌 예수금 (CASH)</div>
+          <div className="text-3xl font-black text-white tabular-nums tracking-tighter">{formatCurrency(account.cashBalance)}</div>
         </div>
       </div>
+
+      {/* Stock List */}
+      <StockList 
+        title="보유 종목"
+        stocks={accountStocks}
+        memos={memos}
+        icon={LayoutDashboard}
+        emptyMessage="해당 계좌에 보유 중인 종목이 없습니다."
+      />
     </div>
   );
 }

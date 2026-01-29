@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import { LayoutList, TrendingUp, PlusCircle, Bookmark, LayoutDashboard } from 'lucide-react';
-import { Card, SectionHeader, Badge } from '../../components/ui';
+import { LayoutList, TrendingUp, Bookmark, LayoutDashboard } from 'lucide-react';
+import { Card, Badge, SectionHeader } from '../../components/ui';
+import { StockList } from '../../components/StockList';
 import { formatCurrency } from '../../lib/utils';
 import type { Stock, StockMemo, StockStatus } from '../../types';
-import { StockCard } from '../../components/StockCard';
 
 interface PortfolioSectionProps {
   holdingStocks: Stock[];
@@ -98,71 +98,27 @@ export function PortfolioSection({ holdingStocks, watchlistStocks, memos, onAddC
       {/* 2. Detailed Lists Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Left: Holding Stocks */}
-        <div className="space-y-6">
-          <SectionHeader 
-            icon={LayoutDashboard}
-            title="보유 리스트"
-            count={holdingStocks.length}
-            extra={
-              <button 
-                onClick={() => onAddClick('HOLDING')}
-                className="p-2 hover:bg-white/5 rounded-full text-gray-500 hover:text-primary-400 transition-colors"
-              >
-                <PlusCircle size={20} />
-              </button>
-            }
-          />
-          <StockList stocks={holdingStocks} memos={memos} emptyMessage="보유 중인 종목이 없습니다." onAddClick={() => onAddClick('HOLDING')} />
-        </div>
+        <StockList 
+          icon={LayoutDashboard}
+          title="보유 리스트"
+          stocks={holdingStocks}
+          memos={memos}
+          onAddClick={() => onAddClick('HOLDING')}
+          emptyMessage="보유 중인 종목이 없습니다."
+          compact
+        />
 
         {/* Right: Watchlist */}
-        <div className="space-y-6">
-          <SectionHeader 
-            icon={Bookmark}
-            title="관심 리스트"
-            count={watchlistStocks.length}
-            extra={
-              <button 
-                onClick={() => onAddClick('WATCHLIST')}
-                className="p-2 hover:bg-white/5 rounded-full text-gray-500 hover:text-primary-400 transition-colors"
-              >
-                <PlusCircle size={20} />
-              </button>
-            }
-          />
-          <StockList stocks={watchlistStocks} memos={memos} emptyMessage="관심 종목이 없습니다." onAddClick={() => onAddClick('WATCHLIST')} />
-        </div>
+        <StockList 
+          icon={Bookmark}
+          title="관심 리스트"
+          stocks={watchlistStocks}
+          memos={memos}
+          onAddClick={() => onAddClick('WATCHLIST')}
+          emptyMessage="관심 종목이 없습니다."
+          compact
+        />
       </div>
-    </div>
-  );
-}
-
-function StockList({ stocks, memos, emptyMessage, onAddClick }: { stocks: Stock[], memos: StockMemo[], emptyMessage: string, onAddClick: () => void }) {
-  if (stocks.length === 0) {
-    return (
-      <button 
-        onClick={onAddClick}
-        className="w-full h-32 border-2 border-dashed border-white/5 rounded-3xl flex flex-col items-center justify-center gap-2 hover:bg-white/[0.02] hover:border-white/10 transition-all group"
-      >
-        <PlusCircle size={24} className="text-gray-700 group-hover:text-gray-500 transition-colors" />
-        <span className="text-xs font-bold text-gray-600 group-hover:text-gray-400">{emptyMessage}</span>
-      </button>
-    );
-  }
-
-  return (
-    <div className="space-y-3">
-      {stocks.map(stock => {
-        const hasNote = memos.some(m => m.stockId === stock.id);
-        return (
-          <StockCard 
-            key={stock.id} 
-            stock={stock} 
-            hasNote={hasNote} 
-            compact 
-          />
-        );
-      })}
     </div>
   );
 }
