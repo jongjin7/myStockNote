@@ -11,7 +11,7 @@ import { SidebarSyncStatus } from './SidebarSyncStatus';
 import { MobileTopNav } from './MobileTopNav';
 import { MobileBottomNav } from './MobileBottomNav';
 
-export function Layout() {
+export default function Layout() {
   const { isLoading } = useApp();
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);

@@ -3,10 +3,10 @@ import { useApp } from '../contexts/AppContext';
 import { v4 as uuidv4 } from 'uuid';
 import { 
  ActionModal,
- Input, Badge
+ Input, Select
 } from './ui';
-import { cn } from '../lib/utils';
 import type { Stock, StockStatus } from '../types';
+import { CATEGORY_OPTIONS } from '../lib/constants';
 
 interface StockModalProps {
  isOpen: boolean;
@@ -21,6 +21,7 @@ export function StockModal({ isOpen, onClose, initialStatus = 'HOLDING' }: Stock
  const [name, setName] = useState('');
  const [symbol, setSymbol] = useState('');
  const [status, setStatus] = useState<StockStatus>(initialStatus);
+ const [category, setCategory] = useState('');
  const [accountId, setAccountId] = useState('');
  const [quantity, setQuantity] = useState<number>(0);
  const [avgPrice, setAvgPrice] = useState<number>(0);
@@ -31,6 +32,7 @@ export function StockModal({ isOpen, onClose, initialStatus = 'HOLDING' }: Stock
   setName('');
   setSymbol('');
   setStatus(initialStatus);
+  setCategory('');
   setAccountId('');
   setQuantity(0);
   setAvgPrice(0);
@@ -47,7 +49,8 @@ export function StockModal({ isOpen, onClose, initialStatus = 'HOLDING' }: Stock
   name: name.trim(),
   symbol: symbol.trim() || null,
   status: status,
-  accountId: status === 'WATCHLIST' ? null : (accountId || null),
+  category: category || null,
+  accountId: (status === 'WATCHLIST' || status === 'SOLD') ? null : (accountId || null),
   quantity: status === 'WATCHLIST' ? 0 : quantity,
   avgPrice: status === 'WATCHLIST' ? 0 : avgPrice,
   currentPrice: status === 'WATCHLIST' ? 0 : (currentPrice || avgPrice),
@@ -59,57 +62,19 @@ export function StockModal({ isOpen, onClose, initialStatus = 'HOLDING' }: Stock
  onClose();
  };
 
+ const modalTitle = status === 'WATCHLIST' ? '관심 종목 추가' : '보유 종목 추가';
+
  return (
  <ActionModal 
   isOpen={isOpen} 
   onClose={onClose}
   onSubmit={handleSubmit}
-  title="종목 추가"
+  title={modalTitle}
   size="lg"
   submitLabel="종목 추가 완료"
   submitDisabled={status !== 'WATCHLIST' && (!accountId || accounts.length === 0)}
  >
   <div className="space-y-8">
-  {/* Type Selection */}
-  <div className="space-y-3">
-   <label className="text-sm font-bold text-gray-500 uppercase tracking-widest">종목 구분</label>
-   <div className="grid grid-cols-2 gap-4">
-   <button
-    type="button"
-    onClick={() => setStatus('HOLDING')}
-    className={cn(
-    "p-5 rounded-2xl border transition-all text-left group",
-    status === 'HOLDING' || status === 'PARTIAL_SOLD' || status === 'SOLD'
-     ? "bg-success/10 border-success/50 text-white shadow-lg shadow-success/5"
-     : "bg-gray-950 border-gray-800 text-gray-500 hover:border-gray-700"
-    )}
-   >
-    <div className="flex items-center justify-between mb-2">
-    <span className="font-bold text-sm">보유 종목</span>
-    <Badge status="HOLDING" className={status === 'HOLDING' ? "bg-success text-white" : "bg-gray-800 text-gray-600"} />
-    </div>
-    <p className="text-sm leading-relaxed text-gray-500 group-hover:text-gray-400">실제로 매수하여 보유 중인 자산</p>
-   </button>
-
-   <button
-    type="button"
-    onClick={() => setStatus('WATCHLIST')}
-    className={cn(
-    "p-5 rounded-2xl border transition-all text-left group",
-    status === 'WATCHLIST'
-     ? "bg-info/10 border-info/50 text-white shadow-lg shadow-info/5"
-     : "bg-gray-950 border-gray-800 text-gray-500 hover:border-gray-700"
-    )}
-   >
-    <div className="flex items-center justify-between mb-2">
-    <span className="font-bold text-sm">관심 종목</span>
-    <Badge status="WATCHLIST" className={status === 'WATCHLIST' ? "bg-info text-white" : "bg-gray-800 text-gray-600"} />
-    </div>
-    <p className="text-sm leading-relaxed text-gray-500 group-hover:text-gray-400">리서치 및 매수 대기 중인 종목</p>
-   </button>
-   </div>
-  </div>
-
   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
    <Input 
    label="종목명"
@@ -128,47 +93,56 @@ export function StockModal({ isOpen, onClose, initialStatus = 'HOLDING' }: Stock
    />
   </div>
 
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+   <Select 
+    label="카테고리 (산업군)"
+    value={category}
+    onChange={(e) => setCategory(e.target.value)}
+    options={CATEGORY_OPTIONS}
+    placeholder="산업군을 선택하세요"
+   />
+
+   {status !== 'WATCHLIST' && (
+    <div className="space-y-2">
+     <Select 
+      label="연결 계좌"
+      value={accountId}
+      onChange={(e) => setAccountId(e.target.value)}
+      required
+      options={accounts.map(a => ({ 
+       value: a.id, 
+       label: `${a.brokerName} (${a.cashBalance.toLocaleString()}원)` 
+      }))}
+      placeholder="계좌를 선택하세요"
+      error={accounts.length === 0 ? "등록된 계좌가 없습니다. 계좌 관리에서 먼저 생성해 주세요." : undefined}
+     />
+    </div>
+   )}
+  </div>
+
   {status !== 'WATCHLIST' && (
    <div className="space-y-6 animate-slide-up">
-   <div className="space-y-3">
-    <label className="text-sm font-bold text-gray-500 uppercase tracking-widest">연결 계좌</label>
-    <select 
-    value={accountId}
-    onChange={(e) => setAccountId(e.target.value)}
-    required
-    className="w-full h-12 bg-gray-950 border border-gray-800 rounded-xl px-4 text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40 appearance-none font-medium transition-all"
-    >
-    <option value="">계좌를 선택하세요 (필수)</option>
-    {accounts.map(a => (
-     <option key={a.id} value={a.id}>{a.brokerName} ({a.cashBalance.toLocaleString()}원)</option>
-    ))}
-    </select>
-    {accounts.length === 0 && (
-    <p className="text-sm text-warning font-bold">등록된 계좌가 없습니다. 계좌 관리에서 먼저 생성해 주세요.</p>
-    )}
-   </div>
-
-   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <Input 
-    label="보유 수량"
-    type="number" 
-    value={quantity}
-    onChange={(e) => setQuantity(Number(e.target.value))}
-    min="0"
-    step="any"
-    required
-    className="bg-gray-950 border-gray-800"
-    />
-    <Input 
-    label="평균 단가 (원)"
-    type="number" 
-    value={avgPrice}
-    onChange={(e) => setAvgPrice(Number(e.target.value))}
-    min="0"
-    required
-    className="bg-gray-950 border-gray-800"
-    />
-   </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+     <Input 
+     label="보유 수량"
+     type="number" 
+     value={quantity}
+     onChange={(e) => setQuantity(Number(e.target.value))}
+     min="0"
+     step="any"
+     required
+     className="bg-gray-950 border-gray-800"
+     />
+     <Input 
+     label="평균 단가 (원)"
+     type="number" 
+     value={avgPrice}
+     onChange={(e) => setAvgPrice(Number(e.target.value))}
+     min="0"
+     required
+     className="bg-gray-950 border-gray-800"
+     />
+    </div>
    </div>
   )}
   </div>

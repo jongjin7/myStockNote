@@ -1,15 +1,18 @@
 import { useSearchParams } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
-import { LayoutDashboard, WalletCards } from 'lucide-react';
-import { PageHeader, Tabs, StatCard } from '../components/ui';
+import { PlusCircle, LayoutDashboard, WalletCards } from 'lucide-react';
+import { PageHeader, Tabs, StatCard, Button } from '../components/ui';
 import { StockList } from '../components/StockList';
+import { StockModal } from '../components/StockModal';
 import { formatCurrency } from '../lib/utils';
+import { useState } from 'react';
 
 export default function Holdings() {
   const { data } = useApp();
   const { stocks, memos, accounts } = data;
   const [searchParams, setSearchParams] = useSearchParams();
   const activeAccountId = searchParams.get('accountId') || 'all';
+  const [isStockModalOpen, setIsStockModalOpen] = useState(false);
 
   // 계좌 필터링 로직
   const holdingStocks = stocks.filter(s => {
@@ -62,13 +65,16 @@ export default function Holdings() {
         subtitle="Holdings"
         description={activeAccountId === 'all' ? "모든 계좌의 보유 자산을 통합하여 관리합니다." : `${activeTabLabel} 계좌의 보유 자산 현황입니다.`}
         extra={
-          <div className="text-right">
-            <div className="text-sm font-normal text-gray-500 uppercase tracking-[0.2em] mb-1">
-              {activeAccountId === 'all' ? '총 운용 자산' : '계좌 총 자산'}
+          <div className="flex items-center gap-6">
+            <div className="text-right">
+              <div className="text-sm font-normal text-gray-500 uppercase tracking-[0.2em] mb-1">
+                {activeAccountId === 'all' ? '총 운용 자산' : '계좌 총 자산'}
+              </div>
+              <div className="text-4xl font-bold text-white tracking-tighter tabular-nums">
+                {formatCurrency(totalAssets)}
+              </div>
             </div>
-            <div className="text-4xl font-bold text-white tracking-tighter tabular-nums">
-              {formatCurrency(totalAssets)}
-            </div>
+            
           </div>
         }
       />
@@ -120,7 +126,14 @@ export default function Holdings() {
         icon={activeAccountId === 'all' ? LayoutDashboard : WalletCards}
         showSearch
         layout="grid"
+        onAddClick={() => setIsStockModalOpen(true)}
         emptyMessage={activeAccountId === 'all' ? "현재 보유 중인 종목이 없습니다." : "이 계좌에 보유 중인 종목이 없습니다."}
+      />
+
+      <StockModal 
+        isOpen={isStockModalOpen}
+        onClose={() => setIsStockModalOpen(false)}
+        initialStatus="HOLDING"
       />
     </div>
   );
