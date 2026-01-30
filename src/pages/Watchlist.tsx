@@ -5,7 +5,7 @@ import { PlusCircle, Bookmark } from 'lucide-react';
 import type { Stock } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 import { 
- Button, Input, ActionModal, PageHeader, Tabs, Select, StatCard 
+ Button, Input, ActionModal, PageHeader, Tabs, Select 
 } from '../components/ui';
 import { StockList } from '../components/StockList';
 
@@ -16,7 +16,6 @@ export default function Watchlist() {
   const activeTabId = searchParams.get('tab') || 'all';
 
   const watchlistStocksAll = stocks.filter(s => s.status === 'WATCHLIST');
-  const activeResearchCount = watchlistStocksAll.filter(s => memos.some(m => m.stockId === s.id)).length;
   const totalMemos = memos.filter(m => stocks.some(s => s.id === m.stockId && s.status === 'WATCHLIST')).length;
 
   // 동적 카테고리 탭 구성
@@ -97,57 +96,36 @@ export default function Watchlist() {
     subtitle="Watchlist"
     description="정찰 중인 종목과 리서치 자료를 관리하며 매수 기회를 포착합니다."
     extra={
-      <div className="text-right">
-        <div className="text-sm font-black text-gray-500 uppercase tracking-[0.2em] mb-1">관심 리서치 기록</div>
-        <div className="text-4xl font-black text-white tracking-tighter tabular-nums">
-          {totalMemos}<span className="text-xl ml-1 text-gray-600">건</span>
+      <div className="flex items-center gap-6">
+        <div className="text-right">
+          <div className="text-xs font-black text-gray-500 uppercase tracking-[0.2em] mb-1">총 리서치</div>
+          <div className="text-3xl font-black text-white tracking-tighter tabular-nums">
+            {totalMemos}<span className="text-sm ml-1 text-gray-600">건</span>
+          </div>
         </div>
+        <Button 
+          onClick={() => setIsModalOpen(true)} 
+          className="px-6 h-12"
+        >
+          <PlusCircle size={20} className="mr-2" />
+          관심 추가
+        </Button>
       </div>
     }
   />
 
       {/* Watchlist Control Center Area */}
-      <div className="space-y-8 relative">
+      <div className="space-y-6 relative">
         {/* Subtle Background Accent (Cyan for Research) */}
         <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-3/4 h-64 bg-info/5 blur-[120px] pointer-events-none rounded-full" />
         
-        <div className="space-y-8 relative z-10">
+        <div className="relative z-10">
           <Tabs 
               items={tabItems} 
               activeId={activeTabId} 
               onTabChange={handleTabChange} 
-              className="w-fit"
+              className="w-full md:w-fit"
             />
-          
-          {/* 관심 종목 요약 섹션 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <StatCard
-              label="전체 관심 종목"
-              subtitle="(Watch)"
-              value={watchlistStocks.length}
-              unit="종목"
-              action={
-                <Button 
-                  onClick={() => setIsModalOpen(true)} 
-                  className="px-6 h-12"
-                >
-                  <PlusCircle size={20} className="mr-2" />
-                  관심 추가
-                </Button>
-              }
-            />
-            
-            <StatCard
-              label="액티브 리서치"
-              subtitle="(Active)"
-              variant="primary"
-              badgeText={`${watchlistStocks.length > 0 ? ((activeResearchCount / watchlistStocks.length) * 100).toFixed(0) : 0}% 분석중`}
-              badgeVariant="info"
-              value={activeResearchCount}
-              unit="종합"
-              labelVariant="primary"
-            />
-          </div>
         </div>
       </div>
 

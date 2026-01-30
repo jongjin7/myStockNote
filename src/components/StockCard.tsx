@@ -94,12 +94,12 @@ export function StockCard({ stock, hasNote, compact = false }: StockCardProps) {
             </div>
           </div>
         ) : (
-          <div className="flex flex-col items-end gap-1.5">
+          <div className="flex items-center gap-1.5 shrink-0">
             <Badge status={stock.status} className="shadow-none scale-90" />
             {hasNote && (
-              <span className="text-[10px] font-black text-gray-600 uppercase tracking-tighter">
-                Research Active
-              </span>
+              <Badge variant="primary" className="shadow-none scale-90 whitespace-nowrap">
+                리서치 중
+              </Badge>
             )}
           </div>
         )}

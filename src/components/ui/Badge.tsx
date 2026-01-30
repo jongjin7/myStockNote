@@ -10,7 +10,7 @@ export type BadgeStatus = 'HOLDING' | 'PARTIAL_SOLD' | 'SOLD' | 'WATCHLIST';
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
  status?: BadgeStatus;
- variant?: 'success' | 'warning' | 'danger' | 'info' | 'default';
+ variant?: 'success' | 'warning' | 'danger' | 'info' | 'primary' | 'default';
  children?: React.ReactNode;
 }
 
@@ -42,6 +42,7 @@ const variantConfig = {
  warning: 'bg-warning-light/10 text-warning-dark',
  danger: 'bg-danger-light/10 text-danger-dark',
  info: 'bg-info-light/10 text-info-dark',
+ primary: 'bg-primary-500/10 text-primary-500',
  default: 'bg-gray-200 text-gray-700',
 };
 
