@@ -1,5 +1,4 @@
 import { useState, useMemo } from 'react';
-import type { ReactNode } from 'react';
 import { PlusCircle, Search, ArrowUpRight } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { SectionHeader, Button } from './ui';
@@ -18,7 +17,6 @@ interface StockListProps {
   showSearch?: boolean;
   layout?: 'list' | 'grid';
   className?: string;
-  extra?: ReactNode;
   searchPlaceholder?: string;
 }
 
@@ -33,7 +31,6 @@ export function StockList({
   showSearch = false,
   layout = 'list',
   className,
-  extra,
   searchPlaceholder = "종목명 또는 심볼로 검색..."
 }: StockListProps) {
   const [searchQuery, setSearchQuery] = useState('');
@@ -85,42 +82,8 @@ export function StockList({
                   </Button>
                 )}
               </div>
-              <Button 
-                variant="secondary" 
-                size="sm" 
-                className="h-[38px] px-4 font-bold"
-              >
-                검색
-              </Button>
             </div>
           )}
-          
-          <div className="flex items-center gap-2 shrink-0">
-            {extra}
-            {onAddClick && (
-              compact ? (
-                <Button 
-                  variant="secondary"
-                  size="sm"
-                  onClick={onAddClick}
-                  title="자세히 보기"
-                  className="w-10 h-10 p-0 rounded-xl"
-                >
-                  <ArrowUpRight size={20} className="group-hover:scale-110 transition-transform" />
-                </Button>
-              ) : (
-                <Button 
-                  onClick={onAddClick}
-                  variant="primary"
-                  size="sm"
-                  className="px-4 whitespace-nowrap"
-                >
-                  <PlusCircle size={16} className="mr-2" />
-                  <span>종목 추가</span>
-                </Button>
-              )
-            )}
-          </div>
         </div>
       </div>
 

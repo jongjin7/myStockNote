@@ -97,11 +97,12 @@ export default function Watchlist() {
     description="정찰 중인 종목과 리서치 자료를 관리하며 매수 기회를 포착합니다."
     extra={
       <div className="flex items-center gap-6">
-        <div className="text-right">
-          <div className="text-xs font-black text-gray-500 uppercase tracking-[0.2em] mb-1">총 리서치</div>
-          <div className="text-3xl font-black text-white tracking-tighter tabular-nums">
-            {totalMemos}<span className="text-sm ml-1 text-gray-600">건</span>
-          </div>
+        <div className="flex items-baseline gap-1 text-right text-sm font-bold text-gray-500" >
+          <span className=" uppercase tracking-[0.2em]">총 리서치</span>
+          <span className="text-3xl text-white tracking-tighter tabular-nums">
+            {totalMemos}
+          </span>
+          <span>건</span>
         </div>
         <Button 
           onClick={() => setIsModalOpen(true)} 
