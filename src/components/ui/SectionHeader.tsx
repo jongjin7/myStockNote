@@ -29,11 +29,11 @@ export default function SectionHeader({
           {count !== undefined && (
             <Badge 
               variant="default" 
-              className="bg-primary-500/10 text-primary-400 border border-primary-500/10 text-[10px] font-bold px-2.5 py-0 h-6 flex items-center gap-1.5 shadow-lg shadow-primary-500/5 transition-all group-hover:bg-primary-500/20"
+              className="bg-primary-500/10 border border-primary-500/10 text-xs font-medium px-2.5 py-0 h-6 flex items-center gap-1.5 shadow-lg shadow-primary-500/5 text-white"
             >
-              <span className="opacity-60 text-[10px]">총</span>
-              <span className="text-white brightness-125 tabular-nums text-xs">{count}</span>
-              <span className="opacity-60 text-[10px]">개</span>
+              <span className="opacity-60">총</span>
+              <span className="opacity-80 tabular-nums text-base">{count}</span>
+              <span className="opacity-60">개</span>
             </Badge>
           )}
         </div>

@@ -82,12 +82,7 @@ export default function Layout() {
   )}
 
   {/* Main Navigation */}
-  <div className="flex-1 px-3 py-4 space-y-2 overflow-y-auto custom-scrollbar overflow-x-hidden">
-   {!isCollapsed && (
-   <div className="text-sm font-black uppercase tracking-[0.3em] text-gray-600 px-7 mb-4 whitespace-nowrap transition-opacity duration-300">
-    메뉴 목록
-   </div>
-   )}
+  <div className="flex-1 px-3 py-4 space-y-1 overflow-y-auto custom-scrollbar overflow-x-hidden">
    {navItems.map((item) => {
    const isActive = location.pathname === item.path;
    return (
@@ -95,7 +90,7 @@ export default function Layout() {
     key={item.path}
     to={item.path}
     className={cn(
-     "flex items-center gap-4 py-4 rounded-2xl transition-all duration-300 group relative overflow-hidden",
+     "flex items-center gap-3 py-2 rounded-full transition-all duration-300 group relative overflow-hidden",
      isActive
      ? "bg-gray-900 border border-gray-800 text-primary-400 shadow-lg shadow-black/20"
      : "text-gray-500 hover:text-gray-200 hover:bg-gray-900/60",
@@ -118,7 +113,7 @@ export default function Layout() {
     />
     
     {!isCollapsed && (
-     <span className={cn("font-bold text-sm tracking-tight whitespace-nowrap overflow-hidden transition-all duration-300", isActive ? "text-white" : "")}>
+     <span className={cn("font-semibold tracking-tight whitespace-nowrap overflow-hidden transition-all duration-300", isActive ? "text-white" : "")}>
      {item.label}
      </span>
     )}

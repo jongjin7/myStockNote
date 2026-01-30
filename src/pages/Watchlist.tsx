@@ -115,20 +115,20 @@ export default function Watchlist() {
     }
   />
 
-      {/* Watchlist Control Center Area */}
-      <div className="space-y-6 relative">
-        {/* Subtle Background Accent (Cyan for Research) */}
-        <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-3/4 h-64 bg-info/5 blur-[120px] pointer-events-none rounded-full" />
-        
-        <div className="relative z-10">
-          <Tabs 
-              items={tabItems} 
-              activeId={activeTabId} 
-              onTabChange={handleTabChange} 
-              className="w-full md:w-fit"
-            />
-        </div>
+    {/* Watchlist Control Center Area */}
+    <div className="space-y-6 relative">
+      {/* Subtle Background Accent (Cyan for Research) */}
+      <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-3/4 h-64 bg-info/5 blur-[120px] pointer-events-none rounded-full" />
+      
+      <div className="relative z-10">
+        <Tabs 
+            items={tabItems} 
+            activeId={activeTabId} 
+            onTabChange={handleTabChange} 
+            className="w-full md:w-fit"
+          />
       </div>
+    </div>
 
     <StockList 
       title={activeTabId === 'all' ? "관심 종목 리스트" : `${categoryOptions.find(o => o.value === activeTabId)?.label || ''} 리스트`}

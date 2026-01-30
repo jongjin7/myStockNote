@@ -104,8 +104,8 @@ export function StockList({
                 <Button 
                   onClick={onAddClick}
                   variant="primary"
-                  size="sm"
-                  className="px-4 whitespace-nowrap"
+                  size="md"
+                  className="px-4 rounded-xl whitespace-nowrap"
                 >
                   <PlusCircle size={16} className="mr-2" />
                   <span>종목 추가</span>

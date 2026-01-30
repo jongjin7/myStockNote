@@ -36,8 +36,8 @@ export function BrokerDistribution({ accounts, stocks, totalAssets }: BrokerDist
         {accountStats.map((stat, index) => (
           <div key={index} className="space-y-2 group">
             <div className="flex justify-between items-end">
-              <span className="text-sm font-bold text-gray-400 group-hover:text-white transition-colors">{stat.name}</span>
-              <span className="text-sm font-black text-white tabular-nums">{stat.percentage.toFixed(1)}%</span>
+              <span className="text-sm font-semibold text-gray-400">{stat.name}</span>
+              <span className="text-sm font-semibold text-white tabular-nums">{stat.percentage.toFixed(1)}%</span>
             </div>
             <div className="h-1.5 w-full bg-gray-800/50 rounded-full overflow-hidden">
               <div 
@@ -45,8 +45,8 @@ export function BrokerDistribution({ accounts, stocks, totalAssets }: BrokerDist
                 style={{ width: `${stat.percentage}%` }}
               />
             </div>
-            <div className="text-[10px] text-gray-600 font-bold text-right tracking-tighter">
-              {formatCurrency(stat.total)} 참여 중
+            <div className="text-xs text-gray-600">
+              {formatCurrency(stat.total)} 투자 중
             </div>
           </div>
         ))}
