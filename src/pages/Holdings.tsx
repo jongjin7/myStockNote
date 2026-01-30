@@ -63,7 +63,7 @@ export default function Holdings() {
         description={activeAccountId === 'all' ? "모든 계좌의 보유 자산을 통합하여 관리합니다." : `${activeTabLabel} 계좌의 보유 자산 현황입니다.`}
         extra={
           <div className="text-right">
-            <div className="text-sm font-bold text-gray-500 uppercase tracking-[0.2em] mb-1">
+            <div className="text-sm font-normal text-gray-500 uppercase tracking-[0.2em] mb-1">
               {activeAccountId === 'all' ? '총 운용 자산' : '계좌 총 자산'}
             </div>
             <div className="text-4xl font-bold text-white tracking-tighter tabular-nums">

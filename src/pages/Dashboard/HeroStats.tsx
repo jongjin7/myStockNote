@@ -28,7 +28,7 @@ function PortfolioValue({ totalAssets }: { totalAssets: number }) {
       </div>
       <div className="flex items-center gap-2 text-sm text-gray-500 tracking-widest ml-1 opacity-70">
         <span className="w-1.5 h-1.5 rounded-full bg-gray-500 animate-pulse" />
-        실시간 자본 총합 (평가자산 + 총 예수금)
+        나의 자본 총합 (평가자산 + 총 예수금)
       </div>
     </div>
   );
@@ -47,14 +47,12 @@ function ProfitCard({
   profitStr: string; 
 }) {
   return (
-    <div className="bg-white/[0.03] backdrop-blur-3xl rounded-2xl p-7 border border-white/10 min-w-[300px] shadow-2xl relative overflow-hidden group/card @container">
+    <div className="bg-white/[0.03] backdrop-blur-3xl rounded-2xl p-4 border border-white/10 min-w-[300px] shadow-2xl relative overflow-hidden group/card @container">
       <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.02] to-white/[0.05] pointer-events-none" />
       <div className="relative z-10">
-        <div className="flex items-start justify-between mb-8">
-          <div className="flex flex-col">
-            <span className="text-sm text-gray-500 uppercase tracking-[0.2em] font-black">HOLDINGS P/L</span>
-            <span className="text-xs text-gray-400 font-bold mt-0.5">전체 평가손익</span>
-          </div>
+        <div className="flex items-center justify-between mb-6">
+          <div className="text-sm text-gray-400 tracking-widest">
+            전체 평가손익</div>
           <div className={cn(
             "text-sm font-black px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 shadow-sm backdrop-blur-md border border-white/5",
             totalProfit >= 0 ? "bg-danger/20 text-danger-light" : "bg-info/20 text-info-light"
@@ -64,7 +62,7 @@ function ProfitCard({
           </div>
         </div>
         
-        <div className="mt-2 flex flex-col min-w-0">
+        <div className="flex flex-col min-w-0">
           <div className="tracking-tighter tabular-nums flex items-baseline leading-none">
             <span 
               className={cn(

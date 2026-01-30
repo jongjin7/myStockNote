@@ -20,7 +20,7 @@ export function StockCard({ stock, hasNote, compact = false }: StockCardProps) {
     <Card 
       onClick={() => navigate(`/stocks/${stock.id}`)}
       className={cn(
-        "bg-gray-800/30 hover:bg-gray-800/70 border-none flex items-center justify-between group cursor-pointer overflow-hidden relative transition-all duration-300 ease-out",
+        "bg-gray-800/20 hover:bg-gray-800/70 border-none flex items-center justify-between group cursor-pointer overflow-hidden relative transition-all duration-300 ease-out",
         "hover:-translate-y-0.5 hover:shadow-xl",
         compact ? "py-3 px-4 rounded-xl" : "p-4 rounded-2xl"
       )}
@@ -73,7 +73,7 @@ export function StockCard({ stock, hasNote, compact = false }: StockCardProps) {
         </div>
       </div>
 
-      <div className="flex items-center gap-4 ml-4">
+      <div className="flex items-center gap-2 ml-4">
         {stock.status === 'HOLDING' ? (
           <div className={cn(
             "flex items-center text-right shrink-0",
