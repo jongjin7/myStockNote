@@ -18,7 +18,7 @@ export function StockEditModal({ isOpen, onClose, stock, accounts, onUpdate }: S
   const [accountId, setAccountId] = useState(stock.accountId || '');
   const [quantity, setQuantity] = useState(stock.quantity || 0);
   const [avgPrice, setAvgPrice] = useState(stock.avgPrice || 0);
-  const [currentPrice, setCurrentPrice] = useState(stock.currentPrice || stock.avgPrice || 0);
+  const [currentPrice, setCurrentPrice] = useState(stock.currentPrice || 0);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

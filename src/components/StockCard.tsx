@@ -12,7 +12,7 @@ interface StockCardProps {
 
 export function StockCard({ stock, hasNote, compact = false }: StockCardProps) {
   const navigate = useNavigate();
-  const currentPrice = stock.currentPrice || stock.avgPrice;
+  const currentPrice = stock.currentPrice || 0;
   const profit = (currentPrice - stock.avgPrice) * stock.quantity;
   const profitRate = stock.avgPrice > 0 ? ((currentPrice - stock.avgPrice) / stock.avgPrice) * 100 : 0;
 

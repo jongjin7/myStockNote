@@ -27,7 +27,7 @@ export default function StockDetail() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isConvertModalOpen, setIsConvertModalOpen] = useState(false);
   
-  const currentPrice = stock?.currentPrice || stock?.avgPrice || 0;
+  const currentPrice = stock?.currentPrice || 0;
   const isUpdatingPrice = isLoading;
 
   const fetchCurrentPrice = async () => {

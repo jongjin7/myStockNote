@@ -104,6 +104,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     try {
       for (const stock of stocksToUpdate) {
         if (!stock.symbol) continue;
+        
+        // Add a small delay between requests to avoid rate limits
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
         const newPrice = await fetchStockPrice(stock.symbol);
         if (newPrice !== null) {
           await api.saveStock({

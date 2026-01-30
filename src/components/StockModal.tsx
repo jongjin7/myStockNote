@@ -7,6 +7,7 @@ import {
 } from './ui';
 import type { Stock, StockStatus } from '../types';
 import { CATEGORY_OPTIONS } from '../lib/constants';
+import { fetchStockPrice } from '../lib/stockApi';
 
 interface StockModalProps {
  isOpen: boolean;
@@ -25,7 +26,6 @@ export function StockModal({ isOpen, onClose, initialStatus = 'HOLDING' }: Stock
  const [accountId, setAccountId] = useState('');
  const [quantity, setQuantity] = useState<number>(0);
  const [avgPrice, setAvgPrice] = useState<number>(0);
- const [currentPrice, setCurrentPrice] = useState<number>(0);
 
  useEffect(() => {
  if (isOpen) {
@@ -36,13 +36,18 @@ export function StockModal({ isOpen, onClose, initialStatus = 'HOLDING' }: Stock
   setAccountId('');
   setQuantity(0);
   setAvgPrice(0);
-  setCurrentPrice(0);
  }
  }, [isOpen, initialStatus]);
 
  const handleSubmit = async (e: React.FormEvent) => {
  e.preventDefault();
  if (!name.trim()) return;
+
+ // 등록 시 실시간 주가 동기화 시도
+ let syncedPrice = 0;
+ if (symbol.trim()) {
+  syncedPrice = await fetchStockPrice(symbol.trim()) || 0;
+ }
 
  const newStock: Stock = {
   id: uuidv4(),
@@ -53,7 +58,7 @@ export function StockModal({ isOpen, onClose, initialStatus = 'HOLDING' }: Stock
   accountId: (status === 'WATCHLIST' || status === 'SOLD') ? null : (accountId || null),
   quantity: status === 'WATCHLIST' ? 0 : quantity,
   avgPrice: status === 'WATCHLIST' ? 0 : avgPrice,
-  currentPrice: status === 'WATCHLIST' ? 0 : (currentPrice || avgPrice),
+  currentPrice: syncedPrice,
   createdAt: Date.now(),
   updatedAt: Date.now(),
  };
