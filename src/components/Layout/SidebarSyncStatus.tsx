@@ -1,5 +1,6 @@
 import { RefreshCcw, Loader2 } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { useApp } from '../../contexts/AppContext';
 
 interface SidebarSyncStatusProps {
   isCollapsed: boolean;
@@ -10,34 +11,47 @@ export function SidebarSyncStatus({
   isCollapsed, 
   isLoading 
 }: SidebarSyncStatusProps) {
+  const { actions } = useApp();
+
+  const handleRefresh = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isLoading) {
+      actions.updateAllStockPrices();
+    }
+  };
+
   return (
-    <div className={cn(
-      "mt-8 bg-gray-900/50 rounded-2xl border border-gray-800/30 group cursor-default transition-all duration-300 overflow-hidden",
-      isCollapsed ? "p-2 mx-auto w-10 h-10 flex items-center justify-center hover:w-full hover:p-5 hover:h-auto absolute bottom-6 left-0 right-0 mx-4 z-10 backdrop-blur-md" : "p-5"
-    )}>
-      {isCollapsed && (
-        <RefreshCcw size={14} className="text-gray-700 animate-spin-slow group-hover:hidden" />
+    <button 
+      onClick={handleRefresh}
+      disabled={isLoading}
+      className={cn(
+        "w-full mt-6 bg-gray-900/40 hover:bg-gray-800/60 rounded-xl border border-white/[0.03] group transition-all duration-300 backdrop-blur-md overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed",
+        isCollapsed ? "p-3 flex items-center justify-center aspect-square" : "p-4"
       )}
-      
-      <div className={cn(isCollapsed ? "hidden group-hover:block" : "block")}>
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-sm font-black uppercase tracking-[0.15em] text-gray-600">SYNC STATUS | 동기화</span>
-          {isLoading ? (
-            <Loader2 size={14} className="text-primary-500 animate-spin" />
-          ) : (
-            <RefreshCcw size={14} className="text-gray-700 group-hover:text-primary-500 transition-colors" />
-          )}
-        </div>
-        <div className=" ">
-          <p className="text-[11px] font-bold text-gray-300 mb-1 whitespace-nowrap">API SERVER | 온라인</p>
-          <div className="flex items-center gap-2">
-            <div className={cn("w-1.5 h-1.5 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)]", isLoading ? "bg-primary-500 animate-pulse" : "bg-success")} />
-            <span className="text-[9px] text-gray-500 whitespace-nowrap uppercase tracking-tighter">
-              {isLoading ? '동기화 중...' : `최근: ${new Date().toLocaleTimeString('ko-KR')}`}
+    >
+      <div className="flex items-center justify-between gap-3">
+        {!isCollapsed && (
+          <div className="flex flex-col items-start gap-1">
+            <span className="text-[11px] font-black text-gray-500 uppercase tracking-wider leading-none">주가 데이터 동기화</span>
+            <span className="text-xs font-bold text-gray-300 tabular-nums leading-none mt-0.5">
+              {isLoading ? '최신화 진행 중...' : `업데이트: ${new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}`}
             </span>
           </div>
+        )}
+        
+        <div className={cn(
+          "flex items-center justify-center transition-all duration-500",
+          isLoading ? "text-primary-500" : "text-gray-600 group-hover:text-primary-500",
+          isCollapsed ? "" : "bg-gray-950/50 p-2 rounded-lg"
+        )}>
+          {isLoading ? (
+            <Loader2 size={16} className="animate-spin" />
+          ) : (
+            <RefreshCcw size={16} className="group-hover:rotate-180 transition-transform duration-500" />
+          )}
         </div>
       </div>
-    </div>
+    </button>
   );
 }

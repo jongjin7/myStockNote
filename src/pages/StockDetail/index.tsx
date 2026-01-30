@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../../contexts/AppContext';
 import { AlertCircle } from 'lucide-react';
@@ -17,7 +17,7 @@ import { StockConvertModal } from './StockConvertModal';
 export default function StockDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { data, actions } = useApp();
+  const { data, actions, isLoading } = useApp();
   const { stocks, accounts, memos } = data;
 
   const stock = stocks.find(s => s.id === id);
@@ -26,71 +26,15 @@ export default function StockDetail() {
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isConvertModalOpen, setIsConvertModalOpen] = useState(false);
-  const [currentPrice, setCurrentPrice] = useState(stock?.currentPrice || stock?.avgPrice || 0);
-  const [isUpdatingPrice, setIsUpdatingPrice] = useState(false);
-
-  // Synchronize internal currentPrice when stock data changes
-  useEffect(() => {
-    if (stock) {
-      setCurrentPrice(stock.currentPrice || stock.avgPrice || 0);
-    }
-  }, [stock?.id, stock?.currentPrice]);
+  
+  const currentPrice = stock?.currentPrice || stock?.avgPrice || 0;
+  const isUpdatingPrice = isLoading;
 
   const fetchCurrentPrice = async () => {
-    if (!stock?.symbol) {
-      alert('종목 코드가 등록되어 있지 않아 가격을 가져올 수 없습니다.');
-      return;
-    }
-
-    setIsUpdatingPrice(true);
-    try {
-      const symbol = stock.symbol.trim();
-      let yahooSymbol = symbol;
-      if (/^\d{6}$/.test(symbol)) {
-        yahooSymbol = `${symbol}.KS`; 
-      }
-
-      const url = `https://query1.finance.yahoo.com/v8/finance/chart/${yahooSymbol}?interval=1m&range=1d`;
-      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-
-      const response = await fetch(proxyUrl);
-      const data = await response.json();
-      const result = JSON.parse(data.contents);
-      
-      let meta = result.chart?.result?.[0]?.meta;
-
-      if (!meta?.regularMarketPrice && yahooSymbol.endsWith('.KS')) {
-        const kqSymbol = yahooSymbol.replace('.KS', '.KQ');
-        const kqUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${kqSymbol}?interval=1m&range=1d`;
-        const kqProxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(kqUrl)}`;
-        
-        const kqRes = await fetch(kqProxyUrl);
-        const kqData = await kqRes.json();
-        const kqResult = JSON.parse(kqData.contents);
-        meta = kqResult.chart?.result?.[0]?.meta;
-      }
-
-      if (!meta?.regularMarketPrice) {
-        throw new Error('주가 정보를 찾을 수 없습니다.');
-      }
-
-      const newPrice = Math.round(meta.regularMarketPrice);
-      const updatedStock = {
-        ...stock,
-        currentPrice: newPrice,
-        updatedAt: Date.now()
-      };
-      
-      await actions.saveStock(updatedStock);
-      setCurrentPrice(newPrice);
-    } catch (error) {
-      console.error('Failed to update price:', error);
-      alert('주가 정보를 가져오는데 실패했습니다. 심볼을 확인해주세요.');
-    } finally {
-      setIsUpdatingPrice(false);
-    }
+    if (!stock?.id) return;
+    await actions.updateStockPrice(stock.id);
   };
-
+   
   if (!stock) {
     return (
       <Card className="flex flex-col items-center justify-center p-20 text-center border-dashed border-gray-800 bg-gray-900/10">

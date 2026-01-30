@@ -2,6 +2,7 @@ import { useState, useEffect, createContext, useContext, useCallback, type React
 import type { AppData, Account, Stock, StockMemo, Attachment } from '../types';
 import { initialData } from '../lib/storage';
 import { api } from '../lib/api';
+import { fetchStockPrice } from '../lib/stockApi';
 
 interface AppContextType {
  data: AppData;
@@ -16,6 +17,8 @@ interface AppContextType {
  saveMemo: (memo: StockMemo) => Promise<void>;
  saveAttachment: (attachment: Attachment) => Promise<void>;
  deleteAttachment: (id: string) => Promise<void>;
+ updateStockPrice: (stockId: string) => Promise<void>;
+ updateAllStockPrices: () => Promise<void>;
  };
 }
 
@@ -74,6 +77,47 @@ export function AppProvider({ children }: { children: ReactNode }) {
   await api.deleteAttachment(id);
   await refresh();
  },
+ updateStockPrice: async (stockId: string) => {
+    const stock = data.stocks.find(s => s.id === stockId);
+    if (!stock || !stock.symbol) return;
+    
+    setIsLoading(true);
+    try {
+      const newPrice = await fetchStockPrice(stock.symbol);
+      if (newPrice !== null) {
+        await api.saveStock({
+          ...stock,
+          currentPrice: newPrice,
+          updatedAt: Date.now()
+        });
+        await refresh();
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  },
+  updateAllStockPrices: async () => {
+    const stocksToUpdate = data.stocks.filter(s => s.symbol && (s.status === 'HOLDING' || s.status === 'PARTIAL_SOLD' || s.status === 'WATCHLIST'));
+    if (stocksToUpdate.length === 0) return;
+
+    setIsLoading(true);
+    try {
+      for (const stock of stocksToUpdate) {
+        if (!stock.symbol) continue;
+        const newPrice = await fetchStockPrice(stock.symbol);
+        if (newPrice !== null) {
+          await api.saveStock({
+            ...stock,
+            currentPrice: newPrice,
+            updatedAt: Date.now()
+          });
+        }
+      }
+      await refresh();
+    } finally {
+      setIsLoading(false);
+    }
+  },
  };
 
  return (

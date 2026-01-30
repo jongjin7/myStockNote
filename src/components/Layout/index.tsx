@@ -5,7 +5,6 @@ import { cn } from '../../lib/utils';
 import { useApp } from '../../contexts/AppContext';
 import { Button } from '../ui';
 import { SidebarLogo } from './SidebarLogo';
-import { SidebarSnapshotBadge } from './SidebarSnapshotBadge';
 import { SidebarNavItem } from './SidebarNavItem';
 import { SidebarSyncStatus } from './SidebarSyncStatus';
 import { MobileTopNav } from './MobileTopNav';
@@ -47,7 +46,6 @@ export default function Layout() {
         </Button>
 
         <SidebarLogo isCollapsed={isCollapsed} />
-        <SidebarSnapshotBadge isCollapsed={isCollapsed} />
 
         {/* Main Navigation */}
         <div className="flex-1 px-3 py-4 space-y-1 overflow-y-auto custom-scrollbar overflow-x-hidden">
