@@ -20,7 +20,7 @@ export function StockCard({ stock, hasNote, compact = false }: StockCardProps) {
     <Card 
       onClick={() => navigate(`/stocks/${stock.id}`)}
       className={cn(
-        "bg-gray-900/40 hover:bg-gray-900/50 border-none flex items-center justify-between group cursor-pointer overflow-hidden relative transition-all duration-300 ease-out",
+        "bg-gray-800/30 hover:bg-gray-800/70 border-none flex items-center justify-between group cursor-pointer overflow-hidden relative transition-all duration-300 ease-out",
         "hover:-translate-y-0.5 hover:shadow-xl",
         compact ? "py-3 px-4 rounded-xl" : "p-6 rounded-[2rem]"
       )}

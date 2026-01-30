@@ -5,7 +5,7 @@ import { PlusCircle, Bookmark } from 'lucide-react';
 import type { Stock } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 import { 
- Button, Input, ActionModal, PageHeader, Badge, Tabs, Select 
+ Button, Input, ActionModal, PageHeader, Tabs, Select, StatCard 
 } from '../components/ui';
 import { StockList } from '../components/StockList';
 
@@ -112,44 +112,38 @@ export default function Watchlist() {
         <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-3/4 h-64 bg-info/5 blur-[120px] pointer-events-none rounded-full" />
         
         <div className="space-y-8 relative z-10">
-          <div className="flex flex-col gap-6">
-            <div className="flex items-center justify-between">
-              <div className="text-[11px] font-black text-gray-500 uppercase tracking-[0.3em]">Research Pipeline | 파이프라인</div>
-            </div>
-            <Tabs 
+          <Tabs 
               items={tabItems} 
               activeId={activeTabId} 
               onTabChange={handleTabChange} 
               className="w-fit"
             />
-          </div>
           
           {/* 관심 종목 요약 섹션 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-gray-900/40 border border-gray-800 p-8 rounded-[2.5rem] backdrop-blur-sm hover:border-white/10 hover:bg-gray-900/60 transition-all duration-500 flex items-center justify-between group">
-              <div>
-                <div className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em] mb-3 group-hover:text-gray-400 transition-colors">전체 관심 종목 (Watch)</div>
-                <div className="text-3xl font-black text-white tabular-nums tracking-tighter group-hover:scale-[1.02] transition-transform origin-left">
-                  {watchlistStocks.length}<span className="text-lg ml-1 text-gray-600 font-bold group-hover:text-primary-500 transition-colors">종목</span>
-                </div>
-              </div>
-              <Button onClick={() => setIsModalOpen(true)} className="rounded-2xl h-12 px-6 font-bold shadow-2xl shadow-primary-500/20 transition-all hover:scale-110 active:scale-90 bg-primary-500 text-white border-none">
-                <PlusCircle size={20} className="mr-2" />
-                관심 추가
-              </Button>
-            </div>
+            <StatCard
+              label="전체 관심 종목"
+              subtitle="(Watch)"
+              value={watchlistStocks.length}
+              unit="종목"
+              action={
+                <Button onClick={() => setIsModalOpen(true)} className="rounded-2xl h-12 px-6 font-bold shadow-2xl shadow-primary-500/20 transition-all hover:scale-110 active:scale-90 bg-primary-500 text-white border-none">
+                  <PlusCircle size={20} className="mr-2" />
+                  관심 추가
+                </Button>
+              }
+            />
             
-            <div className="bg-primary-500/5 border border-primary-500/10 p-8 rounded-[2.5rem] backdrop-blur-md group hover:bg-primary-500/10 hover:border-primary-500/30 transition-all duration-500">
-              <div className="flex justify-between items-start mb-3">
-                <div className="text-[10px] font-black text-primary-500 uppercase tracking-[0.2em]">액티브 리서치 (Active)</div>
-                <Badge variant="info" className="text-[10px] font-black px-2.5 py-1 rounded-lg shadow-lg">
-                  {watchlistStocks.length > 0 ? ((activeResearchCount / watchlistStocks.length) * 100).toFixed(0) : 0}% 분석중
-                </Badge>
-              </div>
-              <div className="text-3xl font-black text-white tabular-nums tracking-tighter leading-none group-hover:scale-[1.02] transition-transform origin-left">
-                {activeResearchCount}<span className="text-lg ml-1 text-gray-600 font-bold group-hover:text-primary-500 transition-colors">종합</span>
-              </div>
-            </div>
+            <StatCard
+              label="액티브 리서치"
+              subtitle="(Active)"
+              variant="primary"
+              badgeText={`${watchlistStocks.length > 0 ? ((activeResearchCount / watchlistStocks.length) * 100).toFixed(0) : 0}% 분석중`}
+              badgeVariant="info"
+              value={activeResearchCount}
+              unit="종합"
+              labelVariant="primary"
+            />
           </div>
         </div>
       </div>

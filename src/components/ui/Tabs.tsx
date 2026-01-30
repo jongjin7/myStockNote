@@ -16,7 +16,7 @@ interface TabsProps {
 export function Tabs({ items, activeId, onTabChange, className }: TabsProps) {
   return (
     <div className={cn(
-      "flex items-center gap-1 bg-gray-900/40 p-1 rounded-2xl border border-white/[0.03] backdrop-blur-xl overflow-x-auto no-scrollbar shadow-inner", 
+      "flex items-center gap-1 bg-gray-900/40 p-1 rounded-full border border-white/[0.03] backdrop-blur-xl overflow-x-auto no-scrollbar shadow-inner", 
       className
     )}>
       {items.map((item) => {
@@ -26,10 +26,10 @@ export function Tabs({ items, activeId, onTabChange, className }: TabsProps) {
             key={item.id}
             onClick={() => onTabChange(item.id)}
             className={cn(
-              "flex items-center gap-2.5 px-6 py-2.5 rounded-[14px] text-sm font-black transition-all duration-500 ease-out whitespace-nowrap group/tab",
+              "flex items-center gap-2.5 px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-500 ease-out whitespace-nowrap group/tab",
               isActive 
                 ? "bg-gray-800 text-white shadow-[0_8px_20px_-6px_rgba(0,0,0,0.6)] border border-white/[0.08] ring-1 ring-white/[0.02]" 
-                : "text-gray-500 hover:text-gray-300 hover:bg-white/[0.02]"
+                : "text-gray-500 hover:text-gray-300 hover:bg-white/[0.03]"
             )}
           >
             <span className={cn(

@@ -21,6 +21,7 @@ export type { BadgeProps, BadgeStatus } from './Badge';
 export { default as PageHeader } from './PageHeader';
 export { default as SectionHeader } from './SectionHeader';
 export { Tabs } from './Tabs';
+export { StatCard } from './StatCard';
 
 export * from './modal/index';
 
