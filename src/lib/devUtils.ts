@@ -1,16 +1,16 @@
 import { mockScenarios } from '../lib/mockData';
 import { setMockScenario, resetMockData, getCurrentMockData, clearMockData } from '../mocks/handlers';
 import { api } from './api';
+import { storage } from './storage';
 
 
 /**
  * 개발 환경에서 목 데이터를 로드하는 유틸리티
  */
 export function loadMockDataForDevelopment() {
-  console.log('🎭 목 데이터를 생성하고 있습니다...');
-  localStorage.clear();
+  console.log('🎭 목 데이터를 초기화하고 샘플 데이터를 생성합니다...');
   resetMockData();
-  window.location.reload();
+  setTimeout(() => window.location.reload(), 100);
 }
 
 /**
@@ -18,21 +18,18 @@ export function loadMockDataForDevelopment() {
  */
 export function loadScenario(scenario: keyof typeof mockScenarios) {
   console.log(`🎬 시나리오 "${scenario}" 로드 중...`);
-  localStorage.clear();
   setMockScenario(scenario);
-  console.log('✅ 시나리오 데이터 로드 완료!');
-  window.location.reload();
+  setTimeout(() => window.location.reload(), 100);
 }
 
 /**
- * 모든 데이터 초기화
+ * 모든 데이터 초기화 (완전히 비운 상태로 만듬)
  */
 export function clearAllData() {
   if (confirm('⚠️ 모든 데이터를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
-    clearMockData();
-    localStorage.clear();
-    console.log('🗑️ 모든 데이터와 로컬스토리지가 삭제되었습니다.');
-    window.location.reload();
+    console.log('🗑️ 데이터를 삭제하고 빈 상태로 고정합니다...');
+    clearMockData(); 
+    setTimeout(() => window.location.reload(), 100);
   }
 }
 
@@ -47,7 +44,6 @@ if (import.meta.env.DEV) {
     scenarios: Object.keys(mockScenarios),
     getCurrentData: getCurrentMockData,
     help: () => {
-      console.clear();
       console.log('%c🛠️ StockNote 개발 도구', 'color: #3b82f6; font-size: 16px; font-weight: bold; margin-bottom: 8px;');
 
       const logSection = (title: string, items: Record<string, string>) => {

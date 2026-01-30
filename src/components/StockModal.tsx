@@ -39,33 +39,75 @@ export function StockModal({ isOpen, onClose, initialStatus = 'HOLDING' }: Stock
  }
  }, [isOpen, initialStatus]);
 
- const handleSubmit = async (e: React.FormEvent) => {
- e.preventDefault();
- if (!name.trim()) return;
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim()) return;
 
- // 등록 시 실시간 주가 동기화 시도
- let syncedPrice = 0;
- if (symbol.trim()) {
-  syncedPrice = await fetchStockPrice(symbol.trim()) || 0;
- }
+    const trimmedSymbol = symbol.trim().toUpperCase() || null;
+    const trimmedName = name.trim();
+    const targetAccountId = (status === 'WATCHLIST' || status === 'SOLD') ? null : (accountId || null);
 
- const newStock: Stock = {
-  id: uuidv4(),
-  name: name.trim(),
-  symbol: symbol.trim() || null,
-  status: status,
-  category: category || null,
-  accountId: (status === 'WATCHLIST' || status === 'SOLD') ? null : (accountId || null),
-  quantity: status === 'WATCHLIST' ? 0 : quantity,
-  avgPrice: status === 'WATCHLIST' ? 0 : avgPrice,
-  currentPrice: syncedPrice,
-  createdAt: Date.now(),
-  updatedAt: Date.now(),
- };
+    // 중복 체크: 
+    // 1. 심볼이 있으면 동일 심볼 + 동일 계좌 + 동일 상태
+    // 2. 심볼이 없으면 동일 이름 + 동일 계좌 + 동일 상태
+    const existingStock = data.stocks.find(s => {
+      const sameContext = s.accountId === targetAccountId && s.status === status;
+      if (!sameContext) return false;
+      
+      if (trimmedSymbol && s.symbol) {
+        return s.symbol.toUpperCase() === trimmedSymbol;
+      }
+      return s.name.trim() === trimmedName;
+    });
 
- await actions.saveStock(newStock);
- onClose();
- };
+    let syncedPrice = 0;
+    if (trimmedSymbol) {
+      syncedPrice = await fetchStockPrice(trimmedSymbol) || 0;
+    }
+
+    if (existingStock) {
+      // 기존 종목이 있으면 업데이트 (수량 합산, 평단가 재계산)
+      const newQuantity = existingStock.quantity + (status === 'WATCHLIST' ? 0 : quantity);
+      let newAvgPrice = existingStock.avgPrice;
+      
+      if (status !== 'WATCHLIST' && newQuantity > 0) {
+        // 기존 총액 + 신규 총액 / 전체 수량 = 새로운 평단가
+        const totalCost = (existingStock.quantity * existingStock.avgPrice) + (quantity * avgPrice);
+        newAvgPrice = Math.round(totalCost / newQuantity);
+      }
+
+      const updatedStock: Stock = {
+        ...existingStock,
+        name: name.trim(), // 이름은 최신으로 업데이트
+        quantity: newQuantity,
+        avgPrice: newAvgPrice,
+        currentPrice: syncedPrice || existingStock.currentPrice,
+        category: category || existingStock.category,
+        updatedAt: Date.now(),
+      };
+
+      await actions.saveStock(updatedStock);
+    } else {
+      // 신규 등록
+      const newStock: Stock = {
+        id: uuidv4(),
+        name: name.trim(),
+        symbol: trimmedSymbol,
+        status: status,
+        category: category || null,
+        accountId: targetAccountId,
+        quantity: status === 'WATCHLIST' ? 0 : quantity,
+        avgPrice: status === 'WATCHLIST' ? 0 : avgPrice,
+        currentPrice: syncedPrice,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      };
+
+      await actions.saveStock(newStock);
+    }
+
+    onClose();
+  };
 
  const modalTitle = status === 'WATCHLIST' ? '관심 종목 추가' : '보유 종목 추가';
 

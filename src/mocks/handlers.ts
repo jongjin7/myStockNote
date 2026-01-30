@@ -7,10 +7,12 @@ import type { AppData, Account, Stock, StockMemo, Attachment } from '../types';
 const BASE_URL = '/api';
 
 // 서버 사이드 데이터 시뮬레이션 (초기 로드 시 localStorage에서 가져옴)
-let currentMockData: AppData = storage.load();
+let currentMockData: AppData;
 
-// 만약 데이터가 전혀 없으면 기본 목 데이터 생성
-if (currentMockData.accounts.length === 0 && currentMockData.stocks.length === 0) {
+if (storage.exists()) {
+  currentMockData = storage.load();
+} else {
+  // 처음 방문했을 때만 기본 목 데이터 생성
   currentMockData = generateMockData();
   storage.save(currentMockData);
 }

@@ -98,8 +98,11 @@ export default function StockDetail() {
 
   const handleDelete = async () => {
     if (window.confirm('정말 삭제하시겠습니까? 관련 모든 노트와 첨부파일이 영구적으로 삭제됩니다.')) {
+      const isWatchlist = stock.status === 'WATCHLIST';
+      const targetPath = isWatchlist ? '/watchlist' : '/holdings';
+      
       await actions.deleteStock(stock.id);
-      navigate('/');
+      navigate(targetPath, { replace: true });
     }
   };
 

@@ -1,6 +1,6 @@
 import type { AppData } from '../types';
 
-const STORAGE_KEY = 'stock_note_data_v1';
+export const STORAGE_KEY = 'stock_note_data_v1';
 
 export const initialData: AppData = {
   accounts: [],
@@ -10,6 +10,13 @@ export const initialData: AppData = {
 };
 
 export const storage = {
+  /**
+   * 데이터가 존재하는지 확인합니다.
+   */
+  exists: (): boolean => {
+    return localStorage.getItem(STORAGE_KEY) !== null;
+  },
+
   /**
    * 로컬 스토리지에서 데이터를 로드합니다.
    * (이제 직접 UI에서 사용하지 않고 MSW 핸들러에서만 서버 저장소 역할을 위해 사용합니다)
