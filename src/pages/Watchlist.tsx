@@ -127,7 +127,10 @@ export default function Watchlist() {
               value={watchlistStocks.length}
               unit="종목"
               action={
-                <Button onClick={() => setIsModalOpen(true)} className="rounded-2xl h-12 px-6 font-bold shadow-2xl shadow-primary-500/20 transition-all hover:scale-110 active:scale-90 bg-primary-500 text-white border-none">
+                <Button 
+                  onClick={() => setIsModalOpen(true)} 
+                  className="px-6 h-12"
+                >
                   <PlusCircle size={20} className="mr-2" />
                   관심 추가
                 </Button>

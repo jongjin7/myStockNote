@@ -120,14 +120,14 @@ export default function MemoEditor() {
  <div className="max-w-5xl mx-auto pb-20 animate-fade-in">
   <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
   <div className="flex items-center gap-6">
-   <Button 
-   variant="ghost" 
-   size="sm" 
-   onClick={() => navigate(-1)}
-   className="p-3 bg-gray-900/50 border border-gray-800 text-gray-400 hover:text-white rounded-xl"
-   >
-   <ArrowLeft size={20} />
-   </Button>
+    <Button 
+    variant="secondary" 
+    size="sm" 
+    onClick={() => navigate(-1)}
+    className="w-10 h-10 p-0 rounded-xl"
+    >
+    <ArrowLeft size={20} />
+    </Button>
    <div>
    <h1 className="text-3xl font-bold text-white tracking-tight">
     {editingMemo ? '투자 노트 수정' : '새 투자 노트 작성'}
@@ -143,10 +143,10 @@ export default function MemoEditor() {
    <Button variant="secondary" onClick={() => navigate(-1)}>
    취소
    </Button>
-   <Button onClick={handleSave} className="shadow-lg shadow-primary-500/20 px-8">
-   <Save size={18} className="mr-2" />
-   <span>기록 완료</span>
-   </Button>
+    <Button onClick={handleSave} className="px-8">
+    <Save size={18} className="mr-2" />
+    <span>기록 완료</span>
+    </Button>
   </div>
   </header>
 
@@ -345,13 +345,15 @@ export default function MemoEditor() {
      <span className="text-[8px] text-white font-bold truncate w-full mb-1">{att.fileName}</span>
      <span className="text-[8px] text-white/60 ">{formatFileSize(att.fileSize)}</span>
     </div>
-    <button 
+    <Button 
      type="button"
+     variant="danger"
+     size="sm"
      onClick={() => removeAttachment(att.id, true)}
-     className="absolute -top-2 -right-2 p-2 bg-danger text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-xl"
+     className="absolute -top-2 -right-2 w-8 h-8 p-0 rounded-full opacity-0 group-hover:opacity-100 shadow-xl"
     >
      <X size={14} />
-    </button>
+    </Button>
     </div>
    ))}
 
@@ -365,26 +367,29 @@ export default function MemoEditor() {
     <div className="absolute top-2 left-2 px-2 py-0.5 bg-primary-500 text-[8px] font-black text-white rounded uppercase tracking-widest shadow-lg">
      NEW | 신규
     </div>
-    <button 
+    <Button 
      type="button"
+     variant="danger"
+     size="sm"
      onClick={() => removeAttachment(att.id, false)}
-     className="absolute -top-2 -right-2 p-2 bg-danger text-white rounded-full shadow-xl"
+     className="absolute -top-2 -right-2 w-8 h-8 p-0 rounded-full shadow-xl"
     >
      <X size={14} />
-    </button>
+    </Button>
     </div>
    ))}
 
    {/* Upload Trigger */}
    {(memoAttachments.length + newAttachments.length) < 5 && (
-    <button 
+    <Button 
     type="button"
+    variant="secondary"
     onClick={() => fileInputRef.current?.click()}
-    className="aspect-square bg-gray-900/20 border-2 border-dashed border-gray-800 hover:border-primary-500 hover:bg-primary-500/5 rounded-2xl flex flex-col items-center justify-center text-gray-700 hover:text-primary-500 transition-all group"
+    className="aspect-square w-full h-full border-2 border-dashed border-gray-800 hover:border-primary-500 hover:bg-primary-500/5 rounded-2xl flex flex-col items-center justify-center text-gray-700 hover:text-primary-500 shadow-none bg-transparent"
     >
     <Plus size={32} className="mb-3 group-hover:scale-110 group-hover:rotate-90 transition-all duration-300" />
     <span className="text-sm font-bold uppercase tracking-widest">이미지 업로드</span>
-    </button>
+    </Button>
    )}
    <input 
     type="file" 
@@ -414,13 +419,14 @@ export default function MemoEditor() {
    >
    취소하고 돌아가기
    </Button>
-   <Button 
-   size="lg"
-   type="submit"
-   className="w-full sm:w-auto px-16 h-14 shadow-2xl shadow-primary-500/30 font-black text-lg"
-   >
-   기록 완료
-   </Button>
+    <Button 
+    size="lg"
+    type="submit"
+    className="w-full sm:w-auto px-16 h-14 font-black text-lg"
+    >
+    <Save size={18} className="mr-2" />
+    <span>기록 완료</span>
+    </Button>
   </div>
   </form>
  </div>

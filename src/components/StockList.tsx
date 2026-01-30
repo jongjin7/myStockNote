@@ -75,18 +75,20 @@ export function StockList({
                   className="w-full bg-gray-900/60 border border-gray-800 focus:border-primary-500/50 focus:ring-4 focus:ring-primary-500/5 rounded-xl pl-10 pr-10 py-2.5 text-xs text-white focus:outline-none transition-all placeholder:text-gray-600 backdrop-blur-sm"
                 />
                 {searchQuery && (
-                  <button 
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
                     onClick={() => setSearchQuery('')}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white transition-colors z-10"
+                    className="absolute inset-y-0 right-0 h-full p-2.5 text-gray-400 hover:text-white z-10"
                   >
                     <PlusCircle size={16} className="rotate-45" />
-                  </button>
+                  </Button>
                 )}
               </div>
               <Button 
                 variant="secondary" 
                 size="sm" 
-                className="h-[38px] px-4 rounded-xl shrink-0 font-bold border-white/[0.03] bg-gray-800/40"
+                className="h-[38px] px-4 font-bold"
               >
                 검색
               </Button>
@@ -97,19 +99,21 @@ export function StockList({
             {extra}
             {onAddClick && (
               compact ? (
-                <button 
+                <Button 
+                  variant="secondary"
+                  size="sm"
                   onClick={onAddClick}
                   title="자세히 보기"
-                  className="p-2.5 bg-gray-800/40 hover:bg-primary-500/10 text-gray-500 hover:text-primary-500 rounded-xl transition-all border border-white/[0.03] hover:border-primary-500/20 group"
+                  className="w-10 h-10 p-0 rounded-xl"
                 >
                   <ArrowUpRight size={20} className="group-hover:scale-110 transition-transform" />
-                </button>
+                </Button>
               ) : (
                 <Button 
                   onClick={onAddClick}
                   variant="primary"
                   size="sm"
-                  className="rounded-xl h-9 px-4 font-bold shadow-lg shadow-primary-500/10 transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
+                  className="px-4 whitespace-nowrap"
                 >
                   <PlusCircle size={16} className="mr-2" />
                   <span>종목 추가</span>
@@ -146,11 +150,12 @@ export function StockList({
           </div>
         )
       ) : (
-        <button 
+        <Button 
+          variant="ghost"
           onClick={onAddClick}
           className={cn(
-            "w-full border-2 border-dashed border-white/5 rounded-[2rem] flex flex-col items-center justify-center gap-3 hover:bg-white/[0.02] hover:border-white/10 transition-all group",
-            compact ? "h-32" : "h-64"
+            "w-full border-2 border-dashed border-white/5 rounded-[2rem] flex flex-col items-center justify-center gap-3 hover:bg-white/[0.02] hover:border-white/10 h-auto p-12",
+            compact ? "h-32 p-6" : "h-64"
           )}
         >
           <div className="p-4 bg-gray-900/50 rounded-full text-gray-700 group-hover:text-primary-500/50 transition-colors">
@@ -160,7 +165,7 @@ export function StockList({
             <p className="text-sm font-bold text-gray-600 group-hover:text-gray-400">{emptyMessage}</p>
             {!compact && <p className="text-xs text-gray-700 mt-1">새로운 종목을 추가하여 추적을 시작하세요.</p>}
           </div>
-        </button>
+        </Button>
       )}
     </div>
   );

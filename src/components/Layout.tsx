@@ -3,6 +3,7 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Wallet, Bookmark, Settings, Download, RefreshCcw, ChevronLeft, ChevronRight, Loader2, LayoutList } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useApp } from '../contexts/AppContext';
+import { Button } from './ui';
 
 export default function Layout() {
  const { isLoading } = useApp();
@@ -32,12 +33,14 @@ export default function Layout() {
   )}
   >
   {/* Toggle Button */}
-  <button
+  <Button
+   variant="secondary"
+   size="sm"
    onClick={() => setIsCollapsed(!isCollapsed)}
-   className="absolute -right-3 top-10 bg-gray-900 border border-gray-800 text-gray-400 p-1 rounded-full hover:text-white hover:bg-gray-800 transition-colors z-50 opacity-0 group-hover/sidebar:opacity-100 focus:opacity-100 cursor-pointer"
+   className="absolute -right-3 top-10 w-7 h-7 p-0 rounded-full border border-gray-800 z-50 opacity-0 group-hover/sidebar:opacity-100 focus:opacity-100"
   >
    {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
-  </button>
+  </Button>
 
   {/* Logo */}
   <div className={cn("flex items-center gap-4 py-8 transition-all duration-300", isCollapsed ? "px-4 justify-center" : "px-8")}>
@@ -195,9 +198,13 @@ export default function Layout() {
    </div>
    <span className="text-xl font-bold tracking-tight text-white">StockNote</span>
   </div>
-  <button className="p-3 bg-gray-900 rounded-xl hover:bg-gray-800 transition-colors cursor-pointer">
+  <Button 
+    variant="secondary"
+    size="sm"
+    className="w-10 h-10 p-0 rounded-xl"
+  >
    <Settings size={20} className="text-gray-400" />
-  </button>
+  </Button>
   </nav>
 
   {/* Main Content Area */}

@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { LayoutList, TrendingUp, Bookmark, LayoutDashboard } from 'lucide-react';
-import { Card, Badge, SectionHeader } from '../../components/ui';
+import { Card, Badge, SectionHeader, Button } from '../../components/ui';
 import { StockList } from '../../components/StockList';
 import { formatCurrency } from '../../lib/utils';
 import type { Stock, StockMemo } from '../../types';
@@ -35,12 +35,14 @@ export function PortfolioSection({ holdingStocks, watchlistStocks, memos }: Port
           icon={TrendingUp}
           title="보유 종목"
           extra={
-            <button 
+            <Button 
+              variant="secondary"
+              size="sm"
               onClick={() => navigate('/accounts')} 
-              className="p-3 bg-gray-900/50 hover:bg-gray-800/80 text-gray-500 hover:text-gray-300 rounded-full transition-all border border-white/[0.03] hover:border-white/[0.08] group"
+              className="w-10 h-10 p-0 rounded-full"
             >
               <LayoutList size={20} className="group-hover:scale-110 transition-transform" />
-            </button>
+            </Button>
           }
         />
 

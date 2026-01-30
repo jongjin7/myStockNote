@@ -1,5 +1,5 @@
 import { TrendingUp, RefreshCw } from 'lucide-react';
-import { Card, SectionHeader } from '../../components/ui';
+import { Card, SectionHeader, Button } from '../../components/ui';
 import { cn, formatCurrency } from '../../lib/utils';
 import type { Stock } from '../../types';
 
@@ -39,17 +39,19 @@ export function StockStats({ stock, currentPrice, fetchCurrentPrice, isUpdatingP
           <div className="py-4 pl-5 space-y-1">
             <div className="flex items-center gap-2">
               <div className="text-sm font-bold text-primary-500 uppercase tracking-widest">현재가</div>
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={fetchCurrentPrice}
                 disabled={isUpdatingPrice}
                 className={cn(
-                  "p-1.5 rounded-md bg-primary-500/10 hover:bg-primary-500/20 text-primary-500 transition-all",
+                  "w-8 h-8 p-0 min-h-0 bg-primary-500/10 text-primary-500 hover:bg-primary-500/20",
                   isUpdatingPrice && "animate-spin"
                 )}
                 title="현재가 갱신"
               >
                 <RefreshCw size={12} />
-              </button>
+              </Button>
             </div>
             <div className="text-lg font-black text-primary-400 tabular-nums">{formatCurrency(currentPrice)}</div>
           </div>

@@ -43,7 +43,7 @@ export function StockHeader({ stock, account, currentPrice, onEdit, onDelete }: 
             variant="ghost"
             size="sm"
             onClick={onEdit}
-            className="p-2.5 h-auto hover:bg-white/10 text-white border border-white/5 rounded-xl transition-all shadow-lg"
+            className="w-10 h-10 p-0 text-white rounded-xl"
             title="종목 정보 수정"
           >
             <Pencil size={18} />
@@ -52,7 +52,7 @@ export function StockHeader({ stock, account, currentPrice, onEdit, onDelete }: 
             variant="ghost"
             size="sm"
             onClick={onDelete}
-            className="p-2.5 h-auto hover:bg-danger/20 text-white hover:text-danger-light border border-white/5 rounded-xl transition-all shadow-lg"
+            className="w-10 h-10 p-0 text-white hover:text-danger-light rounded-xl"
             title="종목 삭제"
           >
             <Trash2 size={18} />

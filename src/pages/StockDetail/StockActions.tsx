@@ -17,7 +17,7 @@ export function StockActions({ stockId, isWatchlist, onConvert }: StockActionsPr
       </h3>
       <div className="flex flex-col gap-4">
         <Link to={`/stocks/${stockId}/memos/new`} className="w-full">
-          <Button className="w-full h-14 text-white shadow-lg shadow-primary-500/20">
+          <Button className="w-full h-12">
             <Plus size={20} className="mr-2" />
             <span>새 투자 노트 작성</span>
           </Button>
@@ -26,7 +26,7 @@ export function StockActions({ stockId, isWatchlist, onConvert }: StockActionsPr
           <Button
             variant="success"
             onClick={onConvert}
-            className="w-full h-14 shadow-lg shadow-success/20"
+            className="w-full h-12"
           >
             <ExternalLink size={18} className="mr-2" />
             <span className="font-black">매수 확정하기 (전환)</span>

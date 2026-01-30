@@ -66,20 +66,20 @@ export function StockEditModal({ isOpen, onClose, stock, accounts, onUpdate }: S
 
         <div className="space-y-3">
           <label className="text-sm font-bold text-gray-500 uppercase tracking-widest">상태</label>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 bg-gray-900/40 p-1.5 rounded-2xl border border-white/[0.03]">
             {(['HOLDING', 'WATCHLIST', 'PARTIAL_SOLD', 'SOLD'] as const).map((s) => (
               <button
                 key={s}
                 type="button"
                 onClick={() => setStatus(s)}
                 className={cn(
-                  "px-4 py-3 rounded-xl text-sm font-bold border transition-all flex items-center justify-center gap-2",
+                  "px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2",
                   status === s
-                    ? "bg-primary-500 border-primary-500 text-white shadow-lg shadow-primary-500/20"
-                    : "bg-gray-950 border-gray-800 text-gray-500 hover:border-gray-700"
+                    ? "bg-gray-800 text-white shadow-lg border border-white/[0.08]"
+                    : "text-gray-600 hover:text-gray-400 hover:bg-white/[0.02]"
                 )}
               >
-                <Badge status={s} className={status === s ? "bg-white/20 text-white p-0" : "bg-transparent p-0 text-gray-500"} />
+                <Badge status={s} className={status === s ? "bg-white/10 text-white p-0" : "bg-transparent p-0 text-gray-700"} />
               </button>
             ))}
           </div>
