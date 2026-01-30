@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
-import { PlusCircle, Search, ArrowUpRight } from 'lucide-react';
+import type { ReactNode } from 'react';
+import { PlusCircle, Search, LayoutList } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { SectionHeader, Button } from './ui';
 import { StockCard } from './StockCard';
@@ -17,6 +18,7 @@ interface StockListProps {
   showSearch?: boolean;
   layout?: 'list' | 'grid';
   className?: string;
+  extra?: ReactNode;
   searchPlaceholder?: string;
 }
 
@@ -31,6 +33,7 @@ export function StockList({
   showSearch = false,
   layout = 'list',
   className,
+  extra,
   searchPlaceholder = "종목명 또는 심볼로 검색..."
 }: StockListProps) {
   const [searchQuery, setSearchQuery] = useState('');
@@ -69,7 +72,7 @@ export function StockList({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={searchPlaceholder}
-                  className="w-full bg-gray-900/60 border border-gray-800 focus:border-primary-500/50 focus:ring-4 focus:ring-primary-500/5 rounded-xl pl-10 pr-10 py-2.5 text-xs text-white focus:outline-none transition-all placeholder:text-gray-600 backdrop-blur-sm"
+                  className="w-full bg-gray-900/60 border border-gray-800 focus:border-primary-500/50 focus:ring-4 focus:ring-primary-500/5 rounded-xl pl-10 pr-10 py-2.5 text-sm text-white font-medium focus:outline-none transition-all placeholder:text-gray-600 backdrop-blur-sm"
                 />
                 {searchQuery && (
                   <Button 
@@ -84,6 +87,31 @@ export function StockList({
               </div>
             </div>
           )}
+          
+          {extra}
+          {onAddClick && (
+              compact ? (
+                <Button 
+                  variant="secondary"
+                  size="sm"
+                  onClick={onAddClick}
+                  title="자세히 보기"
+                  className="w-10 h-10 p-0 rounded-full"
+                >
+                  <LayoutList size={20} className="group-hover:scale-110 transition-transform" />
+                </Button>
+              ) : (
+                <Button 
+                  onClick={onAddClick}
+                  variant="primary"
+                  size="sm"
+                  className="px-4 whitespace-nowrap"
+                >
+                  <PlusCircle size={16} className="mr-2" />
+                  <span>종목 추가</span>
+                </Button>
+              )
+            )}
         </div>
       </div>
 
@@ -95,9 +123,9 @@ export function StockList({
           </div>
         ) : (
           <div className={cn(
-            "grid gap-4",
+            "grid gap-2",
             layout === 'grid' ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1",
-            compact ? "space-y-1" : ""
+            compact ? "" : ""
           )}>
             {filteredStocks.map((stock) => {
               const hasNote = memos.some(m => m.stockId === stock.id);

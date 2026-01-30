@@ -22,7 +22,7 @@ export function StockCard({ stock, hasNote, compact = false }: StockCardProps) {
       className={cn(
         "bg-gray-800/30 hover:bg-gray-800/70 border-none flex items-center justify-between group cursor-pointer overflow-hidden relative transition-all duration-300 ease-out",
         "hover:-translate-y-0.5 hover:shadow-xl",
-        compact ? "py-3 px-4 rounded-xl" : "p-6 rounded-[2rem]"
+        compact ? "py-3 px-4 rounded-xl" : "p-4 rounded-2xl"
       )}
     >
       {/* Visual Indicator for Profit/Loss on the side */}
@@ -51,20 +51,20 @@ export function StockCard({ stock, hasNote, compact = false }: StockCardProps) {
               {stock.name}
             </span>
             {stock.symbol && !compact && (
-              <span className="text-[9px] font-black text-gray-500 bg-gray-950 px-1.5 py-0.5 rounded-md border border-white/[0.03] uppercase tracking-tighter shrink-0">
+              <span className="text-xs font-medium text-gray-500 bg-gray-950 px-1.5 py-0.5 rounded-md border border-white/[0.03] uppercase tracking-tighter shrink-0">
                 {stock.symbol}
               </span>
             )}
             {stock.category && !compact && (
-              <span className="text-[9px] font-black text-primary-400/80 bg-primary-500/5 px-1.5 py-0.5 rounded-md border border-primary-500/10 tracking-tighter shrink-0">
+              <span className="text-xs font-medium text-primary-400/80 bg-primary-500/5 px-1.5 py-0.5 rounded-md border border-primary-500/10 tracking-tighter shrink-0">
                 {stock.category}
               </span>
             )}
           </div>
 
           <div className={cn(
-            "flex items-center gap-2 font-semibold text-gray-600 uppercase tracking-widest shrink-0",
-            compact ? "text-xs" : "text-md"
+            "flex items-center gap-2  text-gray-600 uppercase tracking-wide shrink-0",
+            compact ? "text-xs font-semibold" : "text-md"
           )}>
             <span>{stock.quantity.toLocaleString()}주</span>
             <span className="w-0.5 h-0.5 rounded-full bg-gray-700/80" />
@@ -76,8 +76,8 @@ export function StockCard({ stock, hasNote, compact = false }: StockCardProps) {
       <div className="flex items-center gap-4 ml-4">
         {stock.status === 'HOLDING' ? (
           <div className={cn(
-            "flex items-center gap-3 text-right shrink-0",
-            compact ? "flex-row" : "flex-col"
+            "flex items-center text-right shrink-0",
+            compact ? "flex-row gap-2" : "flex-col gap-1"
           )}>
             <div className={cn(
               "font-semibold tabular-nums tracking-tighter",
@@ -87,7 +87,7 @@ export function StockCard({ stock, hasNote, compact = false }: StockCardProps) {
               {profit >= 0 ? '+' : ''}{formatCurrency(profit)}
             </div>
             <div className={cn(
-              "font-semibold tabular-nums text-[10px] opacity-70",
+              "font-semibold tabular-nums text-xs opacity-70",
               profit >= 0 ? "text-danger-light" : "text-info-light"
             )}>
               {profitRate > 0 ? '+' : ''}{profitRate.toFixed(2)}%
