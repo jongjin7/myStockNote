@@ -16,17 +16,18 @@ const queryClient = new QueryClient({
   },
 })
 
-// 개발 환경에서 MSW 시작
+// 개발 환경에서 선택적으로 MSW 시작
 async function enableMocking() {
- if (import.meta.env.DEV) {
- const { worker } = await import('./mocks/browser');
- await worker.start({
-  onUnhandledRequest: 'bypass', // API 요청이 아닌 경우 무시
- });
- 
- // 목 데이터 유틸리티 로드
- await import('./lib/devUtils');
- }
+  if (import.meta.env.DEV && import.meta.env.VITE_USE_MSW === 'true') {
+    const { worker } = await import('./mocks/browser');
+    await worker.start({
+      onUnhandledRequest: 'bypass',
+    });
+    console.log('%c🚀 MSW Mock Server 활성화됨 (Supabase API가 챌린지됩니다)', 'color: #ff00ff; font-weight: bold; font-size: 14px;');
+    
+    // 목 데이터 유틸리티 로드
+    await import('./lib/devUtils');
+  }
 }
 
 const rootElement = document.getElementById('root');

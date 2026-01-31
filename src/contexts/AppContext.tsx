@@ -46,9 +46,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }, [serverData]);
 
-  // Realtime Subscriptions
+  // Realtime Subscriptions (MSW 모드에서는 비활성화)
   useEffect(() => {
-    if (!user) return;
+    if (!user || import.meta.env.VITE_USE_MSW === 'true') return;
 
     const channel = supabase
       .channel('db-changes')

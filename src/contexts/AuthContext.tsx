@@ -17,6 +17,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // MSW 환경일 경우 가짜 사용자 세션 제공
+    if (import.meta.env.VITE_USE_MSW === 'true') {
+      const mockUser = {
+        id: 'mock-user-uuid',
+        email: 'mock@example.com',
+        user_metadata: { full_name: 'Mock User' }
+      } as any;
+      const mockSession = {
+        access_token: 'mock-token',
+        user: mockUser,
+      } as any;
+
+      setSession(mockSession);
+      setUser(mockUser);
+      setIsLoading(false);
+      return;
+    }
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session && import.meta.env.DEV) {
