@@ -1,6 +1,6 @@
 # StockNote PRD (Product Requirements Document)
 
-**버전:** v1.1  
+**버전:** v2.0  
 **작성일:** 2026-01-31  
 **상태:** 구현 중 (MVP)  
 **작성자:** 개인 프로젝트

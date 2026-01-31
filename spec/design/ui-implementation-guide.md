@@ -72,6 +72,11 @@
 - **Thesis Timeline**: 투자 노트를 수직 타임라인 형태로 배치
   - **타임라인 인디케이터**: 왼쪽 수직선과 포인트 노드를 통해 기록의 선형 흐름 가시화
   - **메모 유형별 배지**: 매수/매도/일반 기록을 컬러 배지로 구분
+- **Multimedia Research Archive**: 투자 노트에 첨부된 이미지들을 하단 갤러리 형태로 제공
+  - **이미지 프리뷰**: 12px 라운드 및 미세한 보더가 적용된 썸네일 그리드
+  - **전용 라이브러리(Lightbox)**: 클릭 시 `yet-another-react-lightbox` 연동을 통한 고해상도 전체화면 뷰어 제공
+  - **확대 및 탐색**: 마우스 휠 줌(Zoom), 썸네일 바(Thumbnails), 좌우 슬라이드 내비게이션 지원
+  - **UX 최적화**: 무한 루프 비활성화, 현재 위치(Active) 시각적 강조 등 프리미엄 갤러리 경험 제공
 - **Conversion Flow**: 관심 종목 상세에서 '매수 확정' 시 계좌 선택 및 정보 복사 전환 모달
 
 ### 3.5 관심 종목 (Watchlist)
@@ -81,9 +86,11 @@
 
 ### 3.6 노트 에디터 (Memo Editor)
 - **Contextual Form**: 매수/매도/일반 타입 전환에 따른 맞춤형 입력 필드 (판단 근거, 시나리오, 리스크, 복기 등)
+- **Image Archiving**: 리서치 자료 및 차트 이미지를 최대 5개까지 업로드 가능 (Base64 최적화 저장)
 
 ## 4. 기술 명세
 
 - **주가 연동**: `Yahoo Finance API` + `AllOrigins Proxy` (CORS 우회) 기반 실시간 조회
 - **데이터 관리**: `Context API` + `MSW` (Mock Service Worker)를 통한 로컬 가상 서버 환경
 - **포맷팅**: `intl` 라이브러리 없이 `ko-KR` locale 기반 통화 및 날짜 커스텀 유틸 사용
+- **미디어 라이브러리**: `yet-another-react-lightbox` (이미지 갤러리 및 상세 뷰어 구현)
