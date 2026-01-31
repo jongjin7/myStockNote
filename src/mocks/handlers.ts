@@ -24,6 +24,14 @@ const syncToStorage = () => {
   storage.save(currentMockData);
 };
 
+// ID 추출 유틸리티 (URL 파라미터에서 eq.uuid 형태 추출)
+function getParamId(request: Request, paramName: string = 'id'): string | null {
+  const url = new URL(request.url);
+  const val = url.searchParams.get(paramName);
+  if (!val) return null;
+  return val.includes('.') ? val.split('.')[1] : val;
+}
+
 export const handlers = [
   // --- Auth Mock ---
   http.get(`${AUTH_URL}/user`, () => {
@@ -42,25 +50,28 @@ export const handlers = [
       ...a,
       broker_name: a.brokerName,
       cash_balance: a.cashBalance,
-      user_id: 'mock-user-uuid'
+      user_id: 'mock-user-uuid',
+      created_at: new Date(a.createdAt).toISOString(),
+      updated_at: new Date(a.updatedAt).toISOString()
     })));
   }),
 
   // 계좌 생성/수정 (UPSERT)
   http.post(`${REST_URL}/accounts`, async ({ request }) => {
     const account = await request.json() as any;
+    const existingIndex = currentMockData.accounts.findIndex((a) => a.id === account.id);
+    
     const mappedAccount: Account = {
       id: account.id,
       brokerName: account.broker_name,
       cashBalance: account.cash_balance,
       memo: account.memo,
-      createdAt: Date.now(),
+      createdAt: existingIndex >= 0 ? currentMockData.accounts[existingIndex].createdAt : Date.now(),
       updatedAt: Date.now(),
     };
 
-    const index = currentMockData.accounts.findIndex((a) => a.id === account.id);
-    if (index >= 0) {
-      currentMockData.accounts[index] = mappedAccount;
+    if (existingIndex >= 0) {
+      currentMockData.accounts[existingIndex] = mappedAccount;
     } else {
       currentMockData.accounts.push(mappedAccount);
     }
@@ -70,8 +81,7 @@ export const handlers = [
 
   // 계좌 삭제
   http.delete(`${REST_URL}/accounts`, ({ request }) => {
-    const url = new URL(request.url);
-    const id = url.searchParams.get('id')?.split('.')[1];
+    const id = getParamId(request);
     if (id) {
       currentMockData.accounts = currentMockData.accounts.filter((a) => a.id !== id);
       currentMockData.stocks = currentMockData.stocks.map(s => 
@@ -89,30 +99,36 @@ export const handlers = [
       user_id: 'mock-user-uuid',
       account_id: s.accountId,
       avg_price: s.avgPrice,
-      current_price: s.currentPrice
+      current_price: s.currentPrice,
+      created_at: new Date(s.createdAt).toISOString(),
+      updated_at: new Date(s.updatedAt).toISOString()
     })));
   }),
 
-  // 주식 등록/수정
-  http.post(`${REST_URL}/stocks`, async ({ request }) => {
+  // 주식 등록/수정 (POST/PATCH)
+  http.all(`${REST_URL}/stocks`, async ({ request }) => {
+    if (request.method !== 'POST' && request.method !== 'PATCH') return;
+
     const stock = await request.json() as any;
+    const id = stock.id || getParamId(request);
+    const existingIndex = currentMockData.stocks.findIndex((s) => s.id === id);
+    
     const mappedStock: Stock = {
-      id: stock.id,
+      id: id,
       accountId: stock.account_id,
       symbol: stock.symbol,
       name: stock.name,
-      quantity: stock.quantity,
-      avgPrice: stock.avg_price,
-      currentPrice: stock.current_price,
-      status: stock.status,
-      category: stock.category,
-      createdAt: Date.now(),
+      quantity: stock.quantity ?? (existingIndex >= 0 ? currentMockData.stocks[existingIndex].quantity : 0),
+      avgPrice: stock.avg_price ?? (existingIndex >= 0 ? currentMockData.stocks[existingIndex].avgPrice : 0),
+      currentPrice: stock.current_price ?? (existingIndex >= 0 ? currentMockData.stocks[existingIndex].currentPrice : null),
+      status: stock.status ?? (existingIndex >= 0 ? currentMockData.stocks[existingIndex].status : 'HOLDING'),
+      category: stock.category ?? (existingIndex >= 0 ? currentMockData.stocks[existingIndex].category : ''),
+      createdAt: existingIndex >= 0 ? currentMockData.stocks[existingIndex].createdAt : Date.now(),
       updatedAt: Date.now(),
     };
 
-    const index = currentMockData.stocks.findIndex((s) => s.id === stock.id);
-    if (index >= 0) {
-      currentMockData.stocks[index] = mappedStock;
+    if (existingIndex >= 0) {
+      currentMockData.stocks[existingIndex] = mappedStock;
     } else {
       currentMockData.stocks.push(mappedStock);
     }
@@ -122,8 +138,7 @@ export const handlers = [
 
   // 주식 삭제
   http.delete(`${REST_URL}/stocks`, ({ request }) => {
-    const url = new URL(request.url);
-    const id = url.searchParams.get('id')?.split('.')[1];
+    const id = getParamId(request);
     if (id) {
       const memoIdsToClean = currentMockData.memos.filter(m => m.stockId === id).map(m => m.id);
       currentMockData.stocks = currentMockData.stocks.filter((s) => s.id !== id);
@@ -136,8 +151,7 @@ export const handlers = [
 
   // 메모 목록 조회
   http.get(`${REST_URL}/memos`, ({ request }) => {
-    const url = new URL(request.url);
-    const stockId = url.searchParams.get('stock_id')?.split('.')[1];
+    const stockId = getParamId(request, 'stock_id');
     
     let memos = currentMockData.memos;
     if (stockId) {
@@ -151,29 +165,35 @@ export const handlers = [
       buy_reason: m.buyReason,
       expected_scenario: m.expectedScenario,
       current_thought: m.currentThought,
-      sell_review: m.sellReview
+      sell_review: m.sellReview,
+      created_at: new Date(m.createdAt).toISOString(),
+      updated_at: new Date(m.updatedAt).toISOString()
     })));
   }),
 
-  // 메모 저장
-  http.post(`${REST_URL}/memos`, async ({ request }) => {
+  // 메모 저장 (POST/PATCH)
+  http.all(`${REST_URL}/memos`, async ({ request }) => {
+    if (request.method !== 'POST' && request.method !== 'PATCH') return;
+
     const memo = await request.json() as any;
+    const id = memo.id || getParamId(request);
+    const existingIndex = currentMockData.memos.findIndex((m) => m.id === id);
+    
     const mappedMemo: StockMemo = {
-      id: memo.id,
-      stockId: memo.stock_id,
-      type: memo.type,
-      buyReason: memo.buy_reason,
-      expectedScenario: memo.expected_scenario,
-      risks: memo.risks,
-      currentThought: memo.current_thought,
-      sellReview: memo.sell_review,
-      createdAt: Date.now(),
+      id: id,
+      stockId: memo.stock_id || (existingIndex >= 0 ? currentMockData.memos[existingIndex].stockId : ''),
+      type: memo.type || (existingIndex >= 0 ? currentMockData.memos[existingIndex].type : 'GENERAL'),
+      buyReason: memo.buy_reason !== undefined ? memo.buy_reason : (existingIndex >= 0 ? currentMockData.memos[existingIndex].buyReason : null),
+      expectedScenario: memo.expected_scenario !== undefined ? memo.expected_scenario : (existingIndex >= 0 ? currentMockData.memos[existingIndex].expectedScenario : null),
+      risks: memo.risks !== undefined ? memo.risks : (existingIndex >= 0 ? currentMockData.memos[existingIndex].risks : null),
+      currentThought: memo.current_thought !== undefined ? memo.current_thought : (existingIndex >= 0 ? currentMockData.memos[existingIndex].currentThought : null),
+      sellReview: memo.sell_review !== undefined ? memo.sell_review : (existingIndex >= 0 ? currentMockData.memos[existingIndex].sellReview : null),
+      createdAt: existingIndex >= 0 ? currentMockData.memos[existingIndex].createdAt : Date.now(),
       updatedAt: Date.now(),
     };
 
-    const index = currentMockData.memos.findIndex((m) => m.id === memo.id);
-    if (index >= 0) {
-      currentMockData.memos[index] = mappedMemo;
+    if (existingIndex >= 0) {
+      currentMockData.memos[existingIndex] = mappedMemo;
     } else {
       currentMockData.memos.push(mappedMemo);
     }
@@ -183,8 +203,7 @@ export const handlers = [
 
   // 첨부파일 목록 조회
   http.get(`${REST_URL}/attachments`, ({ request }) => {
-    const url = new URL(request.url);
-    const memoId = url.searchParams.get('memo_id')?.split('.')[1];
+    const memoId = getParamId(request, 'memo_id');
     
     let attachments = currentMockData.attachments;
     if (memoId) {
@@ -198,7 +217,8 @@ export const handlers = [
       file_name: a.fileName,
       file_size: a.fileSize,
       mime_type: a.mimeType,
-      storage_url: a.data
+      storage_url: a.data,
+      created_at: new Date(a.createdAt).toISOString(),
     })));
   }),
 
@@ -221,6 +241,16 @@ export const handlers = [
     return HttpResponse.json(attachment);
   }),
 
+  // 첨부파일 삭제
+  http.delete(`${REST_URL}/attachments`, ({ request }) => {
+    const id = getParamId(request);
+    if (id) {
+      currentMockData.attachments = currentMockData.attachments.filter((a) => a.id !== id);
+      syncToStorage();
+    }
+    return HttpResponse.json({ success: true });
+  }),
+
   // --- Storage API Mock (Supabase) ---
   
   // 이미지 업로드
@@ -233,6 +263,11 @@ export const handlers = [
       Id: 'mock-storage-id',
       path: path
     });
+  }),
+
+  // 이미지 공개 URL
+  http.get(`${STORAGE_URL}/object/public/stock-images/*`, () => {
+    return Response.redirect('https://images.unsplash.com/photo-1611974717483-936666666666?w=800&auto=format&fit=crop&q=60', 302);
   }),
 ];
 
