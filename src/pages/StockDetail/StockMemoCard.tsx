@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Pencil, Activity, AlertCircle, TrendingUp } from 'lucide-react';
+import { Pencil, Activity, AlertCircle, TrendingUp, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Card, Badge } from '../../components/ui';
 import { formatDateTime } from '../../lib/utils';
 import type { StockMemo, Attachment } from '../../types';
+import { useApp } from '../../contexts/AppContext';
 
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
@@ -19,6 +20,18 @@ interface StockMemoCardProps {
 
 export function StockMemoCard({ memo, attachments, isWatchlist }: StockMemoCardProps) {
   const [index, setIndex] = useState(-1);
+  const { actions } = useApp();
+
+  const handleDelete = async () => {
+    if (window.confirm('이 노트를 삭제하시겠습니까? 관련된 첨부파일도 모두 삭제됩니다.')) {
+      try {
+        await actions.deleteMemo(memo.id);
+      } catch (err) {
+        console.error('Failed to delete memo:', err);
+        alert('노트 삭제에 실패했습니다.');
+      }
+    }
+  };
 
   return (
     <div className="relative pl-14 pb-12 last:pb-0">
@@ -31,15 +44,24 @@ export function StockMemoCard({ memo, attachments, isWatchlist }: StockMemoCardP
               {memo.type === 'PURCHASE' ? '매수 기록' : memo.type === 'SELL' ? '매도 기록' : '일반 메모'}
             </Badge>
             <span className="text-xs font-bold text-gray-500 uppercase tracking-widest ">
-              {formatDateTime(new Date(memo.updatedAt))}
+              {formatDateTime(memo.updatedAt)}
             </span>
           </div>
-          <Link
-            to={`/memos/${memo.id}/edit`}
-            className="p-2 text-gray-600 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
-          >
-            <Pencil size={16} />
-          </Link>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleDelete}
+              className="p-2 text-gray-600 hover:text-danger-light hover:bg-danger/10 rounded-lg transition-colors"
+              title="삭제"
+            >
+              <Trash2 size={16} />
+            </button>
+            <Link
+              to={`/memos/${memo.id}/edit`}
+              className="p-2 text-gray-600 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+            >
+              <Pencil size={16} />
+            </Link>
+          </div>
         </div>
 
         <div className="space-y-6">

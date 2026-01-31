@@ -18,6 +18,7 @@ interface AppContextType {
     saveStock: (stock: Stock) => Promise<void>;
     deleteStock: (id: string) => Promise<void>;
     saveMemo: (memo: StockMemo) => Promise<void>;
+    deleteMemo: (id: string) => Promise<void>;
     saveAttachment: (attachment: Attachment) => Promise<void>;
     deleteAttachment: (id: string) => Promise<void>;
     updateStockPrice: (stockId: string) => Promise<void>;
@@ -101,6 +102,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['appData', user?.id] }),
   });
 
+  const deleteMemoMutation = useMutation({
+    mutationFn: (id: string) => supabaseApi.deleteMemo(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['appData', user?.id] }),
+  });
+
   const attachmentMutation = useMutation({
     mutationFn: (attachment: Attachment) => supabaseApi.saveAttachment(user!.id, attachment),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['appData', user?.id] }),
@@ -127,6 +133,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
     },
     saveMemo: async (memo: StockMemo) => {
       await memoMutation.mutateAsync(memo);
+    },
+    deleteMemo: async (id: string) => {
+      await deleteMemoMutation.mutateAsync(id);
     },
     saveAttachment: async (attachment: Attachment) => {
       await attachmentMutation.mutateAsync(attachment);

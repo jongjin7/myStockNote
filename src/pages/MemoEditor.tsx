@@ -14,7 +14,7 @@ import {
  Card,
  Button, Textarea 
 } from '../components/ui';
-import { cn, formatFileSize } from '../lib/utils';
+import { cn, formatFileSize, resizeImage } from '../lib/utils';
 
 interface NewAttachment extends Attachment {
   file?: File;
@@ -52,31 +52,42 @@ export default function MemoEditor() {
  }
  }, [stock, editingMemo, navigate]);
 
- const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+ const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
   const files = e.target.files;
   if (!files || !user) return;
 
-  Array.from(files).forEach(file => {
-   if (file.size > 10 * 1024 * 1024) {
-    alert('파일 크기는 10MB 이하여야 합니다.');
-    return;
+  const fileList = Array.from(files);
+  
+  for (const file of fileList) {
+   if (file.size > 20 * 1024 * 1024) {
+    alert('파일 크기가 너무 큽니다. (최대 20MB)');
+    continue;
    }
 
-   const previewUrl = URL.createObjectURL(file);
-   const attachment: NewAttachment = {
-    id: uuidv4(),
-    memoId: editingMemo?.id || 'temp',
-    type: 'IMAGE',
-    fileName: file.name,
-    fileSize: file.size,
-    mimeType: file.type,
-    data: '', // Will be updated with publicUrl after upload
-    createdAt: Date.now(),
-    file,
-    previewUrl,
-   };
-   setNewAttachments(prev => [...prev, attachment]);
-  });
+   try {
+    // 이미지 파일인 경우 리사이징 처리
+    const resizedFile = file.type.startsWith('image/') 
+      ? await resizeImage(file, 1200, 0.8)
+      : file;
+
+    const previewUrl = URL.createObjectURL(resizedFile);
+    const attachment: NewAttachment = {
+     id: uuidv4(),
+     memoId: editingMemo?.id || 'temp',
+     type: 'IMAGE',
+     fileName: resizedFile.name,
+     fileSize: resizedFile.size,
+     mimeType: resizedFile.type,
+     data: '', 
+     createdAt: Date.now(),
+     file: resizedFile,
+     previewUrl,
+    };
+    setNewAttachments(prev => [...prev, attachment]);
+   } catch (err) {
+    console.error('Image resizing failed:', err);
+   }
+  }
  };
 
  const removeAttachment = async (id: string, isExisting: boolean) => {

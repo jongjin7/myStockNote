@@ -201,6 +201,17 @@ export const handlers = [
     return HttpResponse.json(memo);
   }),
 
+  // 메모 삭제
+  http.delete(`${REST_URL}/memos`, ({ request }) => {
+    const id = getParamId(request);
+    if (id) {
+      currentMockData.memos = currentMockData.memos.filter((m) => m.id !== id);
+      currentMockData.attachments = currentMockData.attachments.filter((a) => a.memoId !== id);
+      syncToStorage();
+    }
+    return HttpResponse.json({ success: true });
+  }),
+
   // 첨부파일 목록 조회
   http.get(`${REST_URL}/attachments`, ({ request }) => {
     const memoId = getParamId(request, 'memo_id');

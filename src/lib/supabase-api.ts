@@ -114,6 +114,15 @@ export const supabaseApi = {
     return mapMemoFromDb(data);
   },
 
+  deleteMemo: async (id: string): Promise<void> => {
+    const { error } = await supabase
+      .from('memos')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+  },
+
   // Attachments
   getAttachments: async (userId: string, memoId: string): Promise<Attachment[]> => {
     const { data, error } = await supabase

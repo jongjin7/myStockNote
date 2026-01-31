@@ -53,29 +53,32 @@ export function formatRelativeTime(date: Date | string): string {
  * @param date - 포맷팅할 날짜
  * @returns 포맷팅된 날짜 문자열
  */
-export function formatDate(date: Date | string): string {
-  const target = typeof date === 'string' ? new Date(date) : date;
-  return target.toLocaleDateString('ko-KR', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).replace(/\. /g, '-').replace('.', '');
+export function formatDate(date: Date | string | number): string {
+  if (!date) return '-';
+  const d = typeof date === 'string' || typeof date === 'number' ? new Date(date) : date;
+  if (isNaN(d.getTime())) return '-';
+  
+  // getFullYear, getMonth, getDate는 브라우저 로컬 시간대를 사용합니다.
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 /**
- * 날짜를 YYYY-MM-DD HH:mm 형식으로 포맷팅
+ * 날짜를 YYYY-MM-DD HH:mm 형식으로 포맷팅 (한국 시간대 기준)
  * @param date - 포맷팅할 날짜
- * @returns 포맷팅된 날짜시간 문자열
+ * @returns 포맷팅된 로컬 날짜시간 문자열
  */
-export function formatDateTime(date: Date | string): string {
-  const target = typeof date === 'string' ? new Date(date) : date;
-  return target.toLocaleString('ko-KR', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).replace(/\. /g, '-').replace('.', '');
+export function formatDateTime(date: Date | string | number): string {
+  if (!date) return '-';
+  const d = typeof date === 'string' || typeof date === 'number' ? new Date(date) : date;
+  if (isNaN(d.getTime())) return '-';
+
+  const datePart = formatDate(d);
+  const hours = String(d.getHours()).padStart(2, '0'); // 로컬 시
+  const minutes = String(d.getMinutes()).padStart(2, '0'); // 로컬 분
+  return `${datePart} ${hours}:${minutes}`;
 }
 
 /**
@@ -101,3 +104,68 @@ export function formatFileSize(bytes: number): string {
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
 }
+
+/**
+ * 이미지 파일을 리사이징하고 형식을 변환(WebP)하여 압축합니다.
+ * @param file - 원본 이미지 파일
+ * @param maxWidth - 최대 너비 (기본 1200px)
+ * @param quality - 압축 품질 (0.8 = 80%)
+ * @param outputType - 변환할 형식 (기본 image/webp)
+ * @returns 리사이징 및 변환된 File 객체
+ */
+export async function resizeImage(
+  file: File, 
+  maxWidth: number = 1200, 
+  quality: number = 0.8,
+  outputType: string = 'image/webp'
+): Promise<File> {
+  return new Promise((resolve, reject) => {
+    // 이미지 파일이 아니면 변환 없이 반환
+    if (!file.type.startsWith('image/')) {
+      return resolve(file);
+    }
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth) {
+          height = (height * maxWidth) / width;
+          width = maxWidth;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              // 확장자 변경 (예: photo.png -> photo.webp)
+              const newFileName = file.name.replace(/\.[^/.]+$/, "") + ".webp";
+              const convertedFile = new File([blob], newFileName, {
+                type: outputType,
+                lastModified: Date.now(),
+              });
+              resolve(convertedFile);
+            } else {
+              reject(new Error('Canvas to Blob failed'));
+            }
+          },
+          outputType,
+          quality
+        );
+      };
+    };
+    reader.onerror = (error) => reject(error);
+  });
+}
+
