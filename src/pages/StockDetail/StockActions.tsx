@@ -1,4 +1,4 @@
-import { Plus, Bookmark, ExternalLink } from 'lucide-react';
+import { Plus, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '../../components/ui';
 

@@ -35,7 +35,7 @@ export const supabaseApi = {
     const dbAccount = mapAccountToDb(userId, account);
     const { data, error } = await supabase
       .from('accounts')
-      .upsert(dbAccount)
+      .upsert(dbAccount as any)
       .select()
       .single();
 
@@ -68,7 +68,7 @@ export const supabaseApi = {
     const dbStock = mapStockToDb(userId, stock);
     const { data, error } = await supabase
       .from('stocks')
-      .upsert(dbStock)
+      .upsert(dbStock as any)
       .select()
       .single();
 
@@ -106,7 +106,7 @@ export const supabaseApi = {
     const dbMemo = mapMemoToDb(userId, memo);
     const { data, error } = await supabase
       .from('memos')
-      .upsert(dbMemo)
+      .upsert(dbMemo as any)
       .select()
       .single();
 
@@ -139,7 +139,7 @@ export const supabaseApi = {
     const dbAttachment = mapAttachmentToDb(userId, attachment);
     const { data, error } = await supabase
       .from('attachments')
-      .upsert(dbAttachment)
+      .upsert(dbAttachment as any)
       .select()
       .single();
 

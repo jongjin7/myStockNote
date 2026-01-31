@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
-import { PlusCircle, LayoutDashboard, WalletCards } from 'lucide-react';
-import { PageHeader, Tabs, StatCard, Button } from '../components/ui';
+import { LayoutDashboard, WalletCards } from 'lucide-react';
+import { PageHeader, Tabs, StatCard } from '../components/ui';
 import { StockList } from '../components/StockList';
 import { StockModal } from '../components/StockModal';
 import { formatCurrency } from '../lib/utils';

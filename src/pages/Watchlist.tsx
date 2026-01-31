@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
-import { PlusCircle, Bookmark } from 'lucide-react';
+import { Bookmark } from 'lucide-react';
 import { 
- Button, PageHeader, Tabs
+ PageHeader, Tabs
 } from '../components/ui';
 import { StockList } from '../components/StockList';
 import { StockModal } from '../components/StockModal';
