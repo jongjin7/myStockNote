@@ -167,9 +167,9 @@ function mapAccountToDb(userId: string, account: Account) {
   return {
     id: account.id,
     user_id: userId,
-    broker_name: account.brokerName,
-    cash_balance: account.cashBalance,
-    memo: account.memo,
+    broker_name: account.brokerName || '알 수 없는 증권사',
+    cash_balance: account.cashBalance || 0,
+    memo: account.memo || '',
     updated_at: new Date().toISOString()
   };
 }
@@ -192,11 +192,11 @@ function mapStockToDb(userId: string, stock: Stock) {
     account_id: stock.accountId,
     symbol: stock.symbol,
     name: stock.name,
-    quantity: stock.quantity,
-    avg_price: stock.avgPrice,
-    current_price: stock.currentPrice,
-    status: stock.status,
-    category: stock.category,
+    quantity: stock.quantity || 0,
+    avg_price: stock.avgPrice || 0,
+    current_price: stock.currentPrice || null,
+    status: stock.status || 'HOLDING',
+    category: stock.category || '',
     updated_at: new Date().toISOString()
   };
 }

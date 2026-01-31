@@ -46,7 +46,7 @@ export function MigrationAlert() {
   return (
     <div className="px-4 mb-8">
       <Card className="border-blue-500/30 bg-blue-500/5 backdrop-blur-xl p-6 rounded-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 p-8 opacity-5">
+        <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none">
           <Database size={120} />
         </div>
 
