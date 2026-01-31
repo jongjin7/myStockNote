@@ -1,189 +1,184 @@
 import { useState, useEffect, createContext, useContext, useCallback, useMemo, type ReactNode } from 'react';
 import type { AppData, Account, Stock, StockMemo, Attachment } from '../types';
 import { initialData } from '../lib/storage';
-import { api } from '../lib/api';
+import { supabaseApi } from '../lib/supabase-api';
+import { supabase } from '../lib/supabase';
 import { fetchStockPrice } from '../lib/stockApi';
+import { useAuth } from './AuthContext';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface AppContextType {
- data: AppData;
- isLoading: boolean;
- error: Error | null;
- actions: {
- refresh: () => Promise<void>;
- saveAccount: (account: Account) => Promise<void>;
- deleteAccount: (id: string) => Promise<void>;
- saveStock: (stock: Stock) => Promise<void>;
- deleteStock: (id: string) => Promise<void>;
- saveMemo: (memo: StockMemo) => Promise<void>;
- saveAttachment: (attachment: Attachment) => Promise<void>;
- deleteAttachment: (id: string) => Promise<void>;
- updateStockPrice: (stockId: string) => Promise<void>;
- updateAllStockPrices: () => Promise<void>;
- };
+  data: AppData;
+  isLoading: boolean;
+  error: Error | null;
+  actions: {
+    refresh: () => Promise<void>;
+    saveAccount: (account: Account) => Promise<void>;
+    deleteAccount: (id: string) => Promise<void>;
+    saveStock: (stock: Stock) => Promise<void>;
+    deleteStock: (id: string) => Promise<void>;
+    saveMemo: (memo: StockMemo) => Promise<void>;
+    saveAttachment: (attachment: Attachment) => Promise<void>;
+    deleteAttachment: (id: string) => Promise<void>;
+    updateStockPrice: (stockId: string) => Promise<void>;
+    updateAllStockPrices: () => Promise<void>;
+  };
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
- const [data, setData] = useState<AppData>(initialData);
- const [isLoading, setIsLoading] = useState(true);
- const [error, setError] = useState<Error | null>(null);
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+  const [data, setData] = useState<AppData>(initialData);
 
- const refresh = useCallback(async () => {
- try {
-  setIsLoading(true);
-  const loaded = await api.getData();
-  setData(loaded);
-  setError(null);
- } catch (err) {
-  console.error('Failed to fetch data:', err);
-  setError(err instanceof Error ? err : new Error('Unknown error'));
- } finally {
-  setIsLoading(false);
- }
- }, []);
+  // Fetch all data
+  const { data: serverData, isLoading, error: queryError, refetch } = useQuery({
+    queryKey: ['appData', user?.id],
+    queryFn: () => user ? supabaseApi.getAllData(user.id) : Promise.resolve(initialData),
+    enabled: !!user,
+  });
 
- useEffect(() => {
- refresh();
- }, [refresh]);
+  // Sync serverData with local state for backward compatibility
+  useEffect(() => {
+    if (serverData) {
+      setData(serverData);
+    }
+  }, [serverData]);
+
+  // Realtime Subscriptions
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('db-changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', filter: `user_id=eq.${user.id}` },
+        (payload: any) => {
+          console.log('Realtime change received:', payload);
+          queryClient.invalidateQueries({ queryKey: ['appData', user.id] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, queryClient]);
+
+  const refresh = useCallback(async () => {
+    await refetch();
+  }, [refetch]);
+
+  const error = useMemo(() => {
+    return queryError instanceof Error ? queryError : null;
+  }, [queryError]);
+
+  // Mutations
+  const accountMutation = useMutation({
+    mutationFn: (account: Account) => supabaseApi.saveAccount(user!.id, account),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['appData', user?.id] }),
+  });
+
+  const deleteAccountMutation = useMutation({
+    mutationFn: (id: string) => supabaseApi.deleteAccount(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['appData', user?.id] }),
+  });
+
+  const stockMutation = useMutation({
+    mutationFn: (stock: Stock) => supabaseApi.saveStock(user!.id, stock),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['appData', user?.id] }),
+  });
+
+  const deleteStockMutation = useMutation({
+    mutationFn: (id: string) => supabaseApi.deleteStock(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['appData', user?.id] }),
+  });
+
+  const memoMutation = useMutation({
+    mutationFn: (memo: StockMemo) => supabaseApi.saveMemo(user!.id, memo),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['appData', user?.id] }),
+  });
+
+  const attachmentMutation = useMutation({
+    mutationFn: (attachment: Attachment) => supabaseApi.saveAttachment(user!.id, attachment),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['appData', user?.id] }),
+  });
+
+  const deleteAttachmentMutation = useMutation({
+    mutationFn: (id: string) => supabaseApi.deleteAttachment(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['appData', user?.id] }),
+  });
 
   const actions = useMemo(() => ({
     refresh,
     saveAccount: async (account: Account) => {
-      try {
-        setIsLoading(true);
-        await api.saveAccount(account);
-        await refresh();
-      } catch (err) {
-        console.error('Failed to save account:', err);
-        alert('계좌 저장에 실패했습니다.');
-      } finally {
-        setIsLoading(false);
-      }
+      await accountMutation.mutateAsync(account);
     },
     deleteAccount: async (id: string) => {
-      try {
-        setIsLoading(true);
-        await api.deleteAccount(id);
-        await refresh();
-      } catch (err) {
-        console.error('Failed to delete account:', err);
-        alert('계좌 삭제에 실패했습니다.');
-      } finally {
-        setIsLoading(false);
-      }
+      await deleteAccountMutation.mutateAsync(id);
     },
     saveStock: async (stock: Stock) => {
-      try {
-        setIsLoading(true);
-        await api.saveStock(stock);
-        await refresh();
-      } catch (err) {
-        console.error('Failed to save stock:', err);
-        alert('종목 저장에 실패했습니다.');
-      } finally {
-        setIsLoading(false);
-      }
+      await stockMutation.mutateAsync(stock);
     },
     deleteStock: async (id: string) => {
-      try {
-        setIsLoading(true);
-        await api.deleteStock(id);
-        await refresh();
-      } catch (err) {
-        console.error('Failed to delete stock:', err);
-        alert('종목 삭제에 실패했습니다.');
-      } finally {
-        setIsLoading(false);
-      }
+      await deleteStockMutation.mutateAsync(id);
     },
     saveMemo: async (memo: StockMemo) => {
-      try {
-        setIsLoading(true);
-        await api.saveMemo(memo);
-        await refresh();
-      } catch (err) {
-        console.error('Failed to save memo:', err);
-        alert('메모 저장에 실패했습니다.');
-      } finally {
-        setIsLoading(false);
-      }
+      await memoMutation.mutateAsync(memo);
     },
     saveAttachment: async (attachment: Attachment) => {
-      try {
-        setIsLoading(true);
-        await api.saveAttachment(attachment);
-        await refresh();
-      } catch (err) {
-        console.error('Failed to save attachment:', err);
-      } finally {
-        setIsLoading(false);
-      }
+      await attachmentMutation.mutateAsync(attachment);
     },
     deleteAttachment: async (id: string) => {
-      try {
-        setIsLoading(true);
-        await api.deleteAttachment(id);
-        await refresh();
-      } catch (err) {
-        console.error('Failed to delete attachment:', err);
-      } finally {
-        setIsLoading(false);
-      }
+      await deleteAttachmentMutation.mutateAsync(id);
     },
     updateStockPrice: async (stockId: string) => {
       const stock = data.stocks.find(s => s.id === stockId);
       if (!stock || !stock.symbol) return;
       
-      setIsLoading(true);
       try {
         const newPrice = await fetchStockPrice(stock.symbol);
         if (newPrice !== null) {
-          await api.saveStock({
+          await stockMutation.mutateAsync({
             ...stock,
             currentPrice: newPrice,
             updatedAt: Date.now()
           });
-          await refresh();
         }
       } catch (err) {
         console.error('Failed to update price:', err);
-      } finally {
-        setIsLoading(false);
       }
     },
     updateAllStockPrices: async () => {
       const stocksToUpdate = data.stocks.filter(s => s.symbol && (s.status === 'HOLDING' || s.status === 'PARTIAL_SOLD' || s.status === 'WATCHLIST'));
       if (stocksToUpdate.length === 0) return;
 
-      setIsLoading(true);
       try {
         for (const stock of stocksToUpdate) {
           if (!stock.symbol) continue;
           await new Promise(resolve => setTimeout(resolve, 500));
           const newPrice = await fetchStockPrice(stock.symbol);
           if (newPrice !== null) {
-            await api.saveStock({
+            await stockMutation.mutateAsync({
               ...stock,
               currentPrice: newPrice,
               updatedAt: Date.now()
             });
           }
         }
-        await refresh();
       } catch (err) {
         console.error('Failed to update all prices:', err);
-      } finally {
-        setIsLoading(false);
       }
     },
-  }), [refresh, data.stocks]);
+  }), [refresh, data.stocks, user, accountMutation, deleteAccountMutation, stockMutation, deleteStockMutation, memoMutation, attachmentMutation, deleteAttachmentMutation]);
 
- return (
- <AppContext.Provider value={{ data, isLoading, error, actions }}>
-  {children}
- </AppContext.Provider>
- );
+  return (
+    <AppContext.Provider value={{ data, isLoading, error, actions }}>
+      {children}
+    </AppContext.Provider>
+  );
 }
 
 export function useApp() {

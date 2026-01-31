@@ -1,12 +1,23 @@
-import { Settings as SettingsIcon, Moon, Sun, DollarSign, Bell, Check } from 'lucide-react';
-import { PageHeader, Card, Switch } from '../components/ui';
+import { Settings as SettingsIcon, Moon, Sun, DollarSign, Bell, Check, User, LogOut } from 'lucide-react';
+import { PageHeader, Card, Switch, Button } from '../components/ui';
 import { useSettings } from '../contexts/SettingsContext';
+import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function Settings() {
   const { settings, updateSettings } = useSettings();
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   const handleThemeToggle = () => {
     updateSettings({ theme: settings.theme === 'dark' ? 'light' : 'dark' });
+  };
+
+  const handleLogout = async () => {
+    if (window.confirm('로그아웃 하시겠습니까?')) {
+      await signOut();
+      navigate('/login');
+    }
   };
 
   const handleNotificationToggle = (key: 'priceAlert' | 'targetPriceAlert' | 'memoReminder') => {
@@ -19,14 +30,53 @@ export default function Settings() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in max-w-3xl mx-auto">
+    <div className="space-y-6 animate-fade-in max-w-3xl mx-auto pb-20">
       <PageHeader 
         title="설정"
         subtitle="Settings"
-        description="앱 환경을 사용자 취향에 맞게 조정합니다."
+        description="앱 환경과 계정 정보를 관리합니다."
       />
 
       <div className="space-y-4">
+        {/* 프로필 정보 */}
+        <Card className="border-gray-800 bg-gray-900/40 backdrop-blur-sm p-6 space-y-4 rounded-2xl">
+          <div className="flex items-center gap-3 pb-4 border-b border-gray-800/50">
+            <div className="p-2 bg-blue-500/10 rounded-xl border border-blue-500/20">
+              <User size={20} className="text-blue-400" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-white">내 프로필</h3>
+              <p className="text-xs text-gray-500 mt-0.5">계정 정보를 확인합니다</p>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex items-center justify-between p-3 rounded-xl bg-gray-950/50 border border-gray-800/30">
+              <div>
+                <p className="text-xs text-gray-500 uppercase tracking-widest font-bold">이메일</p>
+                <p className="text-sm font-bold text-white mt-1">{user?.email}</p>
+              </div>
+            </div>
+            {user?.user_metadata?.full_name && (
+              <div className="flex items-center justify-between p-3 rounded-xl bg-gray-950/50 border border-gray-800/30">
+                <div>
+                  <p className="text-xs text-gray-500 uppercase tracking-widest font-bold">이름</p>
+                  <p className="text-sm font-bold text-white mt-1">{user.user_metadata.full_name}</p>
+                </div>
+              </div>
+            )}
+            
+            <Button 
+              variant="danger" 
+              className="w-full mt-4 h-12 rounded-xl bg-red-500/10 hover:bg-red-500 text-red-500 border-red-500/20"
+              onClick={handleLogout}
+            >
+              <LogOut size={18} className="mr-2" />
+              로그아웃
+            </Button>
+          </div>
+        </Card>
+
         {/* 테마 설정 */}
         <Card className="border-gray-800 bg-gray-900/40 backdrop-blur-sm p-6 space-y-4 rounded-2xl">
           <div className="flex items-center gap-3 pb-4 border-b border-gray-800/50">
@@ -176,11 +226,11 @@ export default function Settings() {
           <div className="space-y-0.5 text-sm">
             <div className="flex justify-between py-2 px-3 rounded-lg">
               <span className="text-gray-500 font-medium">버전</span>
-              <span className="text-white font-semibold">1.0.0</span>
+              <span className="text-white font-semibold">2.0.0 (Supabase)</span>
             </div>
             <div className="flex justify-between py-2 px-3 rounded-lg">
               <span className="text-gray-500 font-medium">데이터 저장소</span>
-              <span className="text-white font-semibold">로컬 스토리지</span>
+              <span className="text-white font-semibold">Supabase Cloud Sync</span>
             </div>
             <div className="flex justify-between py-2 px-3 rounded-lg">
               <span className="text-gray-500 font-medium">마지막 업데이트</span>

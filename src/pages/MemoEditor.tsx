@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
+import { useAuth } from '../contexts/AuthContext';
+import { supabaseApi } from '../lib/supabase-api';
 import { 
  ArrowLeft, Save, X, Image as ImageIcon, 
  AlertCircle, Info, CheckCircle2,
@@ -14,10 +16,16 @@ import {
 } from '../components/ui';
 import { cn, formatFileSize } from '../lib/utils';
 
+interface NewAttachment extends Attachment {
+  file?: File;
+  previewUrl?: string;
+}
+
 export default function MemoEditor() {
  const { id: stockId, memoId } = useParams<{ id?: string; memoId?: string }>();
  const navigate = useNavigate();
  const { data, actions } = useApp();
+ const { user } = useAuth();
  const { stocks, memos, attachments } = data;
 
  const editingMemo = memoId ? memos.find(m => m.id === memoId) : null;
@@ -34,7 +42,8 @@ export default function MemoEditor() {
  const [sellReview, setSellReview] = useState(editingMemo?.sellReview || '');
  
  // Attachments State
- const [newAttachments, setNewAttachments] = useState<Attachment[]>([]);
+ const [newAttachments, setNewAttachments] = useState<NewAttachment[]>([]);
+ const [isSaving, setIsSaving] = useState(false);
  const fileInputRef = useRef<HTMLInputElement>(null);
 
  useEffect(() => {
@@ -44,73 +53,89 @@ export default function MemoEditor() {
  }, [stock, editingMemo, navigate]);
 
  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
- const files = e.target.files;
- if (!files) return;
+  const files = e.target.files;
+  if (!files || !user) return;
 
- Array.from(files).forEach(file => {
-  if (file.size > 5 * 1024 * 1024) {
-  alert('파일 크기는 5MB 이하여야 합니다.');
-  return;
-  }
+  Array.from(files).forEach(file => {
+   if (file.size > 10 * 1024 * 1024) {
+    alert('파일 크기는 10MB 이하여야 합니다.');
+    return;
+   }
 
-  const reader = new FileReader();
-  reader.onloadend = () => {
-  const attachment: Attachment = {
-   id: uuidv4(),
-   memoId: editingMemo?.id || 'temp', // Fixed up later
-   type: 'IMAGE',
-   fileName: file.name,
-   fileSize: file.size,
-   mimeType: file.type,
-   data: reader.result as string,
-   createdAt: Date.now(),
-  };
-  setNewAttachments(prev => [...prev, attachment]);
-  };
-  reader.readAsDataURL(file);
- });
+   const previewUrl = URL.createObjectURL(file);
+   const attachment: NewAttachment = {
+    id: uuidv4(),
+    memoId: editingMemo?.id || 'temp',
+    type: 'IMAGE',
+    fileName: file.name,
+    fileSize: file.size,
+    mimeType: file.type,
+    data: '', // Will be updated with publicUrl after upload
+    createdAt: Date.now(),
+    file,
+    previewUrl,
+   };
+   setNewAttachments(prev => [...prev, attachment]);
+  });
  };
 
  const removeAttachment = async (id: string, isExisting: boolean) => {
- if (isExisting) {
-  if (window.confirm('기존 첨부파일을 삭제하시겠습니까?')) {
-  await actions.deleteAttachment(id);
+  if (isExisting) {
+   if (window.confirm('기존 첨부파일을 삭제하시겠습니까?')) {
+    await actions.deleteAttachment(id);
+   }
+  } else {
+   setNewAttachments(prev => {
+    const filtered = prev.filter(a => a.id !== id);
+    // Cleanup preview URL
+    const removed = prev.find(a => a.id === id);
+    if (removed?.previewUrl) URL.revokeObjectURL(removed.previewUrl);
+    return filtered;
+   });
   }
- } else {
-  setNewAttachments(prev => prev.filter(a => a.id !== id));
- }
  };
-
 
  const handleSave = async (e: React.FormEvent) => {
- e.preventDefault();
- if (!currentStockId) return;
+  e.preventDefault();
+  if (!currentStockId || !user) return;
 
- const newMemoId = editingMemo?.id || uuidv4();
- const memoData: StockMemo = {
-  id: newMemoId,
-  stockId: currentStockId,
-  type,
-  buyReason: buyReason.trim() || null,
-  expectedScenario: expectedScenario.trim() || null,
-  risks: risks.trim() || null,
-  currentThought: currentThought.trim() || null,
-  sellReview: sellReview.trim() || null,
-  createdAt: editingMemo?.createdAt || Date.now(),
-  updatedAt: Date.now(),
- };
+  setIsSaving(true);
+  try {
+    const newMemoId = editingMemo?.id || uuidv4();
+    const memoData: StockMemo = {
+     id: newMemoId,
+     stockId: currentStockId,
+     type,
+     buyReason: buyReason.trim() || null,
+     expectedScenario: expectedScenario.trim() || null,
+     risks: risks.trim() || null,
+     currentThought: currentThought.trim() || null,
+     sellReview: sellReview.trim() || null,
+     createdAt: editingMemo?.createdAt || Date.now(),
+     updatedAt: Date.now(),
+    };
 
- await actions.saveMemo(memoData);
+    await actions.saveMemo(memoData);
 
- // Save new attachments with real memoId
- for (const att of newAttachments) {
-  await actions.saveAttachment({
-  ...att,
-  memoId: newMemoId
-  });
- }
+    // Upload new files and save meta
+    for (const att of newAttachments) {
+      if (att.file) {
+        const publicUrl = await supabaseApi.uploadImage(user.id, att.file);
+        await actions.saveAttachment({
+          ...att,
+          memoId: newMemoId,
+          data: publicUrl // Save public URL to DB
+        });
+      }
+    }
 
- navigate(`/stocks/${currentStockId}`);
+    navigate(`/stocks/${currentStockId}`);
+  } catch (err: any) {
+    console.error('Failed to save memo:', err);
+    alert('기록 저장 중 오류가 발생했습니다: ' + err.message);
+  } finally {
+    setIsSaving(false);
+  }
  };
 
 
@@ -143,11 +168,11 @@ export default function MemoEditor() {
    <Button variant="secondary" onClick={() => navigate(-1)}>
    취소
    </Button>
-    <Button onClick={handleSave} className="px-8">
-    <Save size={18} className="mr-2" />
-    <span>기록 완료</span>
-    </Button>
-  </div>
+     <Button onClick={handleSave} className="px-8" disabled={isSaving}>
+     <Save size={18} className={cn("mr-2", isSaving && "animate-spin")} />
+     <span>{isSaving ? '기록 저장 중...' : '기록 완료'}</span>
+     </Button>
+   </div>
   </header>
 
   <form onSubmit={handleSave} className="space-y-10">
@@ -361,7 +386,7 @@ export default function MemoEditor() {
    {newAttachments.map((att) => (
     <div key={att.id} className="relative aspect-square group animate-scale-in">
     <img 
-     src={att.data} 
+     src={att.previewUrl} 
      className="w-full h-full object-cover rounded-2xl border border-primary-500 shadow-xl"
     />
     <div className="absolute top-2 left-2 px-2 py-0.5 bg-primary-500 text-[8px] font-black text-white rounded uppercase tracking-widest shadow-lg">
@@ -373,6 +398,7 @@ export default function MemoEditor() {
      size="sm"
      onClick={() => removeAttachment(att.id, false)}
      className="absolute -top-2 -right-2 w-8 h-8 p-0 rounded-full shadow-xl"
+     disabled={isSaving}
     >
      <X size={14} />
     </Button>
@@ -403,7 +429,7 @@ export default function MemoEditor() {
    <div className="flex items-start gap-2 px-2">
    <Info size={12} className="text-gray-600 mt-0.5" />
    <p className="text-sm text-gray-600 font-medium leading-relaxed italic">
-    LocalStorage 용량 제한으로 인해 이미지는 5MB 이하만 업로드 가능하며, 가로 1200px 이상은 업로드 속도가 느려질 수 있습니다.
+    이미지는 최대 10MB까지 업로드 가능하며, 클라우드에 안전하게 저장됩니다.
    </p>
    </div>
   </section>
@@ -419,15 +445,16 @@ export default function MemoEditor() {
    >
    취소하고 돌아가기
    </Button>
-    <Button 
-    size="lg"
-    type="submit"
-    className="w-full sm:w-auto px-16 h-14 font-black text-lg"
-    >
-    <Save size={18} className="mr-2" />
-    <span>기록 완료</span>
-    </Button>
-  </div>
+     <Button 
+     size="lg"
+     type="submit"
+     className="w-full sm:w-auto px-16 h-14 font-black text-lg"
+     disabled={isSaving}
+     >
+     <Save size={18} className={cn("mr-2", isSaving && "animate-spin")} />
+     <span>{isSaving ? '저장 중...' : '기록 완료'}</span>
+     </Button>
+   </div>
   </form>
  </div>
  );

@@ -1,9 +1,20 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { AuthProvider } from './contexts/AuthContext'
 import { AppProvider } from './contexts/AppContext'
 import { SettingsProvider } from './contexts/SettingsContext'
 import './index.css'
 import App from './App'
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      retry: 1,
+    },
+  },
+})
 
 // 개발 환경에서 MSW 시작
 async function enableMocking() {
@@ -24,11 +35,15 @@ if (!rootElement) throw new Error('Failed to find the root element');
 enableMocking().then(() => {
  createRoot(rootElement).render(
  <StrictMode>
-  <SettingsProvider>
-   <AppProvider>
-    <App />
-   </AppProvider>
-  </SettingsProvider>
+  <QueryClientProvider client={queryClient}>
+   <AuthProvider>
+    <SettingsProvider>
+     <AppProvider>
+      <App />
+     </AppProvider>
+    </SettingsProvider>
+   </AuthProvider>
+  </QueryClientProvider>
  </StrictMode>,
  );
 });
