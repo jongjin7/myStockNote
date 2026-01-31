@@ -66,9 +66,15 @@ export function StockCard({ stock, hasNote, compact = false }: StockCardProps) {
             "flex items-center gap-2  text-gray-600 uppercase tracking-wide shrink-0",
             compact ? "text-xs font-semibold" : "text-md"
           )}>
-            <span>{stock.quantity.toLocaleString()}주</span>
-            <span className="w-0.5 h-0.5 rounded-full bg-gray-700/80" />
-            <span>{formatCurrency(stock.avgPrice)}</span>
+            {stock.status === 'WATCHLIST' ? (
+              <span>현재가 {formatCurrency(currentPrice)}</span>
+            ) : (
+              <>
+                <span>{stock.quantity.toLocaleString()}주</span>
+                <span className="w-0.5 h-0.5 rounded-full bg-gray-700/80" />
+                <span>{formatCurrency(stock.avgPrice)}</span>
+              </>
+            )}
           </div>
         </div>
       </div>

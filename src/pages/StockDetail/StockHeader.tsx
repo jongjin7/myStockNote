@@ -26,6 +26,26 @@ export function StockHeader({ stock, account, currentPrice, onEdit, onDelete }: 
     <header className="flex flex-col space-y-6">
       <div className="flex items-center justify-between w-full">
         <BackButton />
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onDelete}
+            className="h-10 px-4 rounded-xl font-bold text-white/30 hover:text-danger-light hover:bg-danger/10 transition-all"
+          >
+            <Trash2 size={16} className="mr-2" />
+            <span>삭제</span>
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={onEdit}
+            className="h-10 px-4 rounded-xl font-bold bg-white/5 border-white/10 hover:bg-white/10 text-white/80 transition-all"
+          >
+            <Pencil size={16} className="mr-2" />
+            <span>수정</span>
+          </Button>
+        </div>
       </div>
 
       <div className="relative rounded-3xl shadow-xl overflow-hidden border border-white/10 group">
@@ -36,28 +56,6 @@ export function StockHeader({ stock, account, currentPrice, onEdit, onDelete }: 
         )} />
         <div className="absolute inset-0 bg-black/10" />
         <div className="absolute -right-10 -top-10 w-64 h-64 bg-white/10 rounded-full blur-3xl opacity-50" />
-
-        {/* Management Actions inside Hero */}
-        <div className="absolute top-2 right-6 z-20 flex items-center gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onEdit}
-            className="w-10 h-10 p-0 text-white rounded-xl"
-            title="종목 정보 수정"
-          >
-            <Pencil size={18} />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onDelete}
-            className="w-10 h-10 p-0 text-white hover:text-danger-light rounded-xl"
-            title="종목 삭제"
-          >
-            <Trash2 size={18} />
-          </Button>
-        </div>
 
         <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between px-8 py-10 gap-10">
           {/* Left: Stock Info */}
@@ -87,28 +85,32 @@ export function StockHeader({ stock, account, currentPrice, onEdit, onDelete }: 
           {/* Right: Focused Evaluation Box */}
           <div className="bg-black/30 backdrop-blur-md px-8 py-7 rounded-2xl border border-white/5 shadow-2xl flex items-center gap-10 w-full lg:w-auto justify-between lg:justify-end">
             <div className="flex flex-col">
-              <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] mb-1.5">Current Value</span>
+              <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] mb-1.5">
+                {stock.status === 'WATCHLIST' ? 'Current Price' : 'Current Value'}
+              </span>
               <div className="text-4xl font-black text-white tracking-tighter tabular-nums text-right leading-none">
-                {formatCurrency(stock.quantity * currentPrice)}
+                {stock.status === 'WATCHLIST' ? formatCurrency(currentPrice) : formatCurrency(stock.quantity * currentPrice)}
               </div>
             </div>
 
-            <div className="flex flex-col items-end">
-              <div className={cn(
-                "text-xl font-black tabular-nums tracking-tighter leading-none mb-2 px-3 py-1 rounded-full shadow-lg",
-                (currentPrice - stock.avgPrice) >= 0 ? "bg-danger text-white" : "bg-info text-white"
-              )}>
-                {(currentPrice - stock.avgPrice) >= 0 ? '+' : ''}
-                {(((currentPrice - stock.avgPrice) / (stock.avgPrice || 1)) * 100).toFixed(2)}%
+            {stock.status !== 'WATCHLIST' && (
+              <div className="flex flex-col items-end">
+                <div className={cn(
+                  "text-xl font-black tabular-nums tracking-tighter leading-none mb-2 px-3 py-1 rounded-full shadow-lg",
+                  (currentPrice - stock.avgPrice) >= 0 ? "bg-danger text-white" : "bg-info text-white"
+                )}>
+                  {(currentPrice - stock.avgPrice) >= 0 ? '+' : ''}
+                  {(((currentPrice - stock.avgPrice) / (stock.avgPrice || 1)) * 100).toFixed(2)}%
+                </div>
+                <div className={cn(
+                  "text-sm font-black tabular-nums tracking-tight",
+                  (currentPrice - stock.avgPrice) >= 0 ? "text-danger-light" : "text-info-light"
+                )}>
+                  {(currentPrice - stock.avgPrice) >= 0 ? '+' : ''}
+                  {formatCurrency((currentPrice - stock.avgPrice) * stock.quantity)}
+                </div>
               </div>
-              <div className={cn(
-                "text-sm font-black tabular-nums tracking-tight",
-                (currentPrice - stock.avgPrice) >= 0 ? "text-danger-light" : "text-info-light"
-              )}>
-                {(currentPrice - stock.avgPrice) >= 0 ? '+' : ''}
-                {formatCurrency((currentPrice - stock.avgPrice) * stock.quantity)}
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
