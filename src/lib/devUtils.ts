@@ -1,7 +1,6 @@
 import { mockScenarios } from '../lib/mockData';
 import { setMockScenario, resetMockData, getCurrentMockData, clearMockData } from '../mocks/handlers';
 import { api } from './api';
-import { storage } from './storage';
 
 
 /**
