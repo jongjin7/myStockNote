@@ -8,6 +8,7 @@ import {
 import type { Stock, StockStatus } from '../types';
 import { CATEGORY_OPTIONS } from '../lib/constants';
 import { fetchStockPrice } from '../lib/stockApi';
+import { isValidTickerFormat, getTickerValidationError } from '../lib/tickerValidation';
 
 interface StockModalProps {
  isOpen: boolean;
@@ -26,6 +27,7 @@ export function StockModal({ isOpen, onClose, initialStatus = 'HOLDING' }: Stock
  const [accountId, setAccountId] = useState('');
  const [quantity, setQuantity] = useState<number>(0);
  const [avgPrice, setAvgPrice] = useState<number>(0);
+ const [symbolError, setSymbolError] = useState<string | null>(null);
 
  useEffect(() => {
  if (isOpen) {
@@ -36,8 +38,18 @@ export function StockModal({ isOpen, onClose, initialStatus = 'HOLDING' }: Stock
   setAccountId('');
   setQuantity(0);
   setAvgPrice(0);
+  setSymbolError(null);
  }
  }, [isOpen, initialStatus]);
+
+  const handleSymbolChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSymbol(value);
+    
+    // Validate ticker format
+    const error = getTickerValidationError(value);
+    setSymbolError(error);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,6 +58,15 @@ export function StockModal({ isOpen, onClose, initialStatus = 'HOLDING' }: Stock
     const trimmedSymbol = symbol.trim().toUpperCase() || null;
     const trimmedName = name.trim();
     const targetAccountId = (status === 'WATCHLIST' || status === 'SOLD') ? null : (accountId || null);
+
+    // Validate ticker format if provided
+    if (trimmedSymbol) {
+      const validationError = getTickerValidationError(trimmedSymbol);
+      if (validationError) {
+        setSymbolError(validationError);
+        return; // Don't proceed if ticker is invalid
+      }
+    }
 
     // 중복 체크: 
     // 1. 심볼이 있으면 동일 심볼 + 동일 계좌 + 동일 상태
@@ -60,8 +81,9 @@ export function StockModal({ isOpen, onClose, initialStatus = 'HOLDING' }: Stock
       return s.name.trim() === trimmedName;
     });
 
+    // Only fetch stock price if ticker is valid
     let syncedPrice = 0;
-    if (trimmedSymbol) {
+    if (trimmedSymbol && isValidTickerFormat(trimmedSymbol)) {
       syncedPrice = await fetchStockPrice(trimmedSymbol) || 0;
     }
 
@@ -119,7 +141,10 @@ export function StockModal({ isOpen, onClose, initialStatus = 'HOLDING' }: Stock
   title={modalTitle}
   size="lg"
   submitLabel="종목 추가 완료"
-  submitDisabled={status !== 'WATCHLIST' && (!accountId || accounts.length === 0)}
+  submitDisabled={
+    (status !== 'WATCHLIST' && (!accountId || accounts.length === 0)) || 
+    !!symbolError
+  }
  >
   <div className="space-y-8">
   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -134,9 +159,10 @@ export function StockModal({ isOpen, onClose, initialStatus = 'HOLDING' }: Stock
    <Input 
    label="종목코드/심볼 (선택)"
    value={symbol}
-   onChange={(e) => setSymbol(e.target.value)}
+   onChange={handleSymbolChange}
    placeholder="예: 005930, NVDA"
    className="bg-gray-950 border-gray-800"
+   error={symbolError || undefined}
    />
   </div>
 
