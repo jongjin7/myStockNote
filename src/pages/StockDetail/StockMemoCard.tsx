@@ -1,15 +1,25 @@
+import { useState } from 'react';
 import { Pencil, Activity, AlertCircle, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Card, Badge } from '../../components/ui';
 import { formatDateTime } from '../../lib/utils';
-import type { StockMemo } from '../../types';
+import type { StockMemo, Attachment } from '../../types';
+
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
 
 interface StockMemoCardProps {
   memo: StockMemo;
+  attachments: Attachment[];
   isWatchlist: boolean;
 }
 
-export function StockMemoCard({ memo, isWatchlist }: StockMemoCardProps) {
+export function StockMemoCard({ memo, attachments, isWatchlist }: StockMemoCardProps) {
+  const [index, setIndex] = useState(-1);
+
   return (
     <div className="relative pl-14 pb-12 last:pb-0">
       <div className="absolute left-4 top-2 w-4 h-4 rounded-full bg-gray-950 border-2 border-gray-700 transition-all z-10 shadow-[0_0_10px_rgba(0,0,0,0.5)]" />
@@ -81,11 +91,38 @@ export function StockMemoCard({ memo, isWatchlist }: StockMemoCardProps) {
             </div>
           )}
 
-          {!memo.buyReason && !memo.currentThought && !memo.sellReview && (
+          {!memo.buyReason && !memo.currentThought && !memo.sellReview && attachments.length === 0 && (
             <p className="text-sm text-gray-600 italic font-medium">내용이 비어 있는 노트입니다.</p>
+          )}
+
+          {attachments.length > 0 && (
+            <div className="pt-4 border-t border-gray-800/30">
+              <div className="flex flex-wrap gap-3">
+                {attachments.map((att, idx) => (
+                  <div key={att.id} className="relative group">
+                    <img
+                      src={att.data}
+                      alt={att.fileName}
+                      className="w-24 h-24 object-cover rounded-xl border border-gray-800 hover:border-primary-500/50 transition-all cursor-zoom-in"
+                      onClick={() => setIndex(idx)}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
         </div>
       </Card>
+
+      <Lightbox
+        index={index}
+        open={index >= 0}
+        close={() => setIndex(-1)}
+        carousel={{ finite: true }}
+        on={{ view: ({ index: currentIndex }) => setIndex(currentIndex) }}
+        slides={attachments.map(att => ({ src: att.data }))}
+        plugins={[Zoom, Thumbnails]}
+      />
     </div>
   );
 }

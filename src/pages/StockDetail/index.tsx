@@ -18,7 +18,7 @@ export default function StockDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { data, actions, isLoading } = useApp();
-  const { stocks, accounts, memos } = data;
+  const { stocks, accounts, memos, attachments } = data;
 
   const stock = stocks.find(s => s.id === id);
   const stockMemos = memos.filter(m => m.stockId === id).sort((a, b) => b.updatedAt - a.updatedAt);
@@ -134,6 +134,7 @@ export default function StockDetail() {
         <StockMemoList 
           stockId={stock.id}
           memos={stockMemos}
+          attachments={attachments}
           isWatchlist={stock.status === 'WATCHLIST'}
         />
       </div>

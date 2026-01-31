@@ -2,15 +2,16 @@ import { FileText, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { SectionHeader, Button } from '../../components/ui';
 import { StockMemoCard } from './StockMemoCard';
-import type { StockMemo } from '../../types';
+import type { StockMemo, Attachment } from '../../types';
 
 interface StockMemoListProps {
   stockId: string;
   memos: StockMemo[];
+  attachments: Attachment[];
   isWatchlist: boolean;
 }
 
-export function StockMemoList({ stockId, memos, isWatchlist }: StockMemoListProps) {
+export function StockMemoList({ stockId, memos, attachments, isWatchlist }: StockMemoListProps) {
   return (
     <div className="lg:col-span-2 space-y-8">
       <SectionHeader
@@ -27,7 +28,12 @@ export function StockMemoList({ stockId, memos, isWatchlist }: StockMemoListProp
 
         {memos.length > 0 ? (
           memos.map((memo) => (
-            <StockMemoCard key={memo.id} memo={memo} isWatchlist={isWatchlist} />
+            <StockMemoCard 
+              key={memo.id} 
+              memo={memo} 
+              attachments={attachments.filter(a => a.memoId === memo.id)}
+              isWatchlist={isWatchlist} 
+            />
           ))
         ) : (
           <div className="bg-gray-900/10 border border-dashed border-gray-800 p-24 rounded-3xl text-center">

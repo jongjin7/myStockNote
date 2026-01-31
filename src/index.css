@@ -383,3 +383,21 @@ button {
   background-size: 24px 24px;
 }
 
+/* ========================================
+   LightBox Overrides
+   ======================================== */
+.yarl__thumbnails_thumbnail {
+  opacity: 0.4 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  transition: all 0.2s ease !important;
+  border: 2px solid transparent !important;
+}
+
+.yarl__thumbnails_thumbnail_active {
+  opacity: 1 !important;
+  border-color: var(--color-primary-500) !important;
+  transform: scale(1.05) !important;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.4) !important;
+}
+
