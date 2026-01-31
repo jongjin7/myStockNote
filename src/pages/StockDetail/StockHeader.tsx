@@ -11,7 +11,13 @@ interface StockHeaderProps {
   onDelete: () => void;
 }
 
-export function StockHeader({ stock, account, currentPrice, onEdit, onDelete }: StockHeaderProps) {
+export function StockHeader({ 
+  stock, 
+  account, 
+  currentPrice, 
+  onEdit, 
+  onDelete
+}: StockHeaderProps) {
   const getHeroCardBg = (s: string) => {
     switch (s) {
       case 'HOLDING': return 'from-success-dark/80 to-success/60';
@@ -85,8 +91,8 @@ export function StockHeader({ stock, account, currentPrice, onEdit, onDelete }: 
           {/* Right: Focused Evaluation Box */}
           <div className="bg-black/30 backdrop-blur-md px-8 py-7 rounded-2xl border border-white/5 shadow-2xl flex items-center gap-10 w-full lg:w-auto justify-between lg:justify-end">
             <div className="flex flex-col">
-              <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] mb-1.5">
-                {stock.status === 'WATCHLIST' ? 'Current Price' : 'Current Value'}
+              <span className="text-sm font-normal text-white/40 uppercase tracking-[0.2em] mb-1.5">
+                {stock.status === 'WATCHLIST' ? '현재 종목가' : '현재 평가금액'}
               </span>
               <div className="text-4xl font-black text-white tracking-tighter tabular-nums text-right leading-none">
                 {stock.status === 'WATCHLIST' ? formatCurrency(currentPrice) : formatCurrency(stock.quantity * currentPrice)}

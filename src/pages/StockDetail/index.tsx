@@ -17,7 +17,7 @@ import { StockConvertModal } from './StockConvertModal';
 export default function StockDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { data, actions, isLoading } = useApp();
+  const { data, actions, isLoading, isSyncing } = useApp();
   const { stocks, accounts, memos, attachments } = data;
 
   const stock = stocks.find(s => s.id === id);
@@ -26,13 +26,19 @@ export default function StockDetail() {
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isConvertModalOpen, setIsConvertModalOpen] = useState(false);
+  const [isLocalSyncing, setIsLocalSyncing] = useState(false);
   
   const currentPrice = stock?.currentPrice || 0;
-  const isUpdatingPrice = isLoading;
+  const isUpdatingPrice = isLoading || isSyncing || isLocalSyncing;
 
   const fetchCurrentPrice = async () => {
-    if (!stock?.id) return;
-    await actions.updateStockPrice(stock.id);
+    if (!stock?.id || isLocalSyncing) return;
+    setIsLocalSyncing(true);
+    try {
+      await actions.updateStockPrice(stock.id);
+    } finally {
+      setIsLocalSyncing(false);
+    }
   };
    
   if (!stock) {
