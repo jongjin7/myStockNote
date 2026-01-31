@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { AppProvider } from './contexts/AppContext'
+import { SettingsProvider } from './contexts/SettingsContext'
 import './index.css'
 import App from './App'
 
@@ -23,9 +24,11 @@ if (!rootElement) throw new Error('Failed to find the root element');
 enableMocking().then(() => {
  createRoot(rootElement).render(
  <StrictMode>
-  <AppProvider>
-  <App />
-  </AppProvider>
+  <SettingsProvider>
+   <AppProvider>
+    <App />
+   </AppProvider>
+  </SettingsProvider>
  </StrictMode>,
  );
 });

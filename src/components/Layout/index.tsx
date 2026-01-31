@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Wallet, Bookmark, Settings, Download, ChevronLeft, ChevronRight, LayoutList } from 'lucide-react';
+import { LayoutDashboard, Wallet, Bookmark, Settings, ChevronLeft, ChevronRight, LayoutList } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { useApp } from '../../contexts/AppContext';
 import { Button } from '../ui';
@@ -24,7 +24,6 @@ export default function Layout() {
 
   const bottomNavItems = [
     { path: '/settings', icon: Settings, label: '설정' },
-    { path: '/backup', icon: Download, label: '백업/복구' },
   ];
 
   return (

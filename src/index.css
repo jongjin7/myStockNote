@@ -83,6 +83,197 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Light Theme */
+:root.light {
+  background-color: #f1f5f9; /* Subtle silver-gray instead of pure white */
+  color: #0f172a;
+}
+
+/* Background colors - Silver-gray palette */
+:root.light .bg-gray-950 {
+  background-color: #f8fafc !important; /* Lightest silver */
+}
+
+:root.light .bg-gray-900 {
+  background-color: #f1f5f9 !important; /* Light silver */
+}
+
+:root.light .bg-gray-800 {
+  background-color: #e2e8f0 !important; /* Medium silver */
+}
+
+:root.light .bg-gray-700 {
+  background-color: #cbd5e1 !important; /* Darker silver */
+}
+
+/* Text colors */
+:root.light .text-white {
+  color: #0f172a !important;
+}
+
+:root.light .text-gray-100 {
+  color: #1e293b !important;
+}
+
+:root.light .text-gray-200 {
+  color: #334155 !important;
+}
+
+:root.light .text-gray-300 {
+  color: #475569 !important;
+}
+
+:root.light .text-gray-400 {
+  color: #64748b !important;
+}
+
+:root.light .text-gray-500 {
+  color: #64748b !important;
+}
+
+:root.light .text-gray-600 {
+  color: #475569 !important;
+}
+
+:root.light .text-gray-700 {
+  color: #334155 !important;
+}
+
+:root.light .text-gray-800 {
+  color: #1e293b !important;
+}
+
+:root.light .text-gray-900 {
+  color: #0f172a !important;
+}
+
+/* Opacity-based text colors */
+:root.light .text-white\/90 {
+  color: rgba(15, 23, 42, 0.95) !important;
+}
+
+:root.light .text-white\/80 {
+  color: rgba(15, 23, 42, 0.85) !important;
+}
+
+:root.light .text-white\/70 {
+  color: rgba(15, 23, 42, 0.75) !important;
+}
+
+:root.light .text-white\/60 {
+  color: rgba(15, 23, 42, 0.65) !important;
+}
+
+/* Border colors */
+:root.light .border-gray-800 {
+  border-color: #cbd5e1 !important;
+}
+
+:root.light .border-gray-700 {
+  border-color: #94a3b8 !important;
+}
+
+:root.light .border-gray-900 {
+  border-color: #e2e8f0 !important;
+}
+
+:root.light .border-white {
+  border-color: #0f172a !important;
+}
+
+/* Specific overrides for better contrast */
+:root.light .bg-grid-pattern {
+  background-image: radial-gradient(circle at 2px 2px, rgba(0, 0, 0, 0.03) 1px, transparent 0);
+}
+
+/* Card and surface backgrounds */
+:root.light [class*="bg-gray-900/"] {
+  background-color: rgba(241, 245, 249, 0.85) !important;
+}
+
+:root.light [class*="bg-gray-950/"] {
+  background-color: rgba(248, 250, 252, 0.95) !important;
+}
+
+:root.light [class*="bg-gray-800/"] {
+  background-color: rgba(226, 232, 240, 0.85) !important;
+}
+
+/* Hover states */
+:root.light .hover\:bg-gray-800:hover {
+  background-color: #e2e8f0 !important;
+}
+
+:root.light .hover\:text-white:hover {
+  color: #0f172a !important;
+}
+
+/* Hero section and gradient backgrounds */
+:root.light .bg-gradient-to-br {
+  background-image: linear-gradient(to bottom right, #f8fafc, #e2e8f0) !important;
+}
+
+:root.light .bg-gradient-to-l {
+  background-image: linear-gradient(to left, rgba(59, 130, 246, 0.08), transparent) !important;
+}
+
+:root.light .bg-gradient-to-tr {
+  background-image: linear-gradient(to top right, transparent, rgba(0, 0, 0, 0.015), rgba(0, 0, 0, 0.025)) !important;
+}
+
+/* Backdrop blur and transparency effects */
+:root.light .backdrop-blur-3xl,
+:root.light .backdrop-blur-sm,
+:root.light .backdrop-blur-md {
+  background-color: rgba(248, 250, 252, 0.9) !important;
+}
+
+/* Border colors for cards and sections */
+:root.light .border-white\/10,
+:root.light .border-white\/5 {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Opacity-based backgrounds */
+:root.light .bg-white\/\[0\.03\] {
+  background-color: rgba(0, 0, 0, 0.025) !important;
+}
+
+/* Primary color adjustments for light theme */
+:root.light .text-primary-400,
+:root.light .text-primary-500 {
+  color: hsl(220, 70%, 45%) !important;
+}
+
+:root.light .text-primary-500\/80 {
+  color: hsla(220, 70%, 45%, 0.85) !important;
+}
+
+:root.light .bg-primary-500\/5,
+:root.light .bg-primary-600\/10 {
+  background-color: rgba(59, 130, 246, 0.08) !important;
+}
+
+:root.light .bg-primary-500\/10 {
+  background-color: rgba(59, 130, 246, 0.12) !important;
+}
+
+:root.light .bg-primary-500\/20 {
+  background-color: rgba(59, 130, 246, 0.18) !important;
+}
+
+:root.light .border-primary-500\/10 {
+  border-color: rgba(59, 130, 246, 0.15) !important;
+}
+
+:root.light .border-primary-500\/20 {
+  border-color: rgba(59, 130, 246, 0.25) !important;
+}
+
+:root.light .shadow-primary-500\/5 {
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.08) !important;
+}
+
 body {
   margin: 0;
   padding: 0;

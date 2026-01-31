@@ -22,6 +22,7 @@ export { default as PageHeader } from './PageHeader';
 export { default as SectionHeader } from './SectionHeader';
 export { Tabs } from './Tabs';
 export { StatCard } from './StatCard';
+export { default as Switch } from './Switch';
 
 export * from './modal/index';
 

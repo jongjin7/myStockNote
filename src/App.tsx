@@ -6,6 +6,7 @@ import Holdings from './pages/Holdings';
 import Watchlist from './pages/Watchlist';
 import StockDetail from './pages/StockDetail';
 import MemoEditor from './pages/MemoEditor';
+import Settings from './pages/Settings';
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
    <Route path="accounts" element={<Accounts />} />
    <Route path="holdings" element={<Holdings />} />
    <Route path="watchlist" element={<Watchlist />} />
+   <Route path="settings" element={<Settings />} />
    <Route path="stocks/:id" element={<StockDetail />} />
    <Route path="stocks/:id/memos/new" element={<MemoEditor />} />
    <Route path="memos/:memoId/edit" element={<MemoEditor />} />
