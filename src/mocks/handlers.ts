@@ -3,10 +3,11 @@ import { storage } from '../lib/storage';
 import { generateMockData, mockScenarios } from '../lib/mockData';
 import type { AppData, Account, Stock, StockMemo, Attachment } from '../types';
 
-// Supabase REST API 엔드포인트 패턴
+// Supabase API 엔드포인트 패턴
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const REST_URL = `${SUPABASE_URL}/rest/v1`;
 const AUTH_URL = `${SUPABASE_URL}/auth/v1`;
+const STORAGE_URL = `${SUPABASE_URL}/storage/v1`;
 
 // 서버 사이드 데이터 시뮬레이션 (초기 로드 시 localStorage에서 가져옴)
 let currentMockData: AppData;
@@ -35,7 +36,7 @@ export const handlers = [
 
   // --- REST API Mock (Supabase) ---
   
-  // 계좌 목록 조회 (select=*)
+  // 계좌 목록 조회
   http.get(`${REST_URL}/accounts`, () => {
     return HttpResponse.json(currentMockData.accounts.map(a => ({
       ...a,
@@ -48,7 +49,6 @@ export const handlers = [
   // 계좌 생성/수정 (UPSERT)
   http.post(`${REST_URL}/accounts`, async ({ request }) => {
     const account = await request.json() as any;
-    const index = currentMockData.accounts.findIndex((a) => a.id === account.id);
     const mappedAccount: Account = {
       id: account.id,
       brokerName: account.broker_name,
@@ -58,6 +58,7 @@ export const handlers = [
       updatedAt: Date.now(),
     };
 
+    const index = currentMockData.accounts.findIndex((a) => a.id === account.id);
     if (index >= 0) {
       currentMockData.accounts[index] = mappedAccount;
     } else {
@@ -70,7 +71,7 @@ export const handlers = [
   // 계좌 삭제
   http.delete(`${REST_URL}/accounts`, ({ request }) => {
     const url = new URL(request.url);
-    const id = url.searchParams.get('id')?.split('.')[1]; // eq.uuid format
+    const id = url.searchParams.get('id')?.split('.')[1];
     if (id) {
       currentMockData.accounts = currentMockData.accounts.filter((a) => a.id !== id);
       currentMockData.stocks = currentMockData.stocks.map(s => 
@@ -95,7 +96,6 @@ export const handlers = [
   // 주식 등록/수정
   http.post(`${REST_URL}/stocks`, async ({ request }) => {
     const stock = await request.json() as any;
-    const index = currentMockData.stocks.findIndex((s) => s.id === stock.id);
     const mappedStock: Stock = {
       id: stock.id,
       accountId: stock.account_id,
@@ -110,6 +110,7 @@ export const handlers = [
       updatedAt: Date.now(),
     };
 
+    const index = currentMockData.stocks.findIndex((s) => s.id === stock.id);
     if (index >= 0) {
       currentMockData.stocks[index] = mappedStock;
     } else {
@@ -219,6 +220,20 @@ export const handlers = [
     syncToStorage();
     return HttpResponse.json(attachment);
   }),
+
+  // --- Storage API Mock (Supabase) ---
+  
+  // 이미지 업로드
+  http.post(`${STORAGE_URL}/object/stock-images/*`, async ({ request }) => {
+    const url = new URL(request.url);
+    const path = url.pathname.split('stock-images/')[1];
+    
+    return HttpResponse.json({
+      Key: `stock-images/${path}`,
+      Id: 'mock-storage-id',
+      path: path
+    });
+  }),
 ];
 
 // 시나리오 변경 함수
@@ -235,7 +250,7 @@ export function resetMockData() {
   console.log('🔄 MSW 목 데이터가 초기화되었습니다.');
 }
 
-// 모든 데이터 완전 삭제 (빈 상태로)
+// 모든 데이터 완전 삭제
 export function clearMockData() {
   currentMockData = {
     accounts: [],
@@ -251,4 +266,3 @@ export function clearMockData() {
 export function getCurrentMockData() {
   return currentMockData;
 }
-
