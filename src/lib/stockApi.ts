@@ -32,13 +32,24 @@ export async function fetchStockPrice(symbol: string): Promise<number | null> {
 async function fetchSingleSymbolPrice(symbol: string): Promise<{ price: number; time: number } | null> {
   try {
     const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1m&range=1d`;
+    // Using allorigins.win proxy to bypass CORS
     const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}&_=${Date.now()}`;
 
     const response = await fetch(proxyUrl);
-    const data = await response.json();
-    const result = JSON.parse(data.contents);
+    if (!response.ok) return null;
     
-    const meta = result.chart?.result?.[0]?.meta;
+    const data = await response.json();
+    if (!data || !data.contents) return null;
+
+    let result;
+    try {
+      result = JSON.parse(data.contents);
+    } catch (e) {
+      console.warn(`Failed to parse Yahoo Finance response for ${symbol}`);
+      return null;
+    }
+    
+    const meta = result?.chart?.result?.[0]?.meta;
 
     if (!meta || typeof meta.regularMarketPrice !== 'number') {
       return null;
@@ -49,6 +60,7 @@ async function fetchSingleSymbolPrice(symbol: string): Promise<{ price: number; 
       time: meta.regularMarketTime || 0
     };
   } catch (e) {
+    console.error(`Error fetching price for ${symbol}:`, e);
     return null;
   }
 }

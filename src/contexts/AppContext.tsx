@@ -10,6 +10,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 interface AppContextType {
   data: AppData;
   isLoading: boolean;
+  isSyncing: boolean;
   error: Error | null;
   actions: {
     refresh: () => Promise<void>;
@@ -32,6 +33,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [data, setData] = useState<AppData>(initialData);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   // Fetch all data
   const { data: serverData, isLoading, error: queryError, refetch } = useQuery({
@@ -149,7 +151,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       
       try {
         const newPrice = await fetchStockPrice(stock.symbol);
-        if (newPrice !== null) {
+        if (newPrice !== null && newPrice !== stock.currentPrice) {
+          // 가격이 실제로 변경되었을 때만 updatedAt 업데이트
           await stockMutation.mutateAsync({
             ...stock,
             currentPrice: newPrice,
@@ -162,29 +165,40 @@ export function AppProvider({ children }: { children: ReactNode }) {
     },
     updateAllStockPrices: async () => {
       const stocksToUpdate = data.stocks.filter(s => s.symbol && (s.status === 'HOLDING' || s.status === 'PARTIAL_SOLD' || s.status === 'WATCHLIST'));
-      if (stocksToUpdate.length === 0) return;
+      if (stocksToUpdate.length === 0 || isSyncing) return;
 
+      setIsSyncing(true);
       try {
         for (const stock of stocksToUpdate) {
           if (!stock.symbol) continue;
-          await new Promise(resolve => setTimeout(resolve, 500));
-          const newPrice = await fetchStockPrice(stock.symbol);
-          if (newPrice !== null) {
-            await stockMutation.mutateAsync({
-              ...stock,
-              currentPrice: newPrice,
-              updatedAt: Date.now()
-            });
+          
+          try {
+            // Rate limit avoidance
+            await new Promise(resolve => setTimeout(resolve, 800));
+            const newPrice = await fetchStockPrice(stock.symbol);
+            
+            if (newPrice !== null && newPrice !== stock.currentPrice) {
+              await stockMutation.mutateAsync({
+                ...stock,
+                currentPrice: newPrice,
+                updatedAt: Date.now()
+              });
+            }
+          } catch (err) {
+            console.error(`Failed to update price for ${stock.symbol}:`, err);
+            // Continue with other stocks
           }
         }
       } catch (err) {
         console.error('Failed to update all prices:', err);
+      } finally {
+        setIsSyncing(false);
       }
     },
   }), [refresh, data.stocks, user, accountMutation, deleteAccountMutation, stockMutation, deleteStockMutation, memoMutation, attachmentMutation, deleteAttachmentMutation]);
 
   return (
-    <AppContext.Provider value={{ data, isLoading, error, actions }}>
+    <AppContext.Provider value={{ data, isLoading, isSyncing, error, actions }}>
       {children}
     </AppContext.Provider>
   );

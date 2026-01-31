@@ -70,7 +70,7 @@ export default function Layout() {
               isBottom
             />
           ))}
-          <SidebarSyncStatus isCollapsed={isCollapsed} isLoading={isLoading} />
+          <SidebarSyncStatus isCollapsed={isCollapsed} />
         </div>
       </nav>
 
