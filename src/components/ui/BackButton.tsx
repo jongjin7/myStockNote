@@ -9,6 +9,8 @@ interface BackButtonProps {
   label?: string;
   /** 대문자 처리 여부. 기본값: false */
   uppercase?: boolean;
+  /** 히스토리 대체 여부. 기본값: false */
+  replace?: boolean;
   /** 추가 클래스 */
   className?: string;
 }
@@ -17,13 +19,22 @@ export default function BackButton({
   to = -1, 
   label = '목록으로 돌아가기', 
   uppercase = false,
+  replace = false,
   className 
 }: BackButtonProps) {
   const navigate = useNavigate();
 
+  const handleClick = () => {
+    if (typeof to === 'number') {
+      navigate(to as any);
+    } else {
+      navigate(to, { replace });
+    }
+  };
+
   return (
     <button
-      onClick={() => (typeof to === 'number' ? navigate(to as any) : navigate(to))}
+      onClick={handleClick}
       className={cn(
         "inline-flex items-center text-gray-400 hover:text-white transition-colors group w-fit",
         className

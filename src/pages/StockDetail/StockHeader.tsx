@@ -25,7 +25,7 @@ export function StockHeader({ stock, account, currentPrice, onEdit, onDelete }: 
   return (
     <header className="flex flex-col space-y-6">
       <div className="flex items-center justify-between w-full">
-        <BackButton />
+        <BackButton to={stock.status === 'WATCHLIST' ? '/watchlist' : '/holdings'} />
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"

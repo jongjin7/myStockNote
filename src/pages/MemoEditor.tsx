@@ -140,7 +140,7 @@ export default function MemoEditor() {
       }
     }
 
-    navigate(`/stocks/${currentStockId}`);
+    navigate(`/stocks/${currentStockId}`, { replace: true });
   } catch (err: any) {
     console.error('Failed to save memo:', err);
     alert('기록 저장 중 오류가 발생했습니다: ' + err.message);
@@ -159,7 +159,7 @@ export default function MemoEditor() {
     <Button 
     variant="secondary" 
     size="sm" 
-    onClick={() => navigate(-1)}
+    onClick={() => navigate(`/stocks/${currentStockId}`, { replace: true })}
     className="w-10 h-10 p-0 rounded-xl"
     >
     <ArrowLeft size={20} />
