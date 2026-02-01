@@ -6,15 +6,23 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   label?: string;
   error?: string;
   helperText?: string;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, label, error, helperText, type = 'text', ...props }, ref) => {
+  ({ className, label, error, helperText, type = 'text', size = 'md', ...props }, ref) => {
     const inputId = props.id || `input-${Math.random().toString(36).substr(2, 9)}`;
+
+    const sizeStyles = {
+      sm: 'h-7 px-3 text-xs rounded',           // 28px height, 4px radius
+      md: 'h-8 px-3 text-sm rounded-lg',        // 32px height, 8px radius
+      lg: 'h-10 px-4 text-base rounded-xl',     // 40px height, 12px radius
+      xl: 'h-12 px-5 text-base rounded-xl',     // 48px height, 12px radius
+    };
 
     return (
       <div className="w-full">
@@ -24,18 +32,17 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             className="block text-sm font-medium text-gray-700 mb-2"
           >
             {label}
-            {props.required && <span className="text-danger ml-1">*</span>}
           </label>
         )}
-        
+
         <input
           ref={ref}
           id={inputId}
           type={type}
           className={cn(
-            'w-full h-8 px-3',
-            'text-sm font-normal',
-            'bg-white border rounded-lg',
+            'w-full',
+            'font-normal',
+            'bg-white border',
             'transition-all duration-200',
             'placeholder:text-gray-400',
             'focus:outline-none focus:ring-2 focus:ring-offset-0',
@@ -43,26 +50,19 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               ? 'border-danger focus:border-danger focus:ring-danger/20'
               : 'border-gray-300 focus:border-primary-500 focus:ring-primary-100',
             'disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50',
-            type === 'number' && 'text-right ',
+            type === 'number' && 'text-right',
+            sizeStyles[size],
             className
           )}
           {...props}
         />
 
-        {error && (
-          <p className="mt-1.5 text-sm text-danger flex items-center gap-1">
-            <svg
-              className="w-4 h-4"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                clipRule="evenodd"
-              />
-            </svg>
-            {error}
+        {(error || helperText) && (
+          <p className={cn(
+            "text-[10px] ml-1 font-medium tracking-wide mt-1.5",
+            error ? "text-danger" : "text-gray-600"
+          )}>
+            {error || helperText}
           </p>
         )}
 

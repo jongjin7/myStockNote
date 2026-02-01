@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Info } from 'lucide-react';
-import { ActionModal, Input } from '../../components/ui';
+import { ActionModal, Input, FormField, FormLabel, FormSelect } from '../../components/ui';
 import type { Account } from '../../types';
 
 interface StockConvertModalProps {
@@ -59,20 +59,20 @@ export function StockConvertModal({
         </div>
 
         <div className="space-y-6">
-          <div className="space-y-3">
-            <label className="text-sm font-bold text-gray-500 uppercase tracking-widest">입고 계좌 선택</label>
-            <select
+          <FormField>
+            <FormLabel required>입고 계좌 선택</FormLabel>
+            <FormSelect
               value={targetAccountId}
               onChange={(e) => setTargetAccountId(e.target.value)}
               required
-              className="w-full h-12 bg-gray-950 border border-gray-800 rounded-xl px-4 text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40 appearance-none font-bold"
+              size="lg"
             >
               <option value="">계좌를 선택하세요</option>
               {accounts.map(a => (
                 <option key={a.id} value={a.id}>{a.brokerName}</option>
               ))}
-            </select>
-          </div>
+            </FormSelect>
+          </FormField>
 
           <div className="grid grid-cols-2 gap-6">
             <Input
@@ -82,6 +82,7 @@ export function StockConvertModal({
               onChange={(e) => setBuyQuantity(Number(e.target.value))}
               min="1"
               required
+              size="lg"
               placeholder="0"
               className="bg-gray-950 border-gray-800"
             />
@@ -92,6 +93,7 @@ export function StockConvertModal({
               onChange={(e) => setBuyPrice(Number(e.target.value))}
               min="1"
               required
+              size="lg"
               placeholder="0"
               className="bg-gray-950 border-gray-800"
             />

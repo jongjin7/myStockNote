@@ -24,6 +24,11 @@ export { Tabs } from './Tabs';
 export { StatCard } from './StatCard';
 export { default as Switch } from './Switch';
 
+export { FormField, FormLabel } from './Form';
+export { default as FormSelect } from './FormSelect';
+export type { FormSelectProps } from './FormSelect';
+
+
 export * from './modal/index';
 
 

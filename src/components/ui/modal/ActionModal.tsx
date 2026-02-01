@@ -38,7 +38,7 @@ export function ActionModal({
         <ModalFooter>
           <Button 
             variant="secondary" 
-            size="md"
+            size="lg"
             type="button" 
             onClick={onClose}
             className="border-gray-800"
@@ -48,7 +48,7 @@ export function ActionModal({
           <Button 
             type="submit" 
             variant={variant}
-            size="md"
+            size="lg"
             disabled={submitDisabled || isSubmitting}
             className={isSubmitting ? "opacity-70 cursor-not-allowed" : ""}
           >
