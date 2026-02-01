@@ -27,13 +27,13 @@ export default function Dashboard() {
  // -- Calculations --
  const totalCash = accounts.reduce((acc: number, curr: Account) => acc + (Number(curr.cashBalance) || 0), 0);
  const holdingStocks = stocks.filter((s: Stock) => s.status === 'HOLDING' || s.status === 'PARTIAL_SOLD');
- 
+  
  const totalInvested = holdingStocks.reduce((acc, curr) => acc + ((Number(curr.quantity) || 0) * (Number(curr.avgPrice) || 0)), 0);
  const totalEvaluation = holdingStocks.reduce((acc, curr) => {
  const currentPrice = curr.currentPrice || curr.avgPrice;
  return acc + ((Number(curr.quantity) || 0) * currentPrice);
  }, 0);
- 
+  
  const totalProfit = totalEvaluation - totalInvested;
  const totalProfitRate = totalInvested > 0 ? (totalProfit / totalInvested) * 100 : 0;
  const profitStr = formatNumber(Math.abs(totalProfit));
@@ -57,7 +57,7 @@ export default function Dashboard() {
      </Button>
    }
   />
-  
+   
   {/* Hero Stats Section */}
   <HeroStats 
   totalAssets={totalAssets}
@@ -95,6 +95,7 @@ export default function Dashboard() {
    holdingStocks={holdingStocks}
    watchlistStocks={stocks.filter(s => s.status === 'WATCHLIST')}
    memos={data.memos}
+   accounts={accounts}
   />
 
 
