@@ -72,16 +72,16 @@ export function StockList({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={searchPlaceholder}
-                  className="w-full bg-gray-900/60 border border-gray-800 focus:border-primary-500/50 focus:ring-4 focus:ring-primary-500/5 rounded-xl pl-10 pr-10 py-2.5 text-sm text-white font-medium focus:outline-none transition-all placeholder:text-gray-600 backdrop-blur-sm"
+                  className="w-full h-8 bg-gray-900/60 border border-gray-800 focus:border-primary-500/50 focus:ring-4 focus:ring-primary-500/5 rounded-lg pl-10 pr-10 text-sm text-white font-medium focus:outline-none transition-all placeholder:text-gray-600 backdrop-blur-sm"
                 />
                 {searchQuery && (
                   <Button 
                     variant="ghost" 
                     size="sm"
                     onClick={() => setSearchQuery('')}
-                    className="absolute inset-y-0 right-0 h-full p-2.5 text-gray-400 hover:text-white z-10"
+                    className="absolute inset-y-0 right-0 h-full p-2 text-gray-400 hover:text-white z-10"
                   >
-                    <PlusCircle size={16} className="rotate-45" />
+                    <PlusCircle size={14} className="rotate-45" />
                   </Button>
                 )}
               </div>
@@ -96,16 +96,16 @@ export function StockList({
                   size="sm"
                   onClick={onAddClick}
                   title="자세히 보기"
-                  className="w-10 h-10 p-0 rounded-full"
+                  className="w-7 h-7 p-0 rounded-full shrink-0"
                 >
-                  <LayoutList size={20} className="group-hover:scale-110 transition-transform" />
+                  <LayoutList size={16} className="group-hover:scale-110 transition-transform" />
                 </Button>
               ) : (
                 <Button 
                   onClick={onAddClick}
                   variant="primary"
                   size="md"
-                  className="px-4 rounded-xl whitespace-nowrap"
+                  className="rounded-lg whitespace-nowrap shrink-0"
                 >
                   <PlusCircle size={16} className="mr-2" />
                   <span>종목 추가</span>

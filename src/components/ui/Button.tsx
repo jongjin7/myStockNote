@@ -8,7 +8,7 @@ function cn(...inputs: ClassValue[]) {
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
  variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'success';
- size?: 'sm' | 'md' | 'lg';
+ size?: 'sm' | 'md' | 'lg' | 'xl';
  isLoading?: boolean;
 }
 
@@ -54,9 +54,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
  };
 
  const sizeStyles = {
-  sm: 'px-4 py-2 text-xs rounded-xl tracking-wider',
-  md: 'px-6 py-3 text-sm rounded-2xl tracking-wide',
-  lg: 'px-8 py-4 text-base rounded-3xl tracking-widest uppercase',
+  sm: 'h-7 px-3 text-xs rounded',        // 28px height, 4px radius
+  md: 'h-8 px-4 text-sm rounded-lg',     // 32px height, 8px radius
+  lg: 'h-10 px-5 text-base rounded-xl',  // 40px height, 12px radius
+  xl: 'h-12 px-6 text-base rounded-xl',  // 48px height, 12px radius
  };
 
  return (
