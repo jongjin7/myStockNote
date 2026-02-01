@@ -27,10 +27,10 @@ export function InvestmentMilestone({ totalAssets }: InvestmentMilestoneProps) {
 
         <div className="flex-1 flex flex-col justify-center">
           <div className="text-center mb-6">
-            <div className="text-5xl font-black text-white tracking-tighter tabular-nums mb-1">
-              {progress.toFixed(1)}<span className="text-2xl ml-1 text-primary-400">%</span>
+            <div className="text-5xl font-black text-white tabular-nums mb-1">
+              {progress.toFixed(1)}<span className="text-2xl ml-1 ">%</span>
             </div>
-            <p className="text-sm font-bold text-gray-500 tracking-tight">목표 {formatNumber(targetGoal)}원 도달 현황</p>
+            <p className="text-sm font-semibold text-gray-500">목표 {formatNumber(targetGoal)}원 도달 현황</p>
           </div>
 
           <div className="space-y-4">
@@ -43,9 +43,9 @@ export function InvestmentMilestone({ totalAssets }: InvestmentMilestoneProps) {
               </div>
             </div>
             
-            <div className="flex justify-between items-center text-[11px] font-black uppercase tracking-widest text-gray-600">
-              <span>Current: ₩{formatNumber(totalAssets)}</span>
-              <span className="text-primary-400/80">Goal Remaining: ₩{formatNumber(remaining)}</span>
+            <div className="flex justify-between items-center text-sm font-semibold uppercase tracking-widest text-gray-600">
+              <span>총 평가액: ₩{formatNumber(totalAssets)}</span>
+              <span className="text-primary-400/80">목표액: ₩{formatNumber(remaining)}</span>
             </div>
           </div>
         </div>

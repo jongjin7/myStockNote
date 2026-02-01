@@ -208,6 +208,32 @@ function AssetItem({
 /**
  * 3. 하단 요약 인사이트 컴포넌트
  */
+interface InsightItemProps {
+  icon: React.ElementType;
+  label: string;
+  value: React.ReactNode;
+  iconColor?: string;
+  showBorder?: boolean;
+}
+
+function InsightItem({ icon: Icon, label, value, iconColor, showBorder = true }: InsightItemProps) {
+  return (
+    <div className={cn(
+      "flex flex-col items-center justify-center flex-1 px-2",
+      !showBorder && "border-none"
+    )}>
+      <div className="flex items-center gap-1.5 mb-2">
+        <Icon size={14} className={iconColor || "text-gray-500"} />
+        <span className="text-xs font-semibold text-gray-500 uppercase tracking-widest">{label}</span>
+      </div>
+      <strong className="text-sm text-white tracking-tight tabular-nums">{value}</strong>
+    </div>
+  );
+}
+
+/**
+ * 3. 하단 요약 인사이트 컴포넌트
+ */
 function AllocationInsights({ 
   diversificationStatus, 
   avgWeight, 
@@ -219,32 +245,25 @@ function AllocationInsights({
 }) {
   return (
     <div className="bg-white/[0.02] border border-white/5 rounded-[2.5rem] p-4 flex flex-wrap items-center justify-between gap-y-4 divide-x-0 sm:divide-x divide-white/10 mt-auto shadow-xl">
-      <div className="flex flex-col items-center justify-center flex-1 px-2 border-none">
-        <div className="flex items-center gap-1.5 mb-2">
-          <ShieldCheck size={12} className="text-success" />
-          <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Stratum</span>
-        </div>
-        <span className="text-sm font-black text-white tracking-tight">{diversificationStatus}</span>
-      </div>
-      
-      <div className="flex flex-col items-center justify-center flex-1 px-2">
-        <div className="flex items-center gap-2 mb-2">
-          <TrendingUp size={12} className="text-gray-500" />
-          <div className="flex flex-col items-center leading-none">
-            <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest">Avg</span>
-            <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest">wt</span>
-          </div>
-        </div>
-        <span className="text-sm font-black text-white tabular-nums tracking-tighter">{avgWeight.toFixed(1)}%</span>
-      </div>
-      
-      <div className="flex flex-col items-center justify-center flex-1 px-2">
-        <div className="flex items-center gap-1.5 mb-2">
-          <Info size={12} className="text-info" />
-          <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Count</span>
-        </div>
-        <span className="text-sm font-black text-white tabular-nums tracking-tighter">{count}개</span>
-      </div>
+      <InsightItem 
+        icon={ShieldCheck} 
+        label="분산 지표" 
+        value={diversificationStatus} 
+        iconColor="text-success"
+        
+      />
+      <InsightItem 
+        icon={TrendingUp} 
+        label="평균 비중" 
+        value={`${avgWeight.toFixed(1)}%`} 
+        
+      />
+      <InsightItem 
+        icon={Info} 
+        label="보유 종목" 
+        value={`${count}개`} 
+        iconColor="text-info"
+      />
     </div>
   );
 }
