@@ -47,7 +47,7 @@ export function PortfolioSection({ holdingStocks, watchlistStocks, memos }: Port
         />
 
         {/* Ultra-Clean Info Card */}
-        <Card className="relative overflow-hidden bg-[#0d0f14]/60 backdrop-blur-sm border border-white/[0.02] rounded-[2rem] p-10 min-h-[160px] flex items-center group/card shadow-2xl">
+        <Card className="relative overflow-hidden bg-gray-950/60 backdrop-blur-sm border border-white/5 rounded-[2rem] p-10 min-h-[160px] flex items-center group/card shadow-2xl">
           <TrendingUp 
             size={200} 
             className="absolute right-[-30px] bottom-[-50px] text-white/[0.015] -rotate-12 group-hover/card:text-white/[0.025] transition-all duration-1000 ease-out pointer-events-none" 

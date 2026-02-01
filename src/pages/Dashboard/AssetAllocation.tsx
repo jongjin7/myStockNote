@@ -54,7 +54,7 @@ function AllocationPieChart({
   const activePercentage = totalEvaluation > 0 ? (activeStockValue / totalEvaluation * 100) : 0;
 
   return (
-    <div className="relative w-72 h-72 shrink-0 flex items-center justify-center">
+    <div className="relative w-64 @[750px]:w-72 h-64 @[750px]:h-72 shrink-0 flex items-center justify-center">
       {/* Animated Glow behind pie */}
       <div className={cn(
         "absolute inset-0 rounded-full blur-[40px] transition-all duration-700",
@@ -62,7 +62,7 @@ function AllocationPieChart({
       )} />
       
       <svg 
-        className="w-64 h-64 -rotate-90 drop-shadow-[0_0_40px_rgba(0,0,0,0.6)] z-10 cursor-pointer overflow-visible" 
+        className="w-56 @[750px]:w-64 h-56 @[750px]:h-64 -rotate-90 drop-shadow-[0_0_40px_rgba(0,0,0,0.6)] z-10 cursor-pointer overflow-visible" 
         viewBox="0 0 100 100"
         onClick={() => setActiveStockId(null)}
       >
@@ -165,36 +165,36 @@ function AssetItem({
         isActive ? "bg-white/[0.08] translate-x-1 border border-white/10" : "hover:bg-white/[0.03] hover:translate-x-1 border border-transparent"
       )}
     >
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3 min-w-0 flex-1">
         <div className={cn(
-          "w-3 h-3 rounded-full shrink-0 shadow-lg transition-transform duration-500", 
+          "w-2.5 h-2.5 rounded-full shrink-0 shadow-lg transition-transform duration-500", 
           BG_COLORS[index],
-          isActive ? "scale-150 ring-4 ring-white/10" : "group-hover:scale-125"
+          isActive ? "scale-125 ring-4 ring-white/10" : "group-hover:scale-110"
         )} />
-        <div className="flex flex-col">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-bold text-gray-200 truncate max-w-[160px] group-hover:text-white transition-colors">
+        <div className="flex flex-col min-w-0 flex-1">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span className="text-sm font-bold text-gray-200 truncate group-hover:text-white transition-colors">
               {stock.name}
             </span>
             {stock.symbol && (
-              <span className="text-[10px] text-gray-700 uppercase tracking-tighter">
+              <span className="text-[9px] text-gray-700 uppercase tracking-tighter shrink-0">
                 {stock.symbol}
               </span>
             )}
           </div>
-          <span className="text-xs font-normal text-gray-600 tabular-nums">
+          <span className="text-[10px] font-normal text-gray-600 tabular-nums truncate">
             {formatCurrency(value)}
           </span>
         </div>
       </div>
-      <div className="text-right flex flex-col items-end">
-        <div className="flex items-baseline gap-1">
-          <span className="text-lg font-black text-white group-hover:text-primary-400 transition-colors tabular-nums">
+      <div className="text-right flex flex-col items-end shrink-0 ml-2">
+        <div className="flex items-baseline gap-0.5">
+          <span className="text-base font-black text-white group-hover:text-primary-400 transition-colors tabular-nums">
             {percentage.toFixed(1)}
           </span>
-          <span className="text-[10px] font-black text-gray-700">%</span>
+          <span className="text-[8px] font-black text-gray-700">%</span>
         </div>
-        <div className="w-16 h-1 bg-gray-800/30 rounded-full mt-1.5 overflow-hidden">
+        <div className="w-12 h-1 bg-gray-800/30 rounded-full mt-1 overflow-hidden">
           <div 
             className={cn("h-full transition-all duration-1000 delay-500 opacity-60", BG_COLORS[index])} 
             style={{ width: `${percentage}%` }}
@@ -218,7 +218,7 @@ function AllocationInsights({
   count: number; 
 }) {
   return (
-    <div className="bg-white/[0.02] border border-white/5 rounded-[2.5rem] p-5 flex items-center justify-between divide-x divide-white/10 mt-auto shadow-xl">
+    <div className="bg-white/[0.02] border border-white/5 rounded-[2.5rem] p-4 flex flex-wrap items-center justify-between gap-y-4 divide-x-0 sm:divide-x divide-white/10 mt-auto shadow-xl">
       <div className="flex flex-col items-center justify-center flex-1 px-2 border-none">
         <div className="flex items-center gap-1.5 mb-2">
           <ShieldCheck size={12} className="text-success" />
@@ -288,7 +288,7 @@ export function AssetAllocation({ holdingStocks, totalEvaluation }: AssetAllocat
   const diversificationStatus = topWeight > 40 ? '집중 투자' : topWeight > 20 ? '균형 분산' : '폭넓은 분산';
 
   return (
-    <div className="bg-gray-900/40 backdrop-blur-sm border border-gray-800/50 rounded-3xl p-8 h-full flex flex-col relative overflow-hidden group/card">
+    <div className="@container bg-gray-900/40 backdrop-blur-sm border border-gray-800/50 rounded-3xl p-8 h-full flex flex-col relative overflow-hidden group/card">
       {/* Background Decor */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/5 blur-[100px] -mr-32 -mt-32 pointer-events-none" />
       
@@ -296,28 +296,22 @@ export function AssetAllocation({ holdingStocks, totalEvaluation }: AssetAllocat
         icon={PieChart}
         title="자산 비중 리포트"
         className="mb-10 px-0 relative z-10"
-        extra={
-          <div className="flex flex-col items-end">
-            <span className="text-sm font-semibold text-gray-600 uppercase tracking-[0.2em] mb-1">총 평가금액</span>
-            <span className="text-2xl font-bold text-white tabular-nums tracking-tighter leading-none group-hover/card:text-primary-400 transition-colors">
-              {formatCurrency(totalEvaluation)}
-            </span>
-          </div>
-        }
       />
 
-      <div className="flex-1 flex flex-col xl:flex-row items-center justify-center gap-12 py-4 relative z-10">
-        <AllocationPieChart 
-          displayStocks={displayStocks}
-          totalEvaluation={totalEvaluation}
-          activeStockId={activeStockId}
-          setActiveStockId={setActiveStockId}
-          topWeight={topWeight}
-          topStockName={sortedAll[0]?.name || ''}
-        />
+      <div className="flex-1 flex flex-col @[645px]:flex-row items-center justify-center gap-12 @[800px]:gap-12 py-4 relative z-10 min-w-0">
+        <div className="shrink-0 flex items-center justify-center transition-transform b">
+          <AllocationPieChart 
+            displayStocks={displayStocks}
+            totalEvaluation={totalEvaluation}
+            activeStockId={activeStockId}
+            setActiveStockId={setActiveStockId}
+            topWeight={topWeight}
+            topStockName={sortedAll[0]?.name || ''}
+          />
+        </div>
 
         {/* Dynamic Information Grid */}
-        <div className="flex-1 w-full max-w-md flex flex-col justify-between h-full space-y-6">
+        <div className="flex-1 w-full max-w-full @[645px]:max-w-[300px] @[500px]:max-w-md flex flex-col justify-between h-full space-y-6 min-w-0">
           <div className="grid grid-cols-1 gap-3">
             {displayStocks.map((stock, index) => (
               <AssetItem 

@@ -24,19 +24,19 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
  }, ref) => {
  const baseStyles = cn(
   'inline-flex items-center justify-center',
-  'font-bold transition-all duration-300 cursor-pointer',
+  'font-semibold transition-all duration-300 cursor-pointer',
   'focus:outline-none focus:ring-2 focus:ring-primary-500/40',
   'disabled:opacity-40 disabled:cursor-not-allowed',
   'active:scale-[0.96]'
  );
 
  const variantStyles = {
-  primary: cn(
-  'bg-primary-500 text-white',
-  'hover:bg-primary-600 hover:shadow-lg hover:shadow-primary-500/20',
-  ),
+   primary: cn(
+   'bg-primary-500 text-white',
+   'hover:bg-primary-600 hover:shadow-lg hover:shadow-primary-500/20',
+   ),
   secondary: cn(
-  'bg-white/5 border border-white/10 text-gray-300',
+  'bg-white/5 border border-white/10 text-white/90',
   'hover:bg-white/10 hover:text-white',
   ),
   success: cn(
@@ -48,15 +48,15 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   'hover:bg-danger-dark hover:shadow-lg hover:shadow-danger/20',
   ),
   ghost: cn(
-  'bg-transparent text-gray-400',
+  'bg-transparent text-white/70',
   'hover:bg-white/5 hover:text-white',
   ),
  };
 
  const sizeStyles = {
   sm: 'h-7 px-3 text-xs rounded',        // 28px height, 4px radius
-  md: 'h-8 px-4 text-sm rounded-lg',     // 32px height, 8px radius
-  lg: 'h-10 px-5 text-base rounded-xl',  // 40px height, 12px radius
+  md: 'h-8 px-4 text-sm rounded-md',     // 32px height, 8px radius
+  lg: 'h-10 px-5 text-base rounded-lg',  // 40px height, 12px radius
   xl: 'h-12 px-6 text-base rounded-xl',  // 48px height, 12px radius
  };
 

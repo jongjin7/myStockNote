@@ -111,6 +111,16 @@
   color: #0f172a !important;
 }
 
+/* Ensure white text stays white on colored buttons in light mode */
+:root.light button.bg-primary-500,
+:root.light button.bg-success,
+:root.light button.bg-danger,
+:root.light .bg-primary-500 .text-white,
+:root.light .bg-success .text-white,
+:root.light .bg-danger .text-white {
+  color: white !important;
+}
+
 :root.light .text-gray-100 {
   color: #1e293b !important;
 }
@@ -148,21 +158,31 @@
 }
 
 /* Opacity-based text colors */
+:root.light .text-white\/95,
 :root.light .text-white\/90 {
   color: rgba(15, 23, 42, 0.95) !important;
 }
 
+:root.light .text-white\/85,
 :root.light .text-white\/80 {
   color: rgba(15, 23, 42, 0.85) !important;
 }
 
+:root.light .text-white\/75,
 :root.light .text-white\/70 {
   color: rgba(15, 23, 42, 0.75) !important;
 }
 
+:root.light .text-white\/65,
 :root.light .text-white\/60 {
   color: rgba(15, 23, 42, 0.65) !important;
 }
+
+:root.light .text-white\/50,
+:root.light .text-white\/40 {
+  color: rgba(15, 23, 42, 0.45) !important;
+}
+
 
 /* Border colors */
 :root.light .border-gray-800 {
@@ -272,6 +292,41 @@
 
 :root.light .shadow-primary-500\/5 {
   box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.08) !important;
+}
+
+/* Fix semantic colors in light theme */
+:root.light .text-danger-light {
+  color: var(--color-danger) !important;
+}
+
+:root.light .text-info-light {
+  color: var(--color-info) !important;
+}
+
+:root.light .text-success-light {
+  color: var(--color-success) !important;
+}
+
+:root.light .text-warning-light {
+  color: var(--color-warning) !important;
+}
+
+/* Background variant adjustments for better contrast in light theme */
+:root.light [class*="bg-danger/"] {
+  background-color: rgba(239, 68, 68, 0.08) !important;
+}
+
+:root.light [class*="bg-success/"] {
+  background-color: rgba(16, 185, 129, 0.08) !important;
+}
+
+:root.light [class*="bg-info/"] {
+  background-color: rgba(59, 130, 246, 0.08) !important;
+}
+
+/* Ensure borders are visible in light theme for cards with variants */
+:root.light [class*="border-white/"] {
+  border-color: rgba(0, 0, 0, 0.08) !important;
 }
 
 body {

@@ -14,7 +14,7 @@ export function InvestmentMilestone({ totalAssets }: InvestmentMilestoneProps) {
   return (
     <div className="bg-primary-500/5 backdrop-blur-sm border border-primary-500/10 rounded-3xl p-8 h-full relative overflow-hidden group">
       {/* Background Decor */}
-      <div className="absolute -right-10 -bottom-10 opacity-5 group-hover:opacity-10 transition-opacity">
+      <div className="absolute -right-10 -bottom-10 opacity-5">
         <Target size={180} />
       </div>
 

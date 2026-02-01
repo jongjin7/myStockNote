@@ -19,9 +19,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 
     const sizeStyles = {
       sm: 'h-7 px-3 text-xs rounded',           // 28px height, 4px radius
-      md: 'h-8 px-3 text-sm rounded-lg',        // 32px height, 8px radius
-      lg: 'h-10 px-4 text-base rounded-xl',     // 40px height, 12px radius
-      xl: 'h-12 px-5 text-base rounded-xl',     // 48px height, 12px radius
+      md: 'h-8 px-3 text-sm rounded-sm',        // 32px height, 8px radius
+      lg: 'h-10 px-4 text-base rounded-md',     // 40px height, 12px radius
+      xl: 'h-12 px-5 text-base rounded-lg',     // 48px height, 12px radius
     };
 
     return (

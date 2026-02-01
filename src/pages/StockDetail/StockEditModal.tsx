@@ -52,22 +52,31 @@ export function StockEditModal({ isOpen, onClose, stock, accounts, onUpdate }: S
           <FormLabel>상태</FormLabel>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
             {(['HOLDING', 'WATCHLIST', 'PARTIAL_SOLD', 'SOLD'] as const).map((s) => (
-              <button
+              <label
                 key={s}
-                type="button"
-                onClick={() => setStatus(s)}
                 className={cn(
-                  "h-10 px-4 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2",
+                  "h-10 px-4 rounded-xl text-sm font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer",
                   status === s
-                    ? "bg-primary-500 text-white border-2 border-primary-500"
-                    : "bg-gray-900/80 text-gray-400 border-2 border-gray-700 hover:bg-gray-900 hover:border-gray-600 hover:text-gray-300"
+                    ? "bg-primary-500 text-white"
+                    : "bg-gray-800/50 text-gray-400 hover:bg-gray-800 hover:text-gray-300"
                 )}
               >
+                <input
+                  type="radio"
+                  name="status"
+                  value={s}
+                  checked={status === s}
+                  onChange={() => setStatus(s)}
+                  className="sr-only"
+                />
                 <Badge 
                   status={s} 
-                  className="p-0 bg-transparent"
+                  className={cn(
+                    "p-0 bg-transparent",
+                    status === s ? "text-white" : "text-gray-400"
+                  )}
                 />
-              </button>
+              </label>
             ))}
           </div>
         </FormField>

@@ -18,15 +18,18 @@ interface HeroStatsProps {
  */
 function PortfolioValue({ totalAssets }: { totalAssets: number }) {
   return (
-    <div className="space-y-2">
-      <span className="text-primary-500 uppercase tracking-[0.3em] ml-1 text-sm">PORTFOLIO VALUE | 포트폴리오 총 자산</span>
-      <div className="font-black tracking-tighter tabular-nums flex items-baseline gap-2 text-white">
+    <div className="space-y-2 min-w-0">
+      <span className="text-primary-500 uppercase tracking-[0.3em] ml-1 text-sm whitespace-nowrap">PORTFOLIO VALUE | 포트폴리오 총 자산</span>
+      <div className="tracking-tighter tabular-nums flex items-baseline gap-2 text-white">
         <span className="text-3xl font-light">₩</span>
-        <span className="text-6xl font-bold tracking-tight">
+        <span 
+          className="font-bold tracking-tight"
+          style={{ fontSize: 'clamp(2.5rem, 5vw, 3.75rem)' }}
+        >
           {formatNumber(totalAssets)}
         </span>
       </div>
-      <div className="flex items-center gap-2 text-sm text-gray-500 tracking-widest ml-1 opacity-70">
+      <div className="flex items-center gap-2 text-sm text-gray-500 tracking-widest ml-1 opacity-70 whitespace-nowrap">
         <span className="w-1.5 h-1.5 rounded-full bg-gray-500 animate-pulse" />
         나의 자본 총합 (평가자산 + 총 예수금)
       </div>
@@ -47,11 +50,11 @@ function ProfitCard({
   profitStr: string; 
 }) {
   return (
-    <div className="bg-white/[0.03] backdrop-blur-3xl rounded-2xl p-4 border border-white/10 min-w-[300px] shadow-2xl relative overflow-hidden group/card @container">
+    <div className="bg-white/[0.03] backdrop-blur-3xl rounded-2xl p-4 border border-white/10 w-full sm:min-w-[320px] lg:max-w-md shadow-2xl relative overflow-hidden group/card @container">
       <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.02] to-white/[0.05] pointer-events-none" />
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-6">
-          <div className="text-sm text-gray-400 tracking-widest">
+          <div className="text-sm text-gray-400 tracking-widest whitespace-nowrap">
             전체 평가손익</div>
           <div className={cn(
             "text-sm font-black px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 shadow-sm backdrop-blur-md border border-white/5",
@@ -71,12 +74,12 @@ function ProfitCard({
               )}
               style={{ 
                 fontSize: profitStr.length <= 4 
-                  ? 'clamp(2.5rem, 8vw, 3.75rem)' 
+                  ? 'clamp(2.25rem, 7vw, 3.5rem)' 
                   : profitStr.length <= 7 
-                  ? 'clamp(2rem, 6vw, 3rem)' 
+                  ? 'clamp(1.75rem, 5vw, 2.75rem)' 
                   : profitStr.length <= 10
-                  ? 'clamp(1.5rem, 5vw, 2.25rem)' 
-                  : 'clamp(1.25rem, 4vw, 1.875rem)' 
+                  ? 'clamp(1.5rem, 4vw, 2rem)' 
+                  : 'clamp(1.25rem, 3.5vw, 1.75rem)' 
               }}
             >
               <span className='relative -top-[0.05em]'>{totalProfit >= 0 ? '+' : '-'} </span>
@@ -89,7 +92,7 @@ function ProfitCard({
                 {profitStr}
               </span>
             </span> 
-            <span className="text-2xl opacity-40 ml-2">원</span>
+            <span className="text-xl opacity-40 ml-2">원</span>
           </div>
         </div>
 
@@ -116,7 +119,7 @@ function AdditionalStats({
   cashRatio: number;
 }) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mt-12 pt-10 border-t border-gray-800/40">
+    <div className="flex flex-wrap justify-between items-start gap-x-2 gap-y-8 mt-12 pt-10 border-t border-gray-800/40">
       <SummaryStat label="평가자산" value={totalEvaluation} prefix="₩" />
       <SummaryStat label="총 예수금" value={totalCash} prefix="₩" />
       <SummaryStat label="투자원금" value={totalInvested} prefix="₩" />
@@ -145,7 +148,7 @@ export function HeroStats({
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-12">
             <PortfolioValue totalAssets={totalAssets} />
             
-            <div className="flex flex-col sm:flex-row items-stretch gap-4 shrink-0">
+            <div className="flex flex-col sm:flex-row items-stretch gap-4 min-w-0 w-full lg:w-auto justify-end">
               <ProfitCard 
                 totalProfit={totalProfit} 
                 totalProfitRate={totalProfitRate} 

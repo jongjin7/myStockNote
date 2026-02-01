@@ -9,7 +9,7 @@ interface SummaryStatProps {
 
 export function SummaryStat({ label, value, prefix, valueClassName }: SummaryStatProps) {
  return (
- <div className="space-y-2">
+ <div className="shrink-0 space-y-2">
   <span className="font-medium text-sm text-gray-500 uppercase">{label}</span>
   <div className="flex items-baseline tracking-tight tabular-nums mt-1">
   {prefix && <span className="relative -top-0.5 text-sm font-light mr-2">{prefix}</span>}
