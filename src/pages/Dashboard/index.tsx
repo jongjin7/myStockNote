@@ -11,7 +11,6 @@ import { PortfolioSection } from './PortfolioSection';
 import { AssetAllocation } from './AssetAllocation';
 import { BrokerDistribution } from './BrokerDistribution';
 import { InvestmentMilestone } from './InvestmentMilestone';
-import { MigrationAlert } from '../../components/MigrationAlert';
 
 export default function Dashboard() {
  const { data } = useApp();
@@ -59,8 +58,6 @@ export default function Dashboard() {
    }
   />
   
-  <MigrationAlert />
-
   {/* Hero Stats Section */}
   <HeroStats 
   totalAssets={totalAssets}
