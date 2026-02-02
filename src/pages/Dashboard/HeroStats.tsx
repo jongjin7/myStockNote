@@ -18,20 +18,20 @@ interface HeroStatsProps {
  */
 function PortfolioValue({ totalAssets }: { totalAssets: number }) {
   return (
-    <div className="space-y-1 sm:space-y-2 min-w-0 flex-1 mr-4">
+    <div className="shrink-0 space-y-1 sm:space-y-2 min-w-0 mr-4">
       <span className="text-primary-500 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold text-[10px] sm:text-sm whitespace-nowrap block truncate">PORTFOLIO VALUE | 포트폴리오 총 자산</span>
       <div className="tracking-tighter tabular-nums flex items-baseline gap-1 sm:gap-2 text-white min-w-0">
         <span className="text-xl sm:text-2xl lg:text-3xl font-light shrink-0">₩</span>
         <span 
-          className="font-bold tracking-tight truncate leading-tight"
+          className="font-bold tracking-tight leading-tight "
           style={{ fontSize: 'clamp(2rem, 8vw, 3.75rem)' }}
         >
           {formatNumber(totalAssets)}
         </span>
       </div>
-      <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-sm text-gray-500 tracking-wide sm:tracking-widest opacity-70 whitespace-nowrap overflow-hidden">
+      <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-sm text-gray-500 tracking-wide sm:tracking-widest opacity-70">
         <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-gray-500 animate-pulse shrink-0" />
-        <span className="truncate">나의 자본 총합 (평가자산 + 총 예수금)</span>
+        <span className="shrink-0">나의 자본 총합 (평가자산 + 총 예수금)</span>
       </div>
     </div>
   );
@@ -50,7 +50,7 @@ function ProfitCard({
   profitStr: string; 
 }) {
   return (
-    <div className="bg-white/[0.03] backdrop-blur-3xl rounded-2xl p-4 border border-white/10 w-full sm:min-w-[320px] lg:max-w-md shadow-2xl relative overflow-hidden group/card @container">
+    <div className="bg-white/[0.03] backdrop-blur-3xl rounded-2xl p-6 border border-white/10 w-full sm:min-w-[330px] lg:max-w-md shadow-2xl relative overflow-hidden group/card @container">
       <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.02] to-white/[0.05] pointer-events-none" />
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-6">
@@ -74,12 +74,12 @@ function ProfitCard({
               )}
               style={{ 
                 fontSize: profitStr.length <= 4 
-                  ? 'clamp(2.25rem, 7vw, 3.5rem)' 
+                  ? 'clamp(2.5rem, 8vw, 4rem)' 
                   : profitStr.length <= 7 
-                  ? 'clamp(1.75rem, 5vw, 2.75rem)' 
+                  ? 'clamp(2rem, 6vw, 3.25rem)' 
                   : profitStr.length <= 10
-                  ? 'clamp(1.5rem, 4vw, 2rem)' 
-                  : 'clamp(1.25rem, 3.5vw, 1.75rem)' 
+                  ? 'clamp(1.75rem, 5vw, 2.5rem)' 
+                  : 'clamp(1.5rem, 4vw, 2.25rem)' 
               }}
             >
               <span className='relative -top-[0.05em]'>{totalProfit >= 0 ? '+' : '-'} </span>
@@ -119,7 +119,8 @@ function AdditionalStats({
   cashRatio: number;
 }) {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 items-start gap-y-8 gap-x-4 mt-8 sm:mt-12 pt-8 sm:pt-10 border-t border-gray-800/40">
+        <div className="flex flex-wrap justify-between items-start gap-x-2 gap-y-4 mt-10 pt-8 border-t border-gray-800/40">
+
       <SummaryStat label="평가자산" value={totalEvaluation} prefix="₩" />
       <SummaryStat label="총 예수금" value={totalCash} prefix="₩" />
       <SummaryStat label="투자원금" value={totalInvested} prefix="₩" />
@@ -145,7 +146,7 @@ export function HeroStats({
         <div className="absolute -right-20 -top-20 w-96 h-96 bg-primary-600/10 rounded-full blur-[100px] pointer-events-none" />
         
         <div className="relative z-10">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-12">
+          <div className="flex flex-wrap lg:items-center justify-between gap-6">
             <PortfolioValue totalAssets={totalAssets} />
             
             <div className="flex flex-col sm:flex-row items-stretch gap-4 min-w-0 w-full lg:w-auto justify-end">
