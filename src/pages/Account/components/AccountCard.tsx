@@ -44,7 +44,7 @@ export function AccountCard({ account, stocks, onEdit, onDelete }: AccountCardPr
 
       <div className="flex-1 space-y-6">
         <div>
-          <h3 className="text-2xl font-bold text-white mb-2 tracking-tight">{account.brokerName}</h3>
+          <h3 className="text-2xl font-bold text-white mb-2">{account.brokerName}</h3>
           <p className="text-sm text-gray-500 h-10 line-clamp-2 leading-relaxed">
             {account.memo || '기록된 메모가 없습니다.'}
           </p>
@@ -52,22 +52,22 @@ export function AccountCard({ account, stocks, onEdit, onDelete }: AccountCardPr
         
         <div className="grid grid-cols-2 gap-4 py-6 border-y border-gray-800/50">
           <div>
-            <div className="text-sm font-bold text-gray-500 mb-1 uppercase tracking-widest">보유 종목</div>
-            <div className="text-xl font-bold text-white">
-              {accountStocks.length} <span className="text-xs text-gray-600 font-medium">개</span>
+            <div className="text-sm font-medium text-gray-500 mb-1 uppercase tracking-widest">보유 종목</div>
+            <div className="text-xl font-medium text-white">
+              {accountStocks.length} <span className="text-sm text-gray-600 font-medium">개</span>
             </div>
           </div>
           <div>
-            <div className="text-sm font-bold text-gray-500 mb-1 uppercase tracking-widest">최종 업데이트</div>
-            <div className="text-[11px] text-gray-400 mt-1.5">
+            <div className="text-sm font-medium text-gray-500 mb-1 uppercase tracking-widest">최종 업데이트</div>
+            <div className="text-sm text-white">
               {formatDateTime(new Date(account.updatedAt)).split(' ')[0]}
             </div>
           </div>
         </div>
 
         <div className="pt-2">
-          <div className="text-sm font-bold text-gray-500 mb-2 uppercase tracking-widest">예수금 잔액 (CASH)</div>
-          <div className="text-3xl font-black text-white tracking-tight">
+          <div className="text-sm font-medium text-gray-500 mb-2 uppercase tracking-widest">예수금 잔액 (CASH)</div>
+          <div className="text-3xl font-bold text-white">
             {formatCurrency(account.cashBalance)}
           </div>
         </div>
@@ -76,17 +76,13 @@ export function AccountCard({ account, stocks, onEdit, onDelete }: AccountCardPr
       <div className="pt-8 grid grid-cols-2 gap-3 mt-auto">
         <Button 
           variant="secondary" 
-          size="sm" 
           onClick={() => onEdit(account)} 
-          className="rounded-xl font-bold text-[11px]"
         >
           예수금 수정
         </Button>
         <Link to={`/holdings?accountId=${account.id}`} className="w-full">
           <Button 
             variant="ghost" 
-            size="sm" 
-            className="w-full rounded-xl font-bold text-[11px] border border-gray-800 hover:bg-gray-800"
           >
             내 종목 보기
           </Button>

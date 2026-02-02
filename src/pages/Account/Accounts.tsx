@@ -75,7 +75,7 @@ export default function Accounts() {
       subtitle="Accounts"
       description="모든 자산은 KRW(원화)를 기준으로 하며, 증권사별 예수금을 관리합니다."
       extra={
-        <Button onClick={() => openModal()} className="shadow-lg shadow-primary-500/10">
+        <Button onClick={() => openModal()} size='xl'>
           <PlusCircle size={20} className="mr-2" />
           <span>새 계좌 추가</span>
         </Button>

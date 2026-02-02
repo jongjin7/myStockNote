@@ -55,7 +55,7 @@ export function StockStats({ stock, currentPrice, fetchCurrentPrice, isUpdatingP
         </div>
 
         <div className="pt-3 pb-1 flex justify-between items-center">
-          <span className="uppercase">투자 원금 (Total)</span>
+          <span className="uppercase">투자 평가액 (Evaluation)</span>
           <span className="text-lg font-bold text-gray-300 tabular-nums">{formatCurrency(stock.quantity * stock.avgPrice)}</span>
         </div>
       </div>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Pencil, Activity, AlertCircle, TrendingUp, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Card, Badge } from '../../components/ui';
-import { formatDateTime } from '../../lib/utils';
+import { formatDateTime, cn } from '../../lib/utils';
 import type { StockMemo, Attachment } from '../../types';
 import { useApp } from '../../contexts/AppContext';
 
@@ -16,6 +16,26 @@ interface StockMemoCardProps {
   memo: StockMemo;
   attachments: Attachment[];
   isWatchlist: boolean;
+}
+
+interface ReasonSectionProps {
+  label: string;
+  labelClassName?: string;
+  content: string;
+  contentClassName?: string;
+  labelIcon?: React.ReactNode;
+}
+
+function ReasonSection({ label, content, labelClassName, contentClassName, labelIcon }: ReasonSectionProps) {
+  return (
+    <div className="flex flex-col gap-2">
+      <p className={cn("flex gap-1 text-sm font-medium text-gray-500 uppercase flex items-center", labelClassName??'')}>
+        {labelIcon}
+        {label}
+      </p>
+      <p className={cn("text-gray-200 leading-relaxed font-medium", contentClassName??'')}>{content}</p>
+    </div>
+  );
 }
 
 export function StockMemoCard({ memo, attachments, isWatchlist }: StockMemoCardProps) {
@@ -43,7 +63,7 @@ export function StockMemoCard({ memo, attachments, isWatchlist }: StockMemoCardP
             <Badge variant={memo.type === 'PURCHASE' ? 'success' : memo.type === 'SELL' ? 'danger' : 'info'}>
               {memo.type === 'PURCHASE' ? '매수 기록' : memo.type === 'SELL' ? '매도 기록' : '일반 메모'}
             </Badge>
-            <span className="text-xs font-bold text-gray-500 uppercase tracking-widest ">
+            <span className="text-xs text-gray-500 uppercase">
               {formatDateTime(memo.updatedAt)}
             </span>
           </div>
@@ -66,31 +86,31 @@ export function StockMemoCard({ memo, attachments, isWatchlist }: StockMemoCardP
 
         <div className="space-y-6">
           {memo.buyReason && (
-            <div>
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">
-                {isWatchlist ? '분석 및 관심 사유' : '매수 판단 근거'}
-              </p>
-              <p className="text-sm text-gray-200 leading-relaxed font-medium">{memo.buyReason}</p>
-            </div>
+            <ReasonSection 
+              label={isWatchlist ? '분석 및 관심 사유' : '매수 판단 근거'} 
+              content={memo.buyReason} 
+            />
           )}
 
           {memo.expectedScenario && (
             <div className="py-4 border-y border-gray-800/30">
-              <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-3 flex items-center">
-                <Activity size={12} className="mr-2 text-primary-500/70" />
-                EXPECTED SCENARIO
-              </p>
-              <p className="text-sm text-gray-300 leading-relaxed">{memo.expectedScenario}</p>
+              <ReasonSection 
+                label="예상 시나리오"
+                content={memo.expectedScenario}
+                labelIcon={<Activity size={12} className="text-primary-500/70" />}
+              />
             </div>
           )}
 
           {memo.risks && (
-            <div className="flex items-start gap-3 p-4 bg-danger/5 rounded-xl border border-danger/10">
-              <AlertCircle size={16} className="text-danger shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-bold text-danger/70 uppercase tracking-widest mb-1.5">리스크 분석</p>
-                <p className="text-xs text-gray-400 leading-relaxed">{memo.risks}</p>
-              </div>
+            <div className="p-4 bg-danger/5 rounded-xl border border-danger/10">
+              <ReasonSection 
+                label="리스크 분석"
+                labelClassName="text-danger/70"
+                content={memo.risks}
+                contentClassName="text-gray-500 text-sm"
+                labelIcon={<AlertCircle size={14} className="text-danger" />}
+              />
             </div>
           )}
 
