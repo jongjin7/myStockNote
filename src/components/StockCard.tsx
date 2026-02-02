@@ -50,16 +50,6 @@ export function StockCard({ stock, hasNote, compact = false }: StockCardProps) {
             )}>
               {stock.name}
             </span>
-            {stock.symbol && !compact && (
-              <span className="text-[10px] font-medium text-gray-500 bg-gray-950 px-1.5 py-0.5 rounded-md border border-white/[0.03] uppercase tracking-tighter shrink-0 hidden sm:block">
-                {stock.symbol}
-              </span>
-            )}
-            {stock.category && !compact && (
-              <span className="text-[10px] font-medium text-primary-400/80 bg-primary-500/5 px-1.5 py-0.5 rounded-md border border-primary-500/10 tracking-tighter shrink-0 hidden lg:block">
-                {stock.category}
-              </span>
-            )}
           </div>
 
           <div className={cn(
@@ -105,11 +95,6 @@ export function StockCard({ stock, hasNote, compact = false }: StockCardProps) {
         ) : (
           <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
             <Badge status={stock.status} className="shadow-none scale-75 sm:scale-90" />
-            {hasNote && (
-              <Badge variant="primary" className="shadow-none scale-75 sm:scale-90 whitespace-nowrap hidden lg:inline-flex">
-                리서치 중
-              </Badge>
-            )}
           </div>
         )}
       </div>

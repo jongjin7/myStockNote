@@ -125,6 +125,7 @@ export function StockModal({ isOpen, onClose, initialStatus = 'HOLDING' }: Stock
         updatedAt: Date.now(),
       };
 
+
       await actions.saveStock(newStock);
     }
 

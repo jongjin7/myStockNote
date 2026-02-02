@@ -9,32 +9,37 @@ import MemoEditor from './pages/MemoEditor';
 import Settings from './pages/Settings';
 import Login from './pages/Auth/Login';
 import ProtectedRoute from './components/ProtectedRoute';
-
+import { useApp } from './contexts/AppContext';
+import { LoadingOverlay } from './components/ui/LoadingOverlay';
 
 function App() {
- return (
- <Router>
-  <Routes>
-  {/* Public Routes */}
-  <Route path="/login" element={<Login />} />
+  const { isGlobalLoading, loadingMessage } = useApp();
+  
+  return (
+    <>
+      <LoadingOverlay isLoading={isGlobalLoading} message={loadingMessage || undefined} />
+      <Router>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/login" element={<Login />} />
 
-  {/* Protected Routes */}
-  <Route element={<ProtectedRoute />}>
-   <Route path="/" element={<Layout />}>
-    <Route index element={<Dashboard />} />
-    <Route path="accounts" element={<Accounts />} />
-    <Route path="holdings" element={<Holdings />} />
-    <Route path="watchlist" element={<Watchlist />} />
-    <Route path="settings" element={<Settings />} />
-    <Route path="stocks/:id" element={<StockDetail />} />
-    <Route path="stocks/:id/memos/new" element={<MemoEditor />} />
-    <Route path="memos/:memoId/edit" element={<MemoEditor />} />
-   </Route>
-  </Route>
-  </Routes>
- </Router>
- );
+          {/* Protected Routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Dashboard />} />
+              <Route path="accounts" element={<Accounts />} />
+              <Route path="holdings" element={<Holdings />} />
+              <Route path="watchlist" element={<Watchlist />} />
+              <Route path="settings" element={<Settings />} />
+              <Route path="stocks/:id" element={<StockDetail />} />
+              <Route path="stocks/:id/memos/new" element={<MemoEditor />} />
+              <Route path="memos/:memoId/edit" element={<MemoEditor />} />
+            </Route>
+          </Route>
+        </Routes>
+      </Router>
+    </>
+  );
 }
 
 export default App;
-

@@ -10,6 +10,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 interface AppContextType {
   data: AppData;
   isLoading: boolean;
+  isGlobalLoading: boolean;
+  loadingMessage: string | null;
   isSyncing: boolean;
   error: Error | null;
   actions: {
@@ -34,6 +36,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const [data, setData] = useState<AppData>(initialData);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [isUpdatingPrice, setIsUpdatingPrice] = useState(false);
 
   // Fetch all data
   const { data: serverData, isLoading, error: queryError, refetch } = useQuery({
@@ -94,6 +97,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['appData', user?.id] }),
   });
 
+  const watchlistMutation = useMutation({
+    mutationFn: (stock: Stock) => supabaseApi.saveStock(user!.id, stock),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['appData', user?.id] }),
+  });
+
   const deleteStockMutation = useMutation({
     mutationFn: (id: string) => supabaseApi.deleteStock(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['appData', user?.id] }),
@@ -119,6 +127,47 @@ export function AppProvider({ children }: { children: ReactNode }) {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['appData', user?.id] }),
   });
 
+  // Global Loading State (Mutations)
+  // 관심 종목 추가/수정은 스피너 제외 (watchlistMutation 사용)
+  const isGlobalLoading = 
+    accountMutation.isPending || 
+    deleteAccountMutation.isPending || 
+    stockMutation.isPending || 
+    watchlistMutation.isPending ||
+    deleteStockMutation.isPending || 
+    memoMutation.isPending || 
+    deleteMemoMutation.isPending ||
+    attachmentMutation.isPending ||
+    deleteAttachmentMutation.isPending ||
+    isSyncing || 
+    isUpdatingPrice;
+
+  const loadingMessage = useMemo(() => {
+    if (isSyncing) return '전체 시세를 동기화하고 있습니다...';
+    if (isUpdatingPrice) return '현재가를 업데이트하고 있습니다...';
+    if (accountMutation.isPending) return '계좌 정보를 저장하고 있습니다...';
+    if (deleteAccountMutation.isPending) return '계좌를 삭제하고 있습니다...';
+    if (stockMutation.isPending || watchlistMutation.isPending) return '종목 정보를 저장하고 있습니다...';
+    if (deleteStockMutation.isPending) return '종목을 삭제하고 있습니다...';
+    if (memoMutation.isPending) return '노트를 저장하고 있습니다...';
+    if (deleteMemoMutation.isPending) return '노트를 삭제하고 있습니다...';
+    if (attachmentMutation.isPending) return '첨부파일을 업로드하고 있습니다...';
+    if (deleteAttachmentMutation.isPending) return '첨부파일을 삭제하고 있습니다...';
+    return null;
+  }, [
+    isSyncing,
+    isUpdatingPrice,
+    accountMutation.isPending,
+    deleteAccountMutation.isPending,
+    stockMutation.isPending,
+    watchlistMutation.isPending,
+    deleteStockMutation.isPending,
+    memoMutation.isPending,
+    deleteMemoMutation.isPending,
+    attachmentMutation.isPending,
+    deleteAttachmentMutation.isPending,
+  ]);
+
   const actions = useMemo(() => ({
     refresh,
     saveAccount: async (account: Account) => {
@@ -128,7 +177,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
       await deleteAccountMutation.mutateAsync(id);
     },
     saveStock: async (stock: Stock) => {
-      await stockMutation.mutateAsync(stock);
+      if (stock.status === 'WATCHLIST') {
+        await watchlistMutation.mutateAsync(stock);
+      } else {
+        await stockMutation.mutateAsync(stock);
+      }
     },
     deleteStock: async (id: string) => {
       await deleteStockMutation.mutateAsync(id);
@@ -149,6 +202,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const stock = data.stocks.find(s => s.id === stockId);
       if (!stock || !stock.symbol) return;
       
+      setIsUpdatingPrice(true);
       try {
         const newPrice = await fetchStockPrice(stock.symbol);
         if (newPrice !== null && newPrice !== stock.currentPrice) {
@@ -161,6 +215,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         }
       } catch (err) {
         console.error('Failed to update price:', err);
+      } finally {
+        setIsUpdatingPrice(false);
       }
     },
     updateAllStockPrices: async () => {
@@ -195,10 +251,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setIsSyncing(false);
       }
     },
-  }), [refresh, data.stocks, user, accountMutation, deleteAccountMutation, stockMutation, deleteStockMutation, memoMutation, attachmentMutation, deleteAttachmentMutation]);
+  }), [refresh, data.stocks, user, accountMutation, deleteAccountMutation, stockMutation, deleteStockMutation, memoMutation, attachmentMutation, deleteAttachmentMutation, isSyncing, isUpdatingPrice]);
 
   return (
-    <AppContext.Provider value={{ data, isLoading, isSyncing, error, actions }}>
+    <AppContext.Provider value={{ data, isLoading, isGlobalLoading, loadingMessage, isSyncing, error, actions }}>
       {children}
     </AppContext.Provider>
   );
