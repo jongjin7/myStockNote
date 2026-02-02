@@ -11,6 +11,7 @@ import Login from './pages/Auth/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 import { useApp } from './contexts/AppContext';
 import { LoadingOverlay } from './components/ui/LoadingOverlay';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   const { isGlobalLoading, loadingMessage } = useApp();
@@ -19,6 +20,7 @@ function App() {
     <>
       <LoadingOverlay isLoading={isGlobalLoading} message={loadingMessage || undefined} />
       <Router>
+        <ScrollToTop />
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />

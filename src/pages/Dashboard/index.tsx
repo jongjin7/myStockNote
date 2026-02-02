@@ -53,11 +53,10 @@ export default function Dashboard() {
    extra={
      <Button 
        onClick={() => handleOpenAddModal('HOLDING')} 
-       size="md"
-       className="sm:h-12 sm:px-6 sm:text-base sm:rounded-xl whitespace-nowrap"
+       className="h-9 md:h-12 md:px-6 md:text-lg md:rounded-xl whitespace-nowrap"
      >
-       <PlusCircle size={20} className="sm:mr-2" />
-       <span className="hidden sm:inline">종목 추가</span>
+       <PlusCircle size={20} className="mr-2 w-4 h-4 md:w-5 md:h-5" />
+       <span>종목 추가</span>
      </Button>
    }
   />

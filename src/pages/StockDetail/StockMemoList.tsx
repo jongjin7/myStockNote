@@ -13,7 +13,7 @@ interface StockMemoListProps {
 
 export function StockMemoList({ stockId, memos, attachments, isWatchlist }: StockMemoListProps) {
   return (
-    <div className="lg:col-span-2 space-y-8">
+    <div className="xl:col-span-2 space-y-8">
       <SectionHeader
         icon={FileText}
         title="투자 노트 기록"

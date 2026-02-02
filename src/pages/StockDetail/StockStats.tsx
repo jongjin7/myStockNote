@@ -31,32 +31,32 @@ export function StockStats({ stock, currentPrice, fetchCurrentPrice, isUpdatingP
           </span>
         </div>
 
-        <div className="grid grid-cols-2">
-          <div className="py-3 pr-4 border-r border-white/5 space-y-1">
-            <div className="uppercase ">평균 단가</div>
-            <div className="text-lg font-bold text-gray-300 tabular-nums">{formatCurrency(stock.avgPrice)}</div>
+        <div className="flex flex-col sm:flex-row divide-y sm:divide-y-0 sm:divide-x divide-white/5">
+          <div className="py-4 sm:flex-1 space-y-1 min-w-0">
+            <div className="uppercase tracking-wider">평균 단가</div>
+            <div className="text-lg font-extrabold text-gray-300 tabular-nums truncate">{formatCurrency(stock.avgPrice)}</div>
           </div>
-          <div className="py-3 pl-5 space-y-1">
+          <div className="py-4 sm:flex-1 sm:pl-6 space-y-1 min-w-0">
             <div className="flex items-center gap-2">
-              <div className="text-primary-500 uppercase ">현재가</div>
+              <div className="text-primary-500 uppercase tracking-wider">현재가</div>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={fetchCurrentPrice}
                 disabled={isUpdatingPrice}
-                className="p-1 opacity-50 hover:bg-transparent hover:opacity-80 hover:text-primary-500 hover:rotate-180 transition-transform duration-500"
+                className="p-1 h-auto opacity-50 hover:bg-transparent hover:opacity-100 hover:text-primary-500 hover:rotate-180 transition-transform duration-500"
                 title="현재가 갱신"
               >
                 <RefreshCw size={12} className={cn(isUpdatingPrice && "animate-spin")} />
               </Button>
             </div>
-            <div className="text-lg font-bold text-primary-400 tabular-nums">{formatCurrency(currentPrice)}</div>
+            <div className="text-lg font-extrabold text-primary-400 tabular-nums truncate">{formatCurrency(currentPrice)}</div>
           </div>
         </div>
 
-        <div className="pt-3 pb-1 flex justify-between items-center">
-          <span className="uppercase">투자 평가액 (Evaluation)</span>
-          <span className="text-lg font-bold text-gray-300 tabular-nums">{formatCurrency(stock.quantity * stock.avgPrice)}</span>
+        <div className="pt-4 pb-1 flex flex-col xs:flex-row justify-between items-start xs:items-center gap-1">
+          <span className="uppercase tracking-wider">투자 평가액</span>
+          <span className="text-lg font-extrabold text-white tabular-nums truncate">{formatCurrency(stock.quantity * currentPrice)}</span>
         </div>
       </div>
     </Card>

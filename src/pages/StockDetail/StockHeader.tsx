@@ -63,25 +63,30 @@ export function StockHeader({
         <div className="absolute inset-0 bg-black/10" />
         <div className="absolute -right-10 -top-10 w-64 h-64 bg-white/10 rounded-full blur-3xl opacity-50" />
 
-        <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between px-8 py-10 gap-10">
+        <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between p-7 gap-5">
           {/* Left: Stock Info */}
-          <div className="flex flex-col gap-4 w-full lg:w-auto">
-            <div className="flex items-center gap-4">
-              <h1 className="text-4xl font-black tracking-tighter text-white drop-shadow-sm">{stock.name}</h1>
-              <Badge status={stock.status} className="bg-white/10 text-white border-white/5 py-1 px-4 text-[11px] font-black uppercase tracking-widest" />
+          <div className="flex flex-col gap-4 w-full lg:flex-1 min-w-0">
+            <div className="flex items-center gap-4 flex-wrap">
+              <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-white drop-shadow-sm break-keep leading-[1.1]">
+                {stock.name}
+              </h1>
+              <Badge 
+                status={stock.status} 
+                className="bg-white/10 text-white/80 border-white/5 py-1 px-4 text-sm font-semibold uppercase tracking-widest flex-shrink-0" 
+              />
             </div>
 
-            <div className="flex flex-wrap items-center gap-6 text-white/70">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-white/70">
               {stock.symbol && (
-                <span className="bg-black/30 border border-white/10 px-2.5 py-1 rounded-lg text-[11px] font-black tracking-widest text-white">
+                <span className="bg-black/30 px-2 py-0.5 rounded-md text-xs font-medium tracking-widest text-white/80 shrink-0">
                   {stock.symbol}
                 </span>
               )}
-              <div className="flex items-center gap-2 text-sm font-bold">
+              <div className="flex items-center gap-2 text-sm font-medium whitespace-nowrap">
                 <Activity size={16} className="opacity-60" />
                 <span>{account?.brokerName || '계좌 미지정'}</span>
               </div>
-              <div className="flex items-center gap-2 text-sm font-bold">
+              <div className="flex items-center gap-2 text-sm font-medium whitespace-nowrap">
                 <Calendar size={16} className="opacity-60" />
                 <span>{formatDate(new Date(stock.createdAt))}</span>
               </div>
@@ -89,27 +94,27 @@ export function StockHeader({
           </div>
 
           {/* Right: Focused Evaluation Box */}
-          <div className="bg-black/30 backdrop-blur-md px-8 py-7 rounded-2xl border border-white/5 shadow-2xl flex items-center gap-10 w-full lg:w-auto justify-between lg:justify-end">
-            <div className="flex flex-col">
-              <span className="text-sm font-normal text-white/40 uppercase tracking-[0.2em] mb-1.5">
+          <div className="bg-black/30 backdrop-blur-sm px-6 py-5 md:px-8 md:py-7 rounded-2xl border border-white/5 shadow-2xl flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-10 w-full lg:w-auto">
+            <div className="flex flex-col min-w-0 flex-1 sm:flex-none">
+              <span className="text-[10px] md:text-sm font-normal text-white/40 uppercase tracking-[0.2em] mb-1.5 whitespace-nowrap">
                 {stock.status === 'WATCHLIST' ? '현재 종목가' : '현재 평가금액'}
               </span>
-              <div className="text-4xl font-black text-white tracking-tighter tabular-nums text-right leading-none">
+              <div className="text-2xl md:text-4xl font-black text-white tracking-tighter tabular-nums leading-none">
                 {stock.status === 'WATCHLIST' ? formatCurrency(currentPrice) : formatCurrency(stock.quantity * currentPrice)}
               </div>
             </div>
 
             {stock.status !== 'WATCHLIST' && (
-              <div className="flex flex-col items-end">
+              <div className="flex flex-row sm:flex-col items-center sm:items-end gap-3 sm:gap-0 mt-2 sm:mt-0">
                 <div className={cn(
-                  "text-xl font-black tabular-nums tracking-tighter leading-none mb-2 px-3 py-1 rounded-full shadow-lg",
+                  "text-base md:text-xl font-black tabular-nums tracking-tighter leading-none sm:mb-2 px-3 py-1.5 rounded-full shadow-lg whitespace-nowrap",
                   (currentPrice - stock.avgPrice) >= 0 ? "bg-danger text-white" : "bg-info text-white"
                 )}>
                   {(currentPrice - stock.avgPrice) >= 0 ? '+' : ''}
                   {(((currentPrice - stock.avgPrice) / (stock.avgPrice || 1)) * 100).toFixed(2)}%
                 </div>
                 <div className={cn(
-                  "text-sm font-black tabular-nums tracking-tight",
+                  "text-xs md:text-sm font-black tabular-nums tracking-tight whitespace-nowrap",
                   (currentPrice - stock.avgPrice) >= 0 ? "text-danger-light" : "text-info-light"
                 )}>
                   {(currentPrice - stock.avgPrice) >= 0 ? '+' : ''}
