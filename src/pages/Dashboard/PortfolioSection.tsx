@@ -20,32 +20,32 @@ function PerformanceSnapshot({
   winRate: number; 
 }) {
   return (
-    <div className="flex items-center gap-10">
-      <div className="flex flex-col justify-center items-center">
-        <span className="text-6xl font-bold text-white tracking-tighter leading-none">
+    <div className="flex items-center gap-6 @[500px]:gap-10">
+      <div className="flex flex-col justify-center items-center shrink-0">
+        <span className="text-4xl @[500px]:text-6xl font-bold text-white tracking-tighter leading-none">
           {holdingCount}
         </span>
-        <span className="text-base font-medium text-gray-500 mt-2 uppercase tracking-[0.2em]">보유 종목</span>
+        <span className="text-[10px] @[500px]:text-base font-medium text-gray-500 mt-1 @[500px]:mt-2 uppercase tracking-[0.1em] @[500px]:tracking-[0.2em]">보유 종목</span>
       </div>
       
-      <div className="flex gap-6 border-l border-white/5 pl-10">
-        <div className="space-y-1.5">
-          <div className="flex items-center gap-1.5 text-danger-light">
-            <ArrowUpRight size={14} strokeWidth={3} />
-            <span className="text-sm uppercase tracking-wide">수익 종목</span>
+      <div className="flex gap-4 @[500px]:gap-6 border-l border-white/5 pl-6 @[500px]:pl-10">
+        <div className="space-y-1 @[500px]:space-y-1.5">
+          <div className="flex items-center gap-1 @[500px]:gap-1.5 text-danger-light">
+            <ArrowUpRight strokeWidth={3} className="size-3 @[500px]:size-3.5" />
+            <span className="text-[10px] @[500px]:text-sm uppercase tracking-wide">수익</span>
           </div>
-          <p className="text-3xl font-semibold text-white tabular-nums leading-none">{profitableCount}</p>
+          <p className="text-xl @[500px]:text-3xl font-semibold text-white tabular-nums leading-none">{profitableCount}</p>
         </div>
-        <div className="space-y-1.5">
-          <div className="flex items-center gap-1.5 text-info-light">
-            <ArrowDownRight size={14} strokeWidth={3} />
-            <span className="text-sm uppercase tracking-wide">손실 종목</span>
+        <div className="space-y-1 @[500px]:space-y-1.5">
+          <div className="flex items-center gap-1 @[500px]:gap-1.5 text-info-light">
+            <ArrowDownRight strokeWidth={3} className="size-3 @[500px]:size-3.5" />
+            <span className="text-[10px] @[500px]:text-sm uppercase tracking-wide">손실</span>
           </div>
-          <p className="text-3xl font-semibold text-white tabular-nums leading-none">{losingCount}</p>
+          <p className="text-xl @[500px]:text-3xl font-semibold text-white tabular-nums leading-none">{losingCount}</p>
         </div>
       </div>
 
-      <div className="ml-auto">
+      <div className="ml-auto hidden @[600px]:block">
         <div className="flex flex-col items-center">
           <Badge variant="success" className="bg-success/15 text-success-light border-success/20 px-3 py-1 text-xs font-medium rounded-xl">
             승률 {winRate.toFixed(0)}%
@@ -73,19 +73,19 @@ function AllocationInsight({
   holdingCount: number; 
 }) {
   return (
-    <div className="@[800px]:border-l border-white/5 @[800px]:pl-12 space-y-7">
+    <div className="@[800px]:border-l border-white/5 @[800px]:pl-12 space-y-4 @[500px]:space-y-7">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <div className="flex flex-col">
             <div className="flex items-baseline gap-1.5">
-              <span className="text-xl font-bold text-white tabular-nums">{accountCount}</span>
-              <span className="text-xs font-bold text-gray-400">개 계좌 운용</span>
+              <span className="text-lg @[500px]:text-xl font-bold text-white tabular-nums">{accountCount}</span>
+              <span className="text-[10px] @[500px]:text-xs font-bold text-gray-400">개 계좌 운용</span>
             </div>
           </div>
         </div>
         <div className="flex flex-col items-end">
-          <span className="text-xs font-bold text-gray-600 uppercase tracking-[0.2em] leading-none mb-1">포트폴리오 균형</span>
-          <span className="text-xs font-bold text-white/50">{winRate.toFixed(1)}% 활성</span>
+          <span className="text-[10px] font-bold text-gray-600 uppercase tracking-[0.1em] @[500px]:tracking-[0.2em] leading-none mb-1">포트폴리오 균형</span>
+          <span className="text-[10px] @[500px]:text-xs font-bold text-white/50">{winRate.toFixed(1)}% 활성</span>
         </div>
       </div>
 
@@ -100,9 +100,9 @@ function AllocationInsight({
             style={{ width: `${(losingCount / Math.max(holdingCount, 1)) * 100}%` }} 
           />
         </div>
-        <div className="flex justify-between text-xs font-bold text-gray-600 uppercase tracking-widest pt-1">
-          <span className="flex items-center gap-1"><div className="w-1.5 h-1.5 rounded-full bg-danger" /> 수익 비율</span>
-          <span className="flex items-center gap-1">손실 비율 <div className="w-1.5 h-1.5 rounded-full bg-info" /></span>
+        <div className="flex justify-between text-[9px] @[500px]:text-xs font-bold text-gray-600 uppercase tracking-widest pt-1">
+          <span className="flex items-center gap-1"><div className="w-1 h-1 @[500px]:w-1.5 @[500px]:h-1.5 rounded-full bg-danger" /> 수익</span>
+          <span className="flex items-center gap-1">손실 <div className="w-1 h-1 @[500px]:w-1.5 @[500px]:h-1.5 rounded-full bg-info" /></span>
         </div>
       </div>
     </div>
@@ -128,17 +128,17 @@ function PortfolioSummaryCard({
   const winRate = holdingStocks.length > 0 ? (profitableStocks / holdingStocks.length) * 100 : 0;
 
   return (
-    <div className="@container bg-gray-900/40 backdrop-blur-sm border border-gray-800/50 rounded-3xl p-8 flex flex-col relative overflow-hidden group/card shadow-2xl">
+    <div className="@container bg-gray-900/40 backdrop-blur-sm border border-gray-800/50 rounded-[2rem] p-6 @[800px]:p-8 flex flex-col relative overflow-hidden group/card shadow-2xl">
       <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/5 blur-[100px] -mr-32 -mt-32 pointer-events-none" />
       
       <SectionHeader 
         icon={Activity}
         title="포트폴리오 현황"
-        className="mb-4 px-0 border-none relative z-10"
+        className="mb-6 px-0 border-none relative z-10"
       />
 
-      <div className="relative z-10 px-2">
-        <div className="grid grid-cols-1 @[800px]:grid-cols-2 gap-12 items-center">
+      <div className="relative z-10">
+        <div className="grid grid-cols-1 @[800px]:grid-cols-2 gap-8 @[800px]:gap-12 items-center">
           <PerformanceSnapshot 
             holdingCount={holdingStocks.length}
             profitableCount={profitableStocks}
@@ -183,7 +183,7 @@ export function PortfolioSection({ holdingStocks, watchlistStocks, memos, accoun
       />
 
       {/* 2. 상세 리스트 섹션 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 xl:gap-12">
         <StockList 
           icon={LayoutDashboard}
           title="보유 리스트"

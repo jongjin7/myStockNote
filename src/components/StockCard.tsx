@@ -41,12 +41,12 @@ export function StockCard({ stock, hasNote, compact = false }: StockCardProps) {
 
         <div className={cn(
           "flex min-w-0 flex-1",
-          compact ? "flex-row items-center gap-4 sm:gap-6" : "flex-col"
+          compact ? "flex-col lg:flex-row lg:items-center gap-1 lg:gap-6" : "flex-col gap-1"
         )}>
           <div className="flex items-center gap-2 min-w-0">
             <span className={cn(
               "text-white truncate font-semibold leading-tight",
-              compact ? "text-sm sm:text-md" : "text-lg sm:text-xl"
+              compact ? "text-sm sm:text-base font-bold" : "text-lg sm:text-xl"
             )}>
               {stock.name}
             </span>
@@ -64,10 +64,13 @@ export function StockCard({ stock, hasNote, compact = false }: StockCardProps) {
 
           <div className={cn(
             "flex items-center gap-1.5 sm:gap-2 text-gray-600 uppercase tracking-wide shrink-0",
-            compact ? "text-[10px] sm:text-xs font-semibold" : "text-sm sm:text-md"
+            compact ? "text-[9px] sm:text-xs font-bold" : "text-sm sm:text-md"
           )}>
             {stock.status === 'WATCHLIST' ? (
-              <span className="truncate">현재가 {formatCurrency(currentPrice)}</span>
+              <span className="truncate">
+                <span className="hidden sm:inline">현재가 </span>
+                {formatCurrency(currentPrice)}
+              </span>
             ) : (
               <>
                 <span className="whitespace-nowrap">{stock.quantity.toLocaleString()}주</span>
@@ -83,17 +86,17 @@ export function StockCard({ stock, hasNote, compact = false }: StockCardProps) {
         {stock.status === 'HOLDING' ? (
           <div className={cn(
             "flex items-center text-right shrink-0",
-            compact ? "flex-row gap-2" : "flex-col gap-0.5 sm:gap-1"
+            compact ? "flex-col items-end gap-0" : "flex-col gap-0.5 sm:gap-1"
           )}>
             <div className={cn(
-              "font-semibold tabular-nums tracking-tighter leading-none mb-0.5",
-              compact ? "text-xs sm:text-sm" : "text-md sm:text-lg",
+              "font-bold tabular-nums tracking-tighter leading-none mb-0.5 sm:mb-1",
+              compact ? "text-[11px] sm:text-sm" : "text-md sm:text-lg",
               profit >= 0 ? "text-danger-light" : "text-info-light"
             )}>
               {profit >= 0 ? '+' : ''}{formatCurrency(profit)}
             </div>
             <div className={cn(
-              "font-semibold tabular-nums text-[10px] sm:text-xs opacity-70 leading-none",
+              "font-bold tabular-nums text-[9px] sm:text-xs opacity-70 leading-none",
               profit >= 0 ? "text-danger-light" : "text-info-light"
             )}>
               {profitRate > 0 ? '+' : ''}{profitRate.toFixed(2)}%
@@ -103,20 +106,16 @@ export function StockCard({ stock, hasNote, compact = false }: StockCardProps) {
           <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
             <Badge status={stock.status} className="shadow-none scale-75 sm:scale-90" />
             {hasNote && (
-              <Badge variant="primary" className="shadow-none scale-75 sm:scale-90 whitespace-nowrap hidden sm:inline-flex">
+              <Badge variant="primary" className="shadow-none scale-75 sm:scale-90 whitespace-nowrap hidden lg:inline-flex">
                 리서치 중
               </Badge>
             )}
           </div>
         )}
-        
-        {/* Simplified Action: Static Subtle Arrow */}
-        <div className="shrink-0 opacity-40 group-hover:opacity-100 transition-opacity duration-300">
-          <ArrowUpRight 
-            size={16} 
-            className="text-gray-700 group-hover:text-primary-500 transition-colors duration-300" 
-          />
-        </div>
+      </div>
+
+      <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <ArrowUpRight size={16} className="text-gray-600" />
       </div>
     </Card>
   );
