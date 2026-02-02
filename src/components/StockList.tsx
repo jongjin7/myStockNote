@@ -52,7 +52,7 @@ export function StockList({
 
   return (
     <div className={cn("space-y-6", className)}>
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-row items-center justify-between gap-4">
         <SectionHeader 
           icon={icon}
           title={title}
@@ -92,11 +92,11 @@ export function StockList({
           {onAddClick && (
               compact ? (
                 <Button 
-                  variant="secondary"
+                  variant="ghost"
                   size="sm"
                   onClick={onAddClick}
-                  title="자세히 보기"
-                  className="w-7 h-7 p-0 rounded-full shrink-0"
+                title="자세히 보기"
+                className="opacity-70 w-7 h-7 p-0 rounded-full hover:bg-white/10 hover:opacity-100"
                 >
                   <LayoutList size={16} className="group-hover:scale-110 transition-transform" />
                 </Button>
@@ -111,7 +111,8 @@ export function StockList({
                   <span>종목 추가</span>
                 </Button>
               )
-            )}
+          )}
+          
         </div>
       </div>
 

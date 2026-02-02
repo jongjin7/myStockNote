@@ -73,14 +73,15 @@ export function AccountCard({ account, stocks, onEdit, onDelete }: AccountCardPr
         </div>
       </div>
 
-      <div className="pt-8 grid grid-cols-2 gap-3 mt-auto">
+      <div className="flex gap-3 pt-8 mt-auto">
         <Button 
           variant="secondary" 
           onClick={() => onEdit(account)} 
+          className="shrink-0"
         >
           예수금 수정
         </Button>
-        <Link to={`/holdings?accountId=${account.id}`} className="w-full">
+        <Link to={`/holdings?accountId=${account.id}`} className="shrink-0" >
           <Button 
             variant="ghost" 
           >
