@@ -192,7 +192,7 @@ function AssetItem({
           <span className="text-base font-black text-white group-hover:text-primary-400 transition-colors tabular-nums">
             {percentage.toFixed(1)}
           </span>
-          <span className="text-[8px] font-black text-gray-700">%</span>
+          <span className="text-[8px] font-black text-gray-700">%</span>  
         </div>
         <div className="w-12 h-1 bg-gray-800/30 rounded-full mt-1 overflow-hidden">
           <div 
@@ -219,14 +219,14 @@ interface InsightItemProps {
 function InsightItem({ icon: Icon, label, value, iconColor, showBorder = true }: InsightItemProps) {
   return (
     <div className={cn(
-      "flex flex-col items-center justify-center flex-1 px-2",
+      "flex flex-row md:flex-col items-center justify-center flex-1 px-2 gap-2 md:gap-0",
       !showBorder && "border-none"
     )}>
-      <div className="flex items-center gap-1.5 mb-2">
+      <div className="flex items-center gap-0.5 mb-0 md:mb-2 md:gap-1.5">
         <Icon size={14} className={iconColor || "text-gray-500"} />
-        <span className="text-xs font-semibold text-gray-500 uppercase tracking-widest">{label}</span>
+        <span className="text-xs font-semibold text-gray-500 uppercase tracking-widest whitespace-nowrap">{label}</span>
       </div>
-      <strong className="text-sm text-white tracking-tight tabular-nums">{value}</strong>
+      <strong className="text-sm text-white tracking-tight tabular-nums whitespace-nowrap">{value}</strong>
     </div>
   );
 }
@@ -244,7 +244,7 @@ function AllocationInsights({
   count: number; 
 }) {
   return (
-    <div className="bg-white/[0.02] border border-white/5 rounded-[2.5rem] p-4 flex flex-wrap items-center justify-between gap-y-4 divide-x-0 sm:divide-x divide-white/10 mt-auto shadow-xl">
+    <div className="bg-white/[0.02] border border-white/5 rounded-3xl md:rounded-[2.5rem] p-4 flex flex-wrap items-center justify-between gap-y-4 divide-x-0 sm:divide-x divide-white/10 mt-auto shadow-xl">
       <InsightItem 
         icon={ShieldCheck} 
         label="분산 지표" 
@@ -261,7 +261,7 @@ function AllocationInsights({
       <InsightItem 
         icon={Info} 
         label="보유 종목" 
-        value={`${count}개`} 
+        value={`${count}개`}
         iconColor="text-info"
       />
     </div>

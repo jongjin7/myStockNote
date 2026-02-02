@@ -30,16 +30,16 @@ function PerformanceSnapshot({
       
       <div className="flex gap-4 @[500px]:gap-6 border-l border-white/5 pl-6 @[500px]:pl-10">
         <div className="space-y-1 @[500px]:space-y-1.5">
-          <div className="flex items-center gap-1 @[500px]:gap-1.5 text-danger-light">
+          <div className="flex items-center gap-1 @[500px]:gap-1.5 text-danger-light whitespace-nowrap">
             <ArrowUpRight strokeWidth={3} className="size-3 @[500px]:size-3.5" />
-            <span className="text-[10px] @[500px]:text-sm uppercase tracking-wide">수익</span>
+            <span className="text-sm uppercase tracking-wide">수익</span>
           </div>
           <p className="text-xl @[500px]:text-3xl font-semibold text-white tabular-nums leading-none">{profitableCount}</p>
         </div>
         <div className="space-y-1 @[500px]:space-y-1.5">
-          <div className="flex items-center gap-1 @[500px]:gap-1.5 text-info-light">
+          <div className="flex items-center gap-1 @[500px]:gap-1.5 text-info-light whitespace-nowrap">
             <ArrowDownRight strokeWidth={3} className="size-3 @[500px]:size-3.5" />
-            <span className="text-[10px] @[500px]:text-sm uppercase tracking-wide">손실</span>
+            <span className="text-sm uppercase tracking-wide">손실</span>
           </div>
           <p className="text-xl @[500px]:text-3xl font-semibold text-white tabular-nums leading-none">{losingCount}</p>
         </div>
@@ -47,7 +47,7 @@ function PerformanceSnapshot({
 
       <div className="ml-auto hidden @[600px]:block">
         <div className="flex flex-col items-center">
-          <Badge variant="success" className="bg-success/15 text-success-light border-success/20 px-3 py-1 text-xs font-medium rounded-xl">
+          <Badge variant="success" className="bg-success/15 text-success-light border-success/20 px-3 py-1 text-xs font-medium rounded-xl whitespace-nowrap">
             승률 {winRate.toFixed(0)}%
           </Badge>
         </div>
@@ -73,24 +73,24 @@ function AllocationInsight({
   holdingCount: number; 
 }) {
   return (
-    <div className="@[800px]:border-l border-white/5 @[800px]:pl-12 space-y-4 @[500px]:space-y-7">
+    <div className="border-t border-white/5 pt-6 @[800px]:border-l @[800px]:border-t-0 @[800px]:pt-0 @[800px]:pl-12 space-y-1">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <div className="flex flex-col">
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-lg @[500px]:text-xl font-bold text-white tabular-nums">{accountCount}</span>
-              <span className="text-[10px] @[500px]:text-xs font-bold text-gray-400">개 계좌 운용</span>
+            <div className="flex items-baseline gap-1 font-medium">
+              <span className="text-xl text-white tabular-nums">{accountCount}</span>
+              <span className="text-sm text-gray-400">개 계좌 운용</span>
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-end">
-          <span className="text-[10px] font-bold text-gray-600 uppercase tracking-[0.1em] @[500px]:tracking-[0.2em] leading-none mb-1">포트폴리오 균형</span>
-          <span className="text-[10px] @[500px]:text-xs font-bold text-white/50">{winRate.toFixed(1)}% 활성</span>
+        <div className="flex flex-col items-end gap-y-0.5">
+          <span className="text-xs font-medium text-gray-600 uppercase leading-none">포트폴리오 균형</span>
+          <span className="text-sm text-white/50">{winRate.toFixed(1)}% 활성</span>
         </div>
       </div>
 
-      <div className="space-y-2.5">
-        <div className="h-2 w-full bg-white/5 rounded-full flex overflow-hidden p-0.5 border border-white/5">
+      <div className="space-y-1.5">
+        <div className="h-3 w-full bg-white/5 rounded-full flex overflow-hidden p-0.5 border border-white/5">
           <div 
             className="h-full bg-danger rounded-full transition-all duration-1000 shadow-[0_0_12px_rgba(239,68,68,0.2)]" 
             style={{ width: `${(profitableCount / Math.max(holdingCount, 1)) * 100}%` }} 
@@ -100,9 +100,9 @@ function AllocationInsight({
             style={{ width: `${(losingCount / Math.max(holdingCount, 1)) * 100}%` }} 
           />
         </div>
-        <div className="flex justify-between text-[9px] @[500px]:text-xs font-bold text-gray-600 uppercase tracking-widest pt-1">
-          <span className="flex items-center gap-1"><div className="w-1 h-1 @[500px]:w-1.5 @[500px]:h-1.5 rounded-full bg-danger" /> 수익</span>
-          <span className="flex items-center gap-1">손실 <div className="w-1 h-1 @[500px]:w-1.5 @[500px]:h-1.5 rounded-full bg-info" /></span>
+        <div className="flex justify-between text-xs font-medium text-gray-600 uppercase tracking-widest">
+          <span className="flex items-center gap-1"><div className="w-1.5 h-1.5 rounded-full bg-danger" /> 수익</span>
+          <span className="flex items-center gap-1">손실 <div className="w-1.5 h-1.5 rounded-full bg-info" /></span>
         </div>
       </div>
     </div>

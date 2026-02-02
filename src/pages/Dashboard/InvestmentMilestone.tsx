@@ -43,7 +43,7 @@ export function InvestmentMilestone({ totalAssets }: InvestmentMilestoneProps) {
               </div>
             </div>
             
-            <div className="flex justify-between items-center text-sm font-semibold uppercase tracking-widest text-gray-600">
+            <div className="flex justify-between items-center text-sm font-medium tracking-normal sm:tracking-wider text-gray-600">
               <span>총 평가액: ₩{formatNumber(totalAssets)}</span>
               <span className="text-primary-400/80">목표액: ₩{formatNumber(remaining)}</span>
             </div>
