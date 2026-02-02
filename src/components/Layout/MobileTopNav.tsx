@@ -1,9 +1,19 @@
-import { Settings } from 'lucide-react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Settings, X } from 'lucide-react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { Button } from '../ui';
 
 export function MobileTopNav() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isSettingsPage = location.pathname === '/settings';
+
+  const handleToggleSettings = () => {
+    if (isSettingsPage) {
+      navigate(-1);
+    } else {
+      navigate('/settings');
+    }
+  };
 
   return (
     <nav className="lg:hidden flex items-center justify-between px-6 py-4 border-b border-gray-800/50 bg-gray-950/90 backdrop-blur-xl sticky top-0 z-50">
@@ -18,9 +28,13 @@ export function MobileTopNav() {
         variant="secondary"
         size="sm"
         className="w-10 h-10 p-0 rounded-xl active:scale-90 transition-transform"
-        onClick={() => navigate('/settings')}
+        onClick={handleToggleSettings}
       >
-        <Settings size={20} className="text-gray-400" />
+        {isSettingsPage ? (
+          <X size={20} className="text-primary-400" />
+        ) : (
+          <Settings size={20} className="text-gray-400" />
+        )}
       </Button>
     </nav>
   );
