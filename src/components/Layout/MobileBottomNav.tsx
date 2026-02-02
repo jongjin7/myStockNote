@@ -13,7 +13,7 @@ interface MobileBottomNavProps {
 
 export function MobileBottomNav({ navItems, pathname }: MobileBottomNavProps) {
   return (
-    <nav className="md:hidden flex items-center justify-around px-4 py-4 border-t border-gray-800/50 bg-gray-950/90 backdrop-blur-xl sticky bottom-0 z-50 shadow-2xl shadow-black/50">
+    <nav className="lg:hidden flex items-center justify-around px-4 py-4 border-t border-gray-800/50 bg-gray-950/90 backdrop-blur-xl sticky bottom-0 z-50 shadow-2xl shadow-black/50">
       {navItems.map((item) => {
         const isActive = pathname === item.path;
         return (

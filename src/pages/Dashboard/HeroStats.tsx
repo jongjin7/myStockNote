@@ -18,20 +18,20 @@ interface HeroStatsProps {
  */
 function PortfolioValue({ totalAssets }: { totalAssets: number }) {
   return (
-    <div className="space-y-2 min-w-0">
-      <span className="text-primary-500 uppercase tracking-[0.3em] ml-1 text-sm whitespace-nowrap">PORTFOLIO VALUE | 포트폴리오 총 자산</span>
-      <div className="tracking-tighter tabular-nums flex items-baseline gap-2 text-white">
-        <span className="text-3xl font-light">₩</span>
+    <div className="space-y-1 sm:space-y-2 min-w-0 flex-1 mr-4">
+      <span className="text-primary-500 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold text-[10px] sm:text-sm whitespace-nowrap block truncate">PORTFOLIO VALUE | 포트폴리오 총 자산</span>
+      <div className="tracking-tighter tabular-nums flex items-baseline gap-1 sm:gap-2 text-white min-w-0">
+        <span className="text-xl sm:text-2xl lg:text-3xl font-light shrink-0">₩</span>
         <span 
-          className="font-bold tracking-tight"
-          style={{ fontSize: 'clamp(2.5rem, 5vw, 3.75rem)' }}
+          className="font-bold tracking-tight truncate leading-tight"
+          style={{ fontSize: 'clamp(2rem, 8vw, 3.75rem)' }}
         >
           {formatNumber(totalAssets)}
         </span>
       </div>
-      <div className="flex items-center gap-2 text-sm text-gray-500 tracking-widest ml-1 opacity-70 whitespace-nowrap">
-        <span className="w-1.5 h-1.5 rounded-full bg-gray-500 animate-pulse" />
-        나의 자본 총합 (평가자산 + 총 예수금)
+      <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-sm text-gray-500 tracking-wide sm:tracking-widest opacity-70 whitespace-nowrap overflow-hidden">
+        <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-gray-500 animate-pulse shrink-0" />
+        <span className="truncate">나의 자본 총합 (평가자산 + 총 예수금)</span>
       </div>
     </div>
   );
@@ -119,7 +119,7 @@ function AdditionalStats({
   cashRatio: number;
 }) {
   return (
-    <div className="flex flex-wrap justify-between items-start gap-x-2 gap-y-8 mt-12 pt-10 border-t border-gray-800/40">
+    <div className="grid grid-cols-2 md:grid-cols-4 items-start gap-y-8 gap-x-4 mt-8 sm:mt-12 pt-8 sm:pt-10 border-t border-gray-800/40">
       <SummaryStat label="평가자산" value={totalEvaluation} prefix="₩" />
       <SummaryStat label="총 예수금" value={totalCash} prefix="₩" />
       <SummaryStat label="투자원금" value={totalInvested} prefix="₩" />
@@ -139,8 +139,8 @@ export function HeroStats({
   profitStr,
 }: HeroStatsProps) {
   return (
-    <section className="relative">
-      <div className="bg-gradient-to-br from-gray-900 to-gray-950 p-10 rounded-3xl border border-gray-800/50 shadow-2xl relative overflow-hidden group ">
+    <section className="relative px-4 sm:px-0">
+      <div className="bg-gradient-to-br from-gray-900 to-gray-950 p-6 sm:p-10 rounded-2xl sm:rounded-3xl border border-gray-800/50 shadow-2xl relative overflow-hidden group ">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary-500/5 to-transparent pointer-events-none" />
         <div className="absolute -right-20 -top-20 w-96 h-96 bg-primary-600/10 rounded-full blur-[100px] pointer-events-none" />
         

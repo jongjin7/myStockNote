@@ -123,7 +123,7 @@ export function StockList({
           </div>
         ) : (
           <div className={cn(
-            "grid gap-2",
+            "grid gap-3 sm:gap-4",
             layout === 'grid' ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1",
             compact ? "" : ""
           )}>

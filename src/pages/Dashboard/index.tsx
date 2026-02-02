@@ -51,9 +51,13 @@ export default function Dashboard() {
    description="나의 주식 자산과 투자 기록을 한눈에 파악합니다."
    className="px-4"
    extra={
-     <Button onClick={() => handleOpenAddModal('HOLDING')} size="xl">
-       <PlusCircle size={20} className="mr-2" />
-       <span>종목 추가</span>
+     <Button 
+       onClick={() => handleOpenAddModal('HOLDING')} 
+       size="md"
+       className="sm:h-12 sm:px-6 sm:text-base sm:rounded-xl whitespace-nowrap"
+     >
+       <PlusCircle size={20} className="sm:mr-2" />
+       <span className="hidden sm:inline">종목 추가</span>
      </Button>
    }
   />

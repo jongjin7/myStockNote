@@ -70,7 +70,7 @@ export default function Holdings() {
               <div className="text-sm font-normal text-gray-500 uppercase tracking-[0.2em] mb-1">
                 {activeAccountId === 'all' ? '총 운용 자산' : '계좌 총 자산'}
               </div>
-              <div className="text-4xl font-bold text-white tracking-tighter tabular-nums">
+              <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tighter tabular-nums truncate">
                 {formatCurrency(totalAssets)}
               </div>
             </div>
@@ -89,10 +89,9 @@ export default function Holdings() {
               items={tabItems} 
               activeId={activeAccountId} 
               onTabChange={handleTabChange} 
-              className="w-fit"
             />
           {/* 자산 요약 섹션 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
             <StatCard
               label="투자 원금"
               subtitle="(Principal)"

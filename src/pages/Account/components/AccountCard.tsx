@@ -17,12 +17,12 @@ export function AccountCard({ account, stocks, onEdit, onDelete }: AccountCardPr
   );
 
   return (
-    <Card className="group border-gray-800 bg-gray-900/40 backdrop-blur-sm p-8 flex flex-col h-full">
-      <div className="flex items-start justify-between mb-8">
-        <div className="p-4 bg-primary-500/10 text-primary-500 rounded-2xl">
-          <Wallet size={28} />
+    <Card className="group border-gray-800 bg-gray-900/40 backdrop-blur-sm p-6 sm:p-8 flex flex-col h-full">
+      <div className="flex items-start justify-between mb-6 sm:mb-8">
+        <div className="p-3 sm:p-4 bg-primary-500/10 text-primary-500 rounded-2xl">
+          <Wallet size={24} className="sm:w-7 sm:h-7" />
         </div>
-        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex items-center gap-1 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
           <Button 
             variant="ghost" 
             size="sm" 
@@ -44,8 +44,8 @@ export function AccountCard({ account, stocks, onEdit, onDelete }: AccountCardPr
 
       <div className="flex-1 space-y-6">
         <div>
-          <h3 className="text-2xl font-bold text-white mb-2">{account.brokerName}</h3>
-          <p className="text-sm text-gray-500 h-10 line-clamp-2 leading-relaxed">
+          <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 truncate">{account.brokerName}</h3>
+          <p className="text-xs sm:text-sm text-gray-500 h-8 sm:h-10 line-clamp-2 leading-relaxed">
             {account.memo || '기록된 메모가 없습니다.'}
           </p>
         </div>
@@ -66,8 +66,8 @@ export function AccountCard({ account, stocks, onEdit, onDelete }: AccountCardPr
         </div>
 
         <div className="pt-2">
-          <div className="text-sm font-medium text-gray-500 mb-2 uppercase tracking-widest">예수금 잔액 (CASH)</div>
-          <div className="text-3xl font-bold text-white">
+          <div className="text-[10px] sm:text-sm font-medium text-gray-500 mb-2 uppercase tracking-widest">예수금 잔액 (CASH)</div>
+          <div className="text-2xl sm:text-3xl font-bold text-white tabular-nums">
             {formatCurrency(account.cashBalance)}
           </div>
         </div>

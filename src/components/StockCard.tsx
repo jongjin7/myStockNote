@@ -40,70 +40,70 @@ export function StockCard({ stock, hasNote, compact = false }: StockCardProps) {
         </div>
 
         <div className={cn(
-           "flex min-w-0 flex-1",
-           compact ? "flex-row items-center gap-6" : "flex-col"
+          "flex min-w-0 flex-1",
+          compact ? "flex-row items-center gap-4 sm:gap-6" : "flex-col"
         )}>
-          <div className="flex items-center gap-2 min-w-0 overflow-hidden">
+          <div className="flex items-center gap-2 min-w-0">
             <span className={cn(
-              "text-white truncate font-semibold",
-              compact ? "text-md" : "text-xl"
+              "text-white truncate font-semibold leading-tight",
+              compact ? "text-sm sm:text-md" : "text-lg sm:text-xl"
             )}>
               {stock.name}
             </span>
             {stock.symbol && !compact && (
-              <span className="text-xs font-medium text-gray-500 bg-gray-950 px-1.5 py-0.5 rounded-md border border-white/[0.03] uppercase tracking-tighter shrink-0">
+              <span className="text-[10px] font-medium text-gray-500 bg-gray-950 px-1.5 py-0.5 rounded-md border border-white/[0.03] uppercase tracking-tighter shrink-0 hidden sm:block">
                 {stock.symbol}
               </span>
             )}
             {stock.category && !compact && (
-              <span className="text-xs font-medium text-primary-400/80 bg-primary-500/5 px-1.5 py-0.5 rounded-md border border-primary-500/10 tracking-tighter shrink-0">
+              <span className="text-[10px] font-medium text-primary-400/80 bg-primary-500/5 px-1.5 py-0.5 rounded-md border border-primary-500/10 tracking-tighter shrink-0 hidden lg:block">
                 {stock.category}
               </span>
             )}
           </div>
 
           <div className={cn(
-            "flex items-center gap-2  text-gray-600 uppercase tracking-wide shrink-0",
-            compact ? "text-xs font-semibold" : "text-md"
+            "flex items-center gap-1.5 sm:gap-2 text-gray-600 uppercase tracking-wide shrink-0",
+            compact ? "text-[10px] sm:text-xs font-semibold" : "text-sm sm:text-md"
           )}>
             {stock.status === 'WATCHLIST' ? (
-              <span>현재가 {formatCurrency(currentPrice)}</span>
+              <span className="truncate">현재가 {formatCurrency(currentPrice)}</span>
             ) : (
               <>
-                <span>{stock.quantity.toLocaleString()}주</span>
-                <span className="w-0.5 h-0.5 rounded-full bg-gray-700/80" />
-                <span>{formatCurrency(stock.avgPrice)}</span>
+                <span className="whitespace-nowrap">{stock.quantity.toLocaleString()}주</span>
+                <span className="w-0.5 h-0.5 rounded-full bg-gray-700/80 shrink-0" />
+                <span className="truncate">{formatCurrency(stock.avgPrice)}</span>
               </>
             )}
           </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-2 ml-4">
+      <div className="flex items-center gap-2 sm:gap-3 ml-2 sm:ml-4 shrink-0">
         {stock.status === 'HOLDING' ? (
           <div className={cn(
             "flex items-center text-right shrink-0",
-            compact ? "flex-row gap-2" : "flex-col gap-1"
+            compact ? "flex-row gap-2" : "flex-col gap-0.5 sm:gap-1"
           )}>
             <div className={cn(
-              "font-semibold tabular-nums tracking-tighter",
-              compact ? "text-sm" : "text-lg",
+              "font-semibold tabular-nums tracking-tighter leading-none mb-0.5",
+              compact ? "text-xs sm:text-sm" : "text-md sm:text-lg",
               profit >= 0 ? "text-danger-light" : "text-info-light"
             )}>
               {profit >= 0 ? '+' : ''}{formatCurrency(profit)}
             </div>
             <div className={cn(
-              "font-semibold tabular-nums text-xs opacity-70",
+              "font-semibold tabular-nums text-[10px] sm:text-xs opacity-70 leading-none",
               profit >= 0 ? "text-danger-light" : "text-info-light"
             )}>
               {profitRate > 0 ? '+' : ''}{profitRate.toFixed(2)}%
             </div>
           </div>
         ) : (
-          <div className="flex items-center gap-1.5 shrink-0">
-            <Badge status={stock.status} className="shadow-none scale-90" />
+          <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+            <Badge status={stock.status} className="shadow-none scale-75 sm:scale-90" />
             {hasNote && (
-              <Badge variant="primary" className="shadow-none scale-90 whitespace-nowrap">
+              <Badge variant="primary" className="shadow-none scale-75 sm:scale-90 whitespace-nowrap hidden sm:inline-flex">
                 리서치 중
               </Badge>
             )}

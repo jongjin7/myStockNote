@@ -80,7 +80,6 @@ export default function Watchlist() {
             items={tabItems} 
             activeId={activeTabId} 
             onTabChange={handleTabChange} 
-            className="w-full md:w-fit"
           />
       </div>
     </div>

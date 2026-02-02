@@ -456,3 +456,14 @@ button {
   box-shadow: 0 0 15px rgba(59, 130, 246, 0.4) !important;
 }
 
+
+/* ========================================
+   Custom Utilities
+   ======================================== */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

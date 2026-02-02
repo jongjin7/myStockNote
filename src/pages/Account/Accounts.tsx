@@ -75,15 +75,19 @@ export default function Accounts() {
       subtitle="Accounts"
       description="모든 자산은 KRW(원화)를 기준으로 하며, 증권사별 예수금을 관리합니다."
       extra={
-        <Button onClick={() => openModal()} size='xl'>
-          <PlusCircle size={20} className="mr-2" />
-          <span>새 계좌 추가</span>
+        <Button 
+          onClick={() => openModal()} 
+          size="md"
+          className="h-10 px-4 text-sm rounded-lg sm:h-12 sm:px-6 sm:text-base sm:rounded-xl whitespace-nowrap"
+        >
+          <PlusCircle size={20} className="mr-2 sm:mr-2" />
+          <span className="inline">새 계좌 추가</span>
         </Button>
       }
     />
 
       {/* Account List Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {accounts.length > 0 ? (
           accounts.map((account) => (
             <AccountCard 

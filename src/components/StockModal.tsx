@@ -152,7 +152,7 @@ export function StockModal({ isOpen, onClose, initialStatus = 'HOLDING' }: Stock
    label="종목명"
    value={name}
    onChange={(e) => setName(e.target.value)}
-   placeholder="예: 삼성전자, 엔비디아"
+   placeholder="예: 삼성전자"
    required
    className="bg-gray-950 border-gray-800"
    />
@@ -160,7 +160,7 @@ export function StockModal({ isOpen, onClose, initialStatus = 'HOLDING' }: Stock
    label="종목코드/심볼 (선택)"
    value={symbol}
    onChange={handleSymbolChange}
-   placeholder="예: 005930, NVDA"
+   placeholder="예: 005930"
    className="bg-gray-950 border-gray-800"
    error={symbolError || undefined}
    />

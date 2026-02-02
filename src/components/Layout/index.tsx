@@ -27,11 +27,11 @@ export default function Layout() {
   ];
 
   return (
-    <div className="h-screen bg-gray-950 text-gray-100 flex flex-col md:flex-row selection:bg-primary-500/30 selection:text-white overflow-hidden">
+    <div className="h-screen bg-gray-950 text-gray-100 flex flex-col lg:flex-row selection:bg-primary-500/30 selection:text-white overflow-hidden">
       {/* Sidebar Navigation (Desktop) */}
       <nav 
         className={cn(
-          "hidden md:flex flex-col border-r border-gray-800/50 bg-gray-950 h-full overflow-visible transition-all duration-300 ease-in-out relative z-20 group/sidebar",
+          "hidden lg:flex flex-col border-r border-gray-800/50 bg-gray-950 h-full overflow-visible transition-all duration-300 ease-in-out relative z-20 group/sidebar",
           isCollapsed ? "w-20" : "w-56"
         )}
       >
@@ -86,7 +86,7 @@ export default function Layout() {
           </div>
         )}
         
-        <div className="min-h-full p-6 md:p-12 lg:p-16">
+        <div className="min-h-full p-6 lg:p-16">
           <div className="max-w-7xl mx-auto">
             <Outlet />
           </div>
