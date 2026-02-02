@@ -107,9 +107,10 @@ myStockNote/
 │   ├── App.tsx          # 라우팅 설정
 │   ├── main.tsx         # 앱 진입점
 │   └── index.css        # 글로벌 스타일
-├── spec/                # 프로젝트 문서
-│   ├── prd.md          # 제품 요구사항 명세
-│   └── workflow.md     # 개발 워크플로우
+├── docs/                # 프로젝트 문서
+│   ├── COMMIT_CONVENTION.md # 커밋 컨벤션
+│   ├── product/         # 제품 요구사항 명세
+│   └── testing/         # 테스트 가이드
 ├── .agent/
 │   └── workflows/      # 테스트 워크플로우
 └── public/             # 정적 파일
