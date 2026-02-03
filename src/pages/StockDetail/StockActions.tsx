@@ -1,4 +1,4 @@
-import { Plus, ExternalLink } from 'lucide-react';
+import { Plus, ExternalLink, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '../../components/ui';
 
@@ -6,9 +6,10 @@ interface StockActionsProps {
   stockId: string;
   isWatchlist: boolean;
   onConvert: () => void;
+  onShowFlow: () => void;
 }
 
-export function StockActions({ stockId, isWatchlist, onConvert }: StockActionsProps) {
+export function StockActions({ stockId, isWatchlist, onConvert, onShowFlow }: StockActionsProps) {
   return (
     <div className="">
       <div className="flex flex-col gap-4">
@@ -18,6 +19,14 @@ export function StockActions({ stockId, isWatchlist, onConvert }: StockActionsPr
             <span>새 투자 노트 작성</span>
           </Button>
         </Link>
+        <Button
+          variant="secondary"
+          onClick={onShowFlow}
+          className="w-full h-12"
+        >
+          <TrendingUp size={18} className="mr-2" />
+          <span>거래 플로우 시각화</span>
+        </Button>
         {isWatchlist && (
           <Button
             variant="success"

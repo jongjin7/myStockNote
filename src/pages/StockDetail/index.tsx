@@ -13,6 +13,7 @@ import { StockActions } from './StockActions';
 import { StockMemoList } from './StockMemoList';
 import { StockEditModal } from './StockEditModal';
 import { StockConvertModal } from './StockConvertModal';
+import { TransactionFlow } from './TransactionFlow';
 
 export default function StockDetail() {
   const { id } = useParams<{ id: string }>();
@@ -26,6 +27,7 @@ export default function StockDetail() {
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isConvertModalOpen, setIsConvertModalOpen] = useState(false);
+  const [isFlowModalOpen, setIsFlowModalOpen] = useState(false);
   const [isLocalSyncing, setIsLocalSyncing] = useState(false);
   
   const currentPrice = stock?.currentPrice || 0;
@@ -134,6 +136,7 @@ export default function StockDetail() {
             stockId={stock.id}
             isWatchlist={stock.status === 'WATCHLIST'}
             onConvert={() => setIsConvertModalOpen(true)}
+            onShowFlow={() => setIsFlowModalOpen(true)}
           />
         </div>
 
@@ -160,6 +163,13 @@ export default function StockDetail() {
         hasGeneralMemo={stockMemos.some(m => m.type === 'GENERAL')}
         onConvert={handleConvertStock}
       />
+
+      {isFlowModalOpen && (
+        <TransactionFlow 
+          stockName={stock.name}
+          onClose={() => setIsFlowModalOpen(false)}
+        />
+      )}
     </div>
   );
 }
