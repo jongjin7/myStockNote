@@ -1,4 +1,3 @@
-import { Quote } from 'lucide-react';
 import { cn } from '../../../lib/utils';
 import type { DayGroup } from './types';
 import type { RefObject } from 'react';
@@ -16,7 +15,6 @@ export function FlowChart({
   setCurrentGroupIndex,
   chartScrollRef
 }: FlowChartProps) {
-  const selectedGroup = groupedNodes[currentGroupIndex];
 
   return (
     <div 
@@ -183,19 +181,6 @@ export function FlowChart({
           })()}
         </svg>
 
-        {/* Floating Daily Insight - Integrated in Chart */}
-        {selectedGroup.memo && (
-          <div className="absolute top-24 left-10 max-w-[300px] z-10 animate-in fade-in slide-in-from-top-1 duration-500 pointer-events-none">
-            <div className="bg-gray-950/40 backdrop-blur-xl rounded-2xl p-4 border border-white/5 shadow-2xl relative">
-              <div className="flex items-start gap-3">
-                <Quote size={14} className="text-primary-500/60 mt-0.5" />
-                <p className="text-[11px] font-medium text-gray-300 leading-relaxed italic line-clamp-3">
-                  {selectedGroup.memo}
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

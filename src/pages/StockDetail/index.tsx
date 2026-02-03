@@ -13,7 +13,7 @@ import { StockActions } from './StockActions';
 import { StockMemoList } from './StockMemoList';
 import { StockEditModal } from './StockEditModal';
 import { StockConvertModal } from './StockConvertModal';
-import { TransactionFlow } from './StockTransactionFlow';
+import { StockTransactionFlow } from './StockTransactionFlow'; 
 
 export default function StockDetail() {
   const { id } = useParams<{ id: string }>();
@@ -164,12 +164,11 @@ export default function StockDetail() {
         onConvert={handleConvertStock}
       />
 
-      {isFlowModalOpen && (
-        <TransactionFlow 
-          stockName={stock.name}
-          onClose={() => setIsFlowModalOpen(false)}
-        />
-      )}
+      <StockTransactionFlow 
+        isOpen={isFlowModalOpen}
+        stockName={stock.name}
+        onClose={() => setIsFlowModalOpen(false)}
+      />
     </div>
   );
 }

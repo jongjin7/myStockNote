@@ -1,18 +1,19 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { TrendingUp } from 'lucide-react';
-import { Card } from '../../../components/ui';
+import { Modal } from '../../../components/ui';
 import { FlowHeader } from './FlowHeader';
 import { FlowChart } from './FlowChart';
 import { TransactionLog } from './TransactionLog';
 import { FlowFooter } from './FlowFooter';
 import type { TransactionNode, DayGroup } from './types';
 
-interface TransactionFlowProps {
+interface StockTransactionFlowProps {
+  isOpen: boolean;
   stockName: string;
   onClose: () => void;
 }
 
-export function TransactionFlow({ stockName, onClose }: TransactionFlowProps) {
+export function StockTransactionFlow({ isOpen, stockName, onClose }: StockTransactionFlowProps) {
   // 1. Generate 30 days of transactions (resulting in 30 groups) - Persistent with useMemo
   const groupedNodes = useMemo<DayGroup[]>(() => {
     return Array.from({ length: 30 }, (_, dayIdx) => {
@@ -84,58 +85,52 @@ export function TransactionFlow({ stockName, onClose }: TransactionFlowProps) {
   }, [currentGroupIndex, groupedNodes.length]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
-      <Card className="w-full max-w-6xl bg-gray-950 border-gray-800 shadow-2xl overflow-hidden flex flex-col h-[90vh]">
-        {/* Main Modal Header */}
-        <div className="p-6 border-b border-gray-800 flex items-center justify-between bg-gray-900/30">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary-500/10 flex items-center justify-center text-primary-500 border border-primary-500/20">
-              <TrendingUp size={20} />
-            </div>
-            <div>
-              <h2 className="text-lg font-bold text-white tracking-tight">{stockName} 거래 플로우</h2>
-              <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-0.5">Transaction Timeline Analytics</p>
-            </div>
+    <Modal 
+      isOpen={isOpen} 
+      onClose={onClose} 
+      size="2xl"
+      title={
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-primary-500/10 flex items-center justify-center text-primary-500 border border-primary-500/20">
+            <TrendingUp size={18} />
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-gray-800 rounded-full transition-colors text-gray-500 hover:text-white">
-            <span className="text-2xl leading-none">&times;</span>
-          </button>
-        </div>
-
-        {/* Content Area */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="flex-1 overflow-y-auto custom-scrollbar p-10">
-            <div className="max-w-5xl mx-auto space-y-10">
-              {/* Chart Section */}
-              <div className="relative bg-gray-900/40 rounded-3xl border border-gray-800/50 overflow-hidden group/chart h-[320px] flex flex-col">
-                <FlowHeader 
-                  currentGroupIndex={currentGroupIndex}
-                  groupedNodes={groupedNodes}
-                  rawNodes={rawNodes}
-                  handlePrev={handlePrev}
-                  handleNext={handleNext}
-                />
-                <FlowChart 
-                  groupedNodes={groupedNodes}
-                  currentGroupIndex={currentGroupIndex}
-                  setCurrentGroupIndex={setCurrentGroupIndex}
-                  chartScrollRef={chartScrollRef}
-                />
-              </div>
-
-              {/* Transaction Log Table */}
-              <TransactionLog selectedGroup={selectedGroup} />
-            </div>
+          <div>
+            <h2 className="text-base md:text-lg font-bold text-white tracking-tight">{stockName} 거래 플로우</h2>
+            <p className="text-[9px] md:text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-0.5 whitespace-nowrap">Transaction Timeline Analytics</p>
           </div>
         </div>
+      }
+    >
+      {/* Content Area */}
+      <div className="p-4 md:p-8 lg:p-10">
+        <div className="max-w-5xl mx-auto space-y-10">
+          {/* Chart Section */}
+          <div className="relative bg-gray-900/40 rounded-3xl border border-gray-800/50 overflow-hidden group/chart h-[320px] flex flex-col">
+            <FlowHeader 
+              currentGroupIndex={currentGroupIndex}
+              groupedNodes={groupedNodes}
+              rawNodes={rawNodes}
+              handlePrev={handlePrev}
+              handleNext={handleNext}
+            />
+            <FlowChart 
+              groupedNodes={groupedNodes}
+              currentGroupIndex={currentGroupIndex}
+              setCurrentGroupIndex={setCurrentGroupIndex}
+              chartScrollRef={chartScrollRef}
+            />
+          </div>
 
-        {/* Footer Summary */}
-        <FlowFooter 
-          rawNodes={rawNodes}
-          onClose={onClose}
-          onNextDay={() => setCurrentGroupIndex((prev: number) => (prev + 1) % groupedNodes.length)}
-        />
-      </Card>
-    </div>
+          {/* Transaction Log Table */}
+          <TransactionLog selectedGroup={selectedGroup} />
+        </div>
+      </div>
+
+      {/* Footer Summary */}
+      <FlowFooter 
+        rawNodes={rawNodes}
+        onClose={onClose}
+      />
+    </Modal>
   );
 }
