@@ -13,7 +13,7 @@ import { StockActions } from './StockActions';
 import { StockMemoList } from './StockMemoList';
 import { StockEditModal } from './StockEditModal';
 import { StockConvertModal } from './StockConvertModal';
-import { TransactionFlow } from './TransactionFlow';
+import { TransactionFlow } from './StockTransactionFlow';
 
 export default function StockDetail() {
   const { id } = useParams<{ id: string }>();
