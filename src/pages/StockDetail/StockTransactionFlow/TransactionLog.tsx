@@ -10,7 +10,7 @@ export function TransactionLog({ selectedGroup }: TransactionLogProps) {
   return (
     <div className="w-full bg-white/[0.01] rounded-2xl border border-white/5 overflow-hidden shadow-xl animate-slide-up animation-delay-100">
       <div className="px-4 md:px-6 py-3 md:py-4 border-b border-white/5 bg-white/[0.01] space-y-3">
-        <h4 className="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-widest">일간 매매 명세</h4>
+        <h4 className="text-lg font-bold text-white uppercase">일간 매매 명세</h4>
         {selectedGroup.memo && (
           <div className="flex items-start gap-2 md:gap-3 bg-white/[0.02] p-3 md:p-4 rounded-xl border border-white/5 animate-in fade-in slide-in-from-top-1">
             <Quote size={12} className="text-primary-500 opacity-60 mt-1 flex-shrink-0" />

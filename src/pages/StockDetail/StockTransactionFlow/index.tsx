@@ -85,27 +85,17 @@ export function StockTransactionFlow({ isOpen, stockName, onClose }: StockTransa
   }, [currentGroupIndex, groupedNodes.length]);
 
   return (
-    <Modal 
-      isOpen={isOpen} 
-      onClose={onClose} 
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
       size="2xl"
-      title={
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-primary-500/10 flex items-center justify-center text-primary-500 border border-primary-500/20">
-            <TrendingUp size={18} />
-          </div>
-          <div>
-            <h2 className="text-base md:text-lg font-bold text-white tracking-tight">{stockName} 거래 플로우</h2>
-            <p className="text-[9px] md:text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-0.5 whitespace-nowrap">Transaction Timeline Analytics</p>
-          </div>
-        </div>
-      }
+      title={<h2 className="text-2xl font-bold"><span className="text-primary-500">{stockName}</span> 거래 플로우</h2>}
     >
       {/* Content Area */}
       <div className="p-4 md:p-8 lg:p-10">
         <div className="max-w-5xl mx-auto space-y-10">
           {/* Chart Section */}
-          <div className="relative bg-gray-900/40 rounded-3xl border border-gray-800/50 overflow-hidden group/chart h-[320px] flex flex-col">
+          <div className="relative bg-gray-900/40 rounded-3xl border border-gray-800/50 overflow-hidden group/chart h-[400px] flex flex-col">
             <FlowHeader 
               currentGroupIndex={currentGroupIndex}
               groupedNodes={groupedNodes}

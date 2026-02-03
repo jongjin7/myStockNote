@@ -19,7 +19,7 @@ export function FlowChart({
   return (
     <div 
       ref={chartScrollRef}
-      className="absolute inset-0 pt-24 pb-12 overflow-x-auto custom-scrollbar overflow-y-hidden"
+      className="absolute inset-0 pt-28 pb-12 overflow-x-auto custom-scrollbar overflow-y-hidden"
     >
       <div 
         style={{ width: `${Math.max(groupedNodes.length * 4, 100)}%`, minWidth: '100%' }}
@@ -31,8 +31,13 @@ export function FlowChart({
               <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.15" />
               <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
             </linearGradient>
+            <linearGradient id="hitGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="white" stopOpacity="0" />
+              <stop offset="50%" stopColor="white" stopOpacity="0.07" />
+              <stop offset="100%" stopColor="white" stopOpacity="0" />
+            </linearGradient>
             <filter id="shadow">
-              <feDropShadow dx="0" dy="4" stdDeviation="4" floodOpacity="0.5" />
+              <feDropShadow dx="0" dy="4" stdDeviation="4" floodOpacity="0.3" />
             </filter>
           </defs>
 
@@ -66,6 +71,7 @@ export function FlowChart({
                 {groupedNodes.map((_, i: number) => {
                   const x = (i / (groupedNodes.length - 1)) * 100;
                   const width = 100 / (groupedNodes.length - 1);
+
                   return (
                     <rect
                       key={`hit-${i}`}
@@ -73,8 +79,8 @@ export function FlowChart({
                       y="0"
                       width={`${width}%`}
                       height="100%"
-                      fill="transparent"
-                      className="cursor-pointer pointer-events-auto hover:fill-white/[0.03] transition-colors"
+                      fill="url(#hitGradient)"
+                      className="cursor-pointer pointer-events-auto opacity-0 hover:opacity-100 transition-opacity duration-300"
                       onClick={() => setCurrentGroupIndex(i)}
                     />
                   );
