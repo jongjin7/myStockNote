@@ -48,7 +48,7 @@ export function FlowFooter({
             value={(() => {
               const totalProfit = rawNodes.reduce((acc, curr) => acc + (curr.profit || 0), 0);
               return (
-                <p className={cn("text-base font-black tracking-tight tabular-nums", totalProfit > 0 ? "text-red-400" : "text-blue-400")}>
+                <p className={cn("text-base font-bold tracking-tight tabular-nums", totalProfit > 0 ? "text-red-400" : "text-blue-400")}>
                   {totalProfit > 0 ? '+' : ''}{formatCurrency(totalProfit)}
                 </p>
               );
@@ -67,7 +67,7 @@ export function FlowFooter({
         </div>
 
         <div className="flex w-full md:w-auto">
-          <Button variant="secondary" onClick={onClose} className="w-full md:w-auto px-12 h-12 font-bold text-white border-transparent bg-gray-900 hover:bg-gray-800 transition-all">
+          <Button variant="secondary" size="xl" onClick={onClose} className="w-full md:w-auto text-white border-transparent bg-gray-900 hover:bg-gray-800">
             닫기
           </Button>
         </div>
