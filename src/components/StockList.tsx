@@ -52,7 +52,7 @@ export function StockList({
 
   return (
     <div className={cn("space-y-6", className)}>
-      <div className="flex flex-row items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row justify-center sm:justify-between sm:items-center gap-4">
         <SectionHeader 
           icon={icon}
           title={title}
