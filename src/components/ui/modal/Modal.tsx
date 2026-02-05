@@ -70,7 +70,7 @@ export function Modal({
       <div
         className={cn(
           'relative w-full bg-gray-950 border border-gray-800 rounded-3xl shadow-2xl',
-          'animate-scale-in flex flex-col overflow-hidden max-h-[95vh]',
+          'animate-scale-in flex flex-col overflow-hidden max-h-[calc(100vh-140px)] mb-25 lg:max-h-[92vh] lg:mb-0',
           sizeConfig[size],
           className
         )}

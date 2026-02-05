@@ -73,10 +73,10 @@ export function FlowHeader({
 
   return (
     <div className="flex flex-col relative z-1">
-      <div className="px-4 md:px-6 py-3 md:py-4 border-b border-white/5 bg-white/[0.01]">
+      <div className="px-4 md:px-6 pt-3 pb-2 md:pt-4 md:pb-3 border-b border-white/5 bg-white/[0.01]">
         <h4 className="text-lg font-bold text-white uppercase">거래 흐름 시각화</h4>
       </div>
-      <div className="p-2 md:p-4 pb-0">
+      <div className="p-3 md:p-4 pb-0">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-3 md:gap-4 w-full sm:w-auto">
             {/* 날짜 이동 버튼 */}
